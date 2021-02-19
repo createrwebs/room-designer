@@ -1,0 +1,251 @@
+{
+	"site": {
+		"config": {},
+		"menu": {},
+		"elements": [],
+		"stacks": [],
+		"pages": [],
+		"modals": [],
+		"templates": []
+	},
+	"newFolder": {
+		"ParentId": 0,
+		"Name": "Nouveau thème",
+		"Description": "",
+		"Image": "",
+		"Online": true,
+		"DateNewExpiration": "",
+		"Color": ""
+	},
+	"newResource": {
+		"RessourceId": 0,
+		"Name": "",
+		"Description": "",
+		"Content": "",
+		"Image": "",
+		"Accessibility": true,
+		"Duration": "",
+		"AuthorizeNotation": true,
+		"AuthorizeComments": true,
+		"Pushed": false,
+		"Online": false,
+		"StatusId": 1,
+		"Keywords": "",
+		"Rate": 0,
+		"RateCount": 0,
+		"DateNewExpiration": "",
+		"FolderBaseContent": [],
+		"Attachment": [],
+		"Children": [],
+		"Rating": [],
+		"Url": "",
+		"Color": ""
+	},
+	"newPlateforme": {
+		"Name": "",
+		"Description": "",
+		"Content": "",
+		"Image": "",
+		"Accessibility": true,
+		"Poll": "",
+		"AuthorizeNotation": true,
+		"AuthorizeComments": true,
+		"Pushed": false,
+		"Online": false,
+		"StatusId": 1,
+		"Keywords": "",
+		"Rate": 0,
+		"RateCount": 0,
+		"DateNewExpiration": "",
+		"FolderBaseContent": [],
+		"Attachment": [],
+		"Children": [],
+		"Rating": [],
+		"Url": "",
+		"Languages": "",
+		"Contact": "",
+		"Public": "",
+		"Duration": ""
+	},
+	"cssStyleList": [
+		{
+			"label": "Nav",
+			"value": "nav"
+		},
+		{
+			"label": "Lien",
+			"value": "link"
+		},
+		{
+			"label": "Rouge",
+			"value": "red"
+		},
+		{
+			"label": "Jaune",
+			"value": "yellow"
+		},
+		{
+			"label": "Vert",
+			"value": "green"
+		},
+		{
+			"label": "Bleu",
+			"value": "blue"
+		},
+		{
+			"label": "Violet",
+			"value": "purple"
+		},
+		{
+			"label": "btn-info",
+			"value": "btn btn-info"
+		}
+	],
+	"textalignList": [
+		{
+			"label": "gauche",
+			"value": "left"
+		},
+		{
+			"label": "centre",
+			"value": "center"
+		},
+		{
+			"label": "droit",
+			"value": "right"
+		},
+		{
+			"label": "justifié",
+			"value": "justify"
+		}
+	],
+	"headerTagList": [
+		{
+			"label": "Taille 1",
+			"value": "h1"
+		},
+		{
+			"label": "Taille 2",
+			"value": "h2"
+		},
+		{
+			"label": "Taille 3",
+			"value": "h3"
+		},
+		{
+			"label": "Taille 4",
+			"value": "h4"
+		},
+		{
+			"label": "Taille 5",
+			"value": "h5"
+		},
+		{
+			"label": "Taille 6",
+			"value": "h6"
+		}
+	],
+	"colorList": [
+		{
+			"label": "noir",
+			"value": "#000000"
+		},
+		{
+			"label": "blanc",
+			"value": "#FFFFFF"
+		},
+		{
+			"label": "bleu foncé",
+			"value": "#262E65"
+		},
+		{
+			"label": "bleu clair",
+			"value": "#1A9CD8"
+		},
+		{
+			"label": "violet",
+			"value": "#84349A"
+		},
+		{
+			"label": "jaune",
+			"value": "#FFDC0F"
+		},
+		{
+			"label": "orange",
+			"value": "#F07F38"
+		},
+		{
+			"label": "rouge",
+			"value": "#E8414A"
+		},
+		{
+			"label": "violet clair",
+			"value": "#AF4392"
+		},
+		{
+			"label": "vert",
+			"value": "#BDD027"
+		},
+		{
+			"label": "bleu",
+			"value": "#003c82"
+		},
+		{
+			"label": "bleu-cyan",
+			"value": "#16b1e6"
+		},
+		{
+			"label": "bleu-petrole",
+			"value": "#0072a4"
+		},
+		{
+			"label": "or",
+			"value": "#deaf43"
+		},
+		{
+			"label": "violet",
+			"value": "#402a79"
+		},
+		{
+			"label": "vert",
+			"value": "#bbd060"
+		},
+		{
+			"label": "rouge",
+			"value": "#8b0033"
+		},
+		{
+			"label": "vert-emeraude",
+			"value": "#1aa8c0"
+		}
+	],
+	"buttonClickTargetsList": [
+		{
+			"label": "Même fenêtre",
+			"value": "_self"
+		},
+		{
+			"label": "Nouvelle fenêtre",
+			"value": "_blank"
+		}
+	],
+	"buttonClickActions": [
+		{
+			"label": "Pas d'action",
+			"value": ""
+		},
+		{
+			"label": "Navigation vers la page du site",
+			"value": "navigate"
+		},
+		{
+			"label": "Navigation vers le thème",
+			"value": "navigateToTheme"
+		},
+		{
+			"label": "Lien externe",
+			"value": "openWindow"
+		}
+	],
+	"StepTypes": {}
+}
