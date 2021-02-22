@@ -63,9 +63,17 @@ class InfoBar extends Component {
                 </div>
                 {this.props.selection &&
                     <div>
-                        <i className="fa fa-fw fa-arrows-h" />
+                        <i className="fa fa-fw fa-hand-pointer-o" />
                         <span>
                             {this.props.selection.name}
+                        </span>
+                    </div>
+                }
+                {this.props.dragged &&
+                    <div>
+                        <i className="fa fa-fw fa-arrows-h" />
+                        <span>
+                            {this.props.dragged.name}
                         </span>
                     </div>
                 }
@@ -76,6 +84,7 @@ class InfoBar extends Component {
 const mapStateToProps = (state) => {
     return {
         selection: state.selection,
+        dragged: state.dragged,
         fov: state.camera.fov,
         zoom: state.camera.zoom,
         focus: state.camera.focus

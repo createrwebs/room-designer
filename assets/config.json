@@ -1,0 +1,36 @@
+{
+	"walls": {
+		"right": {
+			"width": 4000
+		},
+		"back": {
+			"width": 2400
+		},
+		"left": {
+			"width": 1000
+		}
+	},
+	"fbx": [
+		{
+			"file": "NYH219P40L048.fbx",
+			"name": "Module H219 P40 L48",
+			"startX": 0,
+			"rotateX": "0"
+		},
+		{
+			"file": "NYH219P40L048.fbx",
+			"name": "Module H219 P40 L48",
+			"startX": 500
+		},
+		{
+			"file": "NYH219P40L048.fbx",
+			"name": "Module H219 P40 L48",
+			"startX": 1200
+		},
+		{
+			"file": "NYH219P40L048.fbx",
+			"name": "Module H219 P40 L48",
+			"startX": 2200
+		}
+	]
+}

@@ -1,10 +1,10 @@
-import axios from 'axios'
-import { signinDomainURL } from './Config'
+// import axios from 'axios'
+import { domainURL } from './Config'
 
-export function ____getSignInUser(id) {
-	return fetch(`${signinDomainURL}/api/USERS2/ASSESS/PLAYER/${id}`, {
+export function getConfig() {
+	return fetch(`./config.json`, {
 		method: "GET",
-		mode: 'cors',
+		// mode: 'cors',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
@@ -20,10 +20,8 @@ export function ____getSignInUser(id) {
 	});
 }
 
-export function getSignInUser(id) {
-
+/* export function getInfo(id) {
 	return axios({
-		// url: `${signinDomainURL}/api/USERS2/ASSESS/PLAYER/${id}`,
 		url: `static-requests/${id}.json`,
 		headers: {
 			'Accept': 'application/json',
@@ -39,4 +37,4 @@ export function getSignInUser(id) {
 		.then(usr => {
 			return usr.data
 		})
-}
+} */

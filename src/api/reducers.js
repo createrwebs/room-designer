@@ -1,4 +1,5 @@
 import { NotificationManager } from 'react-notifications';
+import ThreeScene from '../3d/ThreeScene';
 import {
     CameraEvent,
     ObjectEvent,
@@ -6,15 +7,17 @@ import {
 }
     from './actions'
 
-
 const initialState = {
+    config: null,
     light: true,
+    dragged: null,
     selection: null,
     camera: {
         fov: 70,
         zoom: 1.0,
         focus: 10
-    }
+    },
+    meublesOnScene: []
 }
 
 export const reducer = (state = initialState, action) => {
@@ -24,6 +27,11 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state, light: !state.light
             }
+        case SceneEvent.SETCONFIG:
+            ThreeScene.setup(action.config)
+            return {
+                ...state, config: action.config
+            }
         case CameraEvent.SET:
             const camera = Object.assign(state.camera, action.prop);
             return {
@@ -31,8 +39,21 @@ export const reducer = (state = initialState, action) => {
             }
         case ObjectEvent.SELECT:
             return {
-                ...state, selection: action.selection
+                ...state, selection: action.meuble
             }
+        case ObjectEvent.ADD:
+            let meublesOnScene = [...state.meublesOnScene];
+            meublesOnScene.unshift(action.meuble);
+            // meublesOnScene.sort((a, b) => {... possible to sort
+            return { ...state, meublesOnScene: meublesOnScene };
+        case ObjectEvent.DRAG:
+            return { ...state, dragged: action.meuble };
+        case ObjectEvent.REMOVE:
+            let meublesOnScene2 = [...state.meublesOnScene];
+            meublesOnScene2 = meublesOnScene2.filter(m => {
+                return m !== action.meuble
+            })
+            return { ...state, meublesOnScene: meublesOnScene2 };
         default:
             return state;
     }
