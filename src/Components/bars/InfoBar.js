@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 // import { moderator } from '../../API/Config'
 import Button from './Button';
 import './bars.css';
-import { setCamera, setLight } from '../../api/actions'
+import {
+    setCamera,
+    setLight,
+    logCamera
+} from '../../api/actions'
 class InfoBar extends Component {
     constructor (props) {
         super(props);
@@ -61,6 +65,9 @@ class InfoBar extends Component {
                 <div>
                     <Button action={() => { this.props.setLight() }} icon="fa fa-fw fa-lightbulb-o" text={"Eclairer"} />
                 </div>
+                <div>
+                    <Button action={() => { this.props.logCamera() }} icon="fa fa-fw fa-video-camera" text={"Camera position"} status={this.props.cameraLog ? "active" : "deactivated"} />
+                </div>
                 {this.props.selection &&
                     <div>
                         <i className="fa fa-fw fa-hand-pointer-o" />
@@ -84,6 +91,7 @@ class InfoBar extends Component {
 const mapStateToProps = (state) => {
     return {
         selection: state.selection,
+        cameraLog: state.cameraLog,
         dragged: state.dragged,
         fov: state.camera.fov,
         zoom: state.camera.zoom,
@@ -92,6 +100,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = {
     setCamera,
-    setLight
+    setLight,
+    logCamera
 };
 export default connect(mapStateToProps, mapDispatchToProps)(InfoBar)

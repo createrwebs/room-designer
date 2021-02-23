@@ -12,6 +12,7 @@ const initialState = {
     light: true,
     dragged: null,
     selection: null,
+    cameraLog: false,
     camera: {
         fov: 70,
         zoom: 1.0,
@@ -36,6 +37,15 @@ export const reducer = (state = initialState, action) => {
             const camera = Object.assign(state.camera, action.prop);
             return {
                 ...state, camera
+            }
+        case CameraEvent.LOG:
+            return {
+                ...state, cameraLog: !state.cameraLog
+            }
+        case ObjectEvent.ALLLOADED:
+            ThreeScene.allLoaded();
+            return {
+                ...state
             }
         case ObjectEvent.SELECT:
             return {

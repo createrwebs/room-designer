@@ -9,6 +9,7 @@ import store from '../api/store';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
+import Loader from './Loader'
 import Meuble from './Meuble'
 
 import * as THREE from "three";
@@ -35,38 +36,25 @@ export default {
 
         let camera, scene, renderer, orbitControls, stats, manager;
 
-        this.manager = manager = new THREE.LoadingManager();
-        manager.onStart = function (url, itemsLoaded, itemsTotal) {
+        Loader.setup();
+        /*         this.manager = manager = new THREE.LoadingManager();
+                manager.onStart = function (url, itemsLoaded, itemsTotal) {
+        
+                    // console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        
+                };
+                manager.onStart = this.loadManagerStart.bind(this);
+                manager.onLoad = this.loadManagerLoad.bind(this);
+                manager.onProgress = this.loadManagerProgress.bind(this);
+                manager.onError = this.loadManagerError.bind(this); */
 
-            console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        // console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
 
-        };
-        manager.onLoad = function () {
-
-            console.log('Loading complete!');
-
-        };
-        manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-
-            console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-
-        };
-        manager.onError = function (url) {
-
-            console.log('There was an error loading ' + url);
-
-        };
 
         this.scene = scene = new THREE.Scene();
         scene.background = new THREE.Color(0xa0a0a0);
         // scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
-
-        // +Z is up in Blender, whereas + Y is up in three.js
-        this.camera = camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 40000);
-        camera.position.x = 3300;
-        camera.position.y = 2100;
-        camera.position.z = 3300;
 
         // this.frame_stats = stats = new Stats();
         // stats.begin();
@@ -80,7 +68,6 @@ export default {
         // renderer.physicallyCorrectLights = true;
         // renderer.shadowMap.enabled = true;
         // renderer.localClippingEnable = false;
-
         // renderer.setClearColor(0xFFFFFF);
 
         // /* renderer.domElement.addEventListener("click", onclick, true);
@@ -96,6 +83,22 @@ export default {
                 // console.log(selectedObject);
             }
         }
+
+        /* camera */
+
+        // +Z is up in Blender, whereas + Y is up in three.js
+        this.camera = camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 40000);
+        camera.position.set(5038, 5089, 1987)
+
+        /* controls */
+
+        this.orbitControls = orbitControls = new OrbitControls(camera, renderer.domElement);
+        // orbitControls.addEventListener('start', this.render.bind(this)); // use if there is no animation loop
+        orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
+        orbitControls.minDistance = 200;
+        orbitControls.maxDistance = 10000;//10m
+        orbitControls.target.set(1317, -673, 1832);
+        // orbitControls.update();
 
         // const interaction = new Interaction(renderer, scene, camera);
 
@@ -185,13 +188,6 @@ export default {
         this.wallLeft.position.z = wallConfig.back.width;
         scene.add(this.wallLeft);
 
-        /* controls */
-
-        this.orbitControls = orbitControls = new OrbitControls(camera, renderer.domElement);
-        orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
-        orbitControls.minDistance = 200;
-        orbitControls.maxDistance = 10000;//10m
-        orbitControls.target.set(200, 1400, 0);
     },
     updateCamera(props) {
         let camera = this.camera
@@ -214,24 +210,30 @@ export default {
             scene.remove(spotLight2);
         }
     },
+    allLoaded() {
+        // this.orbitControls.update();
+    },
     render() {
         // console.log(`render ${this}`);
-        // console.log(`position ${this.camera.position.x} ${this.camera.position.y} ${this.camera.position.z}`);
+        if (store.getState().cameraLog) {
+            console.log(`camera.position.set(${Math.round(this.camera.position.x)},${Math.round(this.camera.position.y)},${Math.round(this.camera.position.z)})`);
+            console.log(`orbitControls.target.set(${Math.round(this.orbitControls.target.x)},${Math.round(this.orbitControls.target.y)},${Math.round(this.orbitControls.target.z)})`);
+        }
+
         // this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
 
     },
-
-    add(meuble) {
-        this.scene.add(meuble.object);
-        this.render();
-        store.dispatch(add(meuble))
-    },
     fbxloadAll() {
-        const loader = new FBXLoader(this.manager);
+        const loader = new FBXLoader(Loader.manager);
         store.getState().config.fbx.forEach(props => loader.load(`models/${props.file}`, this.fbxloaded.bind(this, props)))
     },
     fbxloaded(props, object) {
         this.add(new Meuble(props, object));// meuble to put in the list better than the scene
+    },
+    add(meuble) {
+        this.scene.add(meuble.object);
+        this.render();
+        store.dispatch(add(meuble))
     },
 }

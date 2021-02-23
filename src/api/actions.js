@@ -5,14 +5,21 @@ export const SceneEvent = {
 }
 export const CameraEvent = {
     SET: 'set',
+    LOG: 'log'
 }
 export const ObjectEvent = {
+    ALLLOADED: 'allLoaded',
     ADD: 'add',
     REMOVE: 'remove',
     SELECT: 'select',
-    DRAG: 'DRAG',
+    DRAG: 'drag',
 }
 
+export const logCamera = () => {
+    return {
+        type: CameraEvent.LOG
+    }
+}
 export const setCamera = (prop) => {
     return {
         type: CameraEvent.SET, prop
@@ -26,6 +33,11 @@ export const setConfig = (config) => {
 export const setLight = () => {
     return {
         type: SceneEvent.SETLIGHT
+    }
+}
+export const allLoaded = () => {
+    return {
+        type: ObjectEvent.ALLLOADED
     }
 }
 export const drag = (meuble) => {

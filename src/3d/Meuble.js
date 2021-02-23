@@ -12,36 +12,46 @@ import 'react-notifications/lib/notifications.css';
 // Controls
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
+// import { TextureLoader } from 'src/loaders/TextureLoader.js';
 
 export default class Meuble {
     static dragged = null;
     constructor (props, object) {
-        console.log('Meuble', props, object)
+        // console.log('Meuble', props, object)
         this.object = object;// threejs group mesh
         this.file = props.file;
         this.name = props.name;
+        this.wall = props.position.wall;
+        this.angle = props.angle;
+        this.wallConfig = store.getState().config.walls;
+        this.width = this.getWidth()// store width for performance collision
+        // this.segment = this.getSegment(object)// store width for performance collision
+        this.dragControls = this.setDraggable();
+        this.setPosition(props.position);
+        console.log("Meuble", this.name, this.width);
 
-        if (props.rotateX == "-90")
-            object.rotateX(-Math.PI / 2);
-        if (props.startX)
-            object.position.x = props.startX;
+        // charger l'objet 'obj' demandé
+        if (props.texture) {
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load("textures/" + props.texture, this.textureLoaded.bind(this));
+        }
 
         /* 			
-               object.cursor = 'pointer';
-               object.on('click', function (ev) {
-                   console.log('object....click....', ev)
-               });
-               object.on('touchstart', function (ev) { });
-               object.on('touchcancel', function (ev) { });
-               object.on('touchmove', function (ev) { });
-               object.on('touchend', function (ev) { });
-               object.on('mousedown', function (ev) { });
-               object.on('mouseout', function (ev) { });
-               object.on('mouseover', function (ev) { });
-               object.on('mousemove', function (ev) { });
-               object.on('mouseup', function (ev) { }); */
+            object.cursor = 'pointer';
+            object.on('click', function (ev) {
+                console.log('object....click....', ev)
+            });
+            object.on('touchstart', function (ev) { });
+            object.on('touchcancel', function (ev) { });
+            object.on('touchmove', function (ev) { });
+            object.on('touchend', function (ev) { });
+            object.on('mousedown', function (ev) { });
+            object.on('mouseout', function (ev) { });
+            object.on('mouseover', function (ev) { });
+            object.on('mousemove', function (ev) { });
+            object.on('mouseup', function (ev) { }); */
 
-        object.traverse(function (child) {
+        /* object.traverse(function (child) {
             // console.log('object.traverse', child)
 
             if (child.name.search("GLACE") > -1) {
@@ -57,80 +67,209 @@ export default class Meuble {
             if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = material;
+
             }
-        });
+        }); */
 
-        // console.log("width", Math.ceil(box.getSize().x));
-        this.wall = "right"
-        this.width = this.getWidth()// store width for performance collision
-        this.segment = this.getSegment(object)// store width for performance collision
-        this.dragControls = this.setDraggable();
     }
+    textureLoaded(texture) {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(10, 10);
+        texture.needsUpdate = true;
 
+        // var geometry = new THREE.PlaneGeometry(4000, 2000, 10);
+        // geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 3000 / 2, 0));
+        const geometry = new THREE.BoxGeometry(1000, 1000, 1000);
+
+        var material = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.DoubleSide
+        });
+        material.needsUpdate = true;
+        var plane = new THREE.Mesh(geometry);
+        plane.material = material;
+        this.object.material = material;
+        this.object.traverse(function (child) {
+            // console.log('texture object.traverse', child)
+
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+            }
+            child.material = material;
+        });
+        console.log(geometry.attributes.uv)
+
+
+
+        ThreeScene.scene.add(plane)
+        ThreeScene.render()
+    }
+    setPosition(position) {
+        switch (position.wall) {
+            case "right":
+                this.object.position.x = position.x;
+                this.object.position.y = 0;
+                this.object.position.z = 0;
+                break;
+            case "back":
+                this.object.rotateY(Math.PI / 2);
+                this.object.position.x = 0;
+                this.object.position.y = 0;
+                this.object.position.z = position.x;
+                break;
+            case "left":
+                this.object.rotateY(Math.PI);
+                this.object.position.x = position.x;
+                this.object.position.y = 0;
+                this.object.position.z = this.wallConfig.back.width;
+                break;
+            case "right-back":
+                this.object.position.x = 0;
+                this.object.position.y = 0;
+                this.object.position.z = 0;
+                break;
+            case "left-back":
+                this.object.rotateY(Math.PI / 2);
+                this.object.position.x = 0;
+                this.object.position.y = 0;
+                this.object.position.z = this.wallConfig.back.width;
+                break;
+            default:
+        }
+    }
     setDraggable() {
         const dragControls = new DragControls([this.object], ThreeScene.camera, ThreeScene.renderer.domElement);
         dragControls.transformGroup = true;
-        dragControls.addEventListener('drag', this.drag.bind(this))
-        dragControls.addEventListener('dragstart', this.startdrag.bind(this))
-        dragControls.addEventListener('dragend', this.enddrag.bind(this))
-        // dragControls.addEventListener('hoveron', this.hoveron.bind(this))
-        // dragControls.addEventListener('hoveroff', this.hoveroff.bind(this))
+        if (!this.angle) {
+            dragControls.addEventListener('drag', this.drag.bind(this))
+            dragControls.addEventListener('dragstart', this.dragStart.bind(this))
+            dragControls.addEventListener('dragend', this.dragEnd.bind(this))
+            // dragControls.addEventListener('hoveron', this.hoveron.bind(this))
+            // dragControls.addEventListener('hoveroff', this.hoveroff.bind(this))
+        }
+        else {
+            dragControls.addEventListener('drag', this.dragAngle.bind(this))
+            dragControls.addEventListener('dragstart', this.dragAngleStart.bind(this))
+            dragControls.addEventListener('dragend', this.dragAngleEnd.bind(this))
+        }
         return dragControls;
     }
 
-    intersects(o1, o2) {
-        var s1 = this.getSegment(o1.object)
-        var s2 = this.getSegment(o2.object)
+
+    intersects(o1, o2, axis) {
+        var s1 = this.getSegment(o1.object, axis)
+        var s2 = this.getSegment(o2.object, axis)
         return s1[1] > s2[0] && s1[0] < s2[1]
     }
-    intersectsRight(o1, o2) {
-        var s1 = this.getSegment(o1.object)
-        var s2 = this.getSegment(o2.object)
-        return s1[0] < s2[1]
-    }
-    intersectsLeft(o1, o2) {
-        var s1 = this.getSegment(o1.object)
-        var s2 = this.getSegment(o2.object)
-        return s1[1] > s2[0]
-    }
-    drag(event) {
-        event.object.position.y = 0;
-        event.object.position.z = 0;
-
-        if (event.object.position.x < 0) {
-            this.wall = "back"
-            drag();
-        }
-
-        // wall constraint
-        const wallConfig = store.getState().config.walls;
-        const wallWidth = wallConfig.right.width;
-        event.object.position.x = Math.max(0, Math.min(wallWidth - this.width, event.object.position.x))
-
-        // elements collision
-        const intersectElement = this.meublesNotDragged.find(m => this.intersects(this, m))
-        if (intersectElement) {
-            var s1 = this.getSegment(this.object)
-            var s2 = this.getSegment(intersectElement.object)
+    collisionSolver(meublesOnWall, axis) {
+        const intersections = meublesOnWall.filter(m => this.intersects(this, m, axis))
+        var s1 = this.getSegment(this.object, axis)
+        let x = s1[0];
+        let intersectElement;
+        if (intersections.length > 0) {// traiter les meubles collés !?
+            intersectElement = intersections[0];
+            var s2 = this.getSegment(intersectElement.object, axis)
             var left = Math.abs(s1[0] - s2[0]) < Math.abs(s1[0] - s2[1])// at left or at right?
             if (!left || s2[0] - this.width < 0) {
-                event.object.position.x = s2[1]
+                x = s2[1]
             } else {
-                event.object.position.x = s2[0] - this.width
+                x = s2[0] - this.width
             }
         }
         else {
-            console.log("pas de intersect")
+            // console.log("pas de intersect")
+        }
+        return x;
+    }
+
+    drag(event) {
+        // console.log("drag", this.wall)
+        let wallWidth, axis;
+
+        switch (this.wall) {
+            case "right":
+                axis = "x";
+                wallWidth = this.wallConfig.right.width;
+                event.object.position.y = 0;
+                event.object.position.z = 0;
+
+                //corner turn
+                if (event.object.position.x < -100) {
+                    this.wall = "back"
+                    this.object.rotateY(Math.PI / 2);
+                    return;
+                }
+
+                // wall constraint
+                event.object.position[axis] = Math.max(0, Math.min(wallWidth - this.width, event.object.position[axis]))
+
+                // elements collision
+                event.object.position[axis] = this.collisionSolver(this.meublesNotDragged.filter(m => m.wall === this.wall), axis);
+
+                break;
+
+            case "back":
+                axis = "z";
+                wallWidth = this.wallConfig.back.width;
+                event.object.position.y = 0;
+                event.object.position.x = 0;
+
+                //corner turn
+                if (event.object.position.z < -100) {
+                    this.wall = "right"
+                    this.object.rotateY(-Math.PI / 2);
+                    this.object.position.x = 0;
+                    return;
+                }
+                if (event.object.position.z > 100 + wallWidth) {
+                    this.wall = "left"
+                    this.object.rotateY(Math.PI / 2);
+                    return;
+                }
+
+                // wall constraint
+                event.object.position[axis] = Math.max(this.width, Math.min(wallWidth, event.object.position[axis]))
+
+
+                // this.width corection : segment not ok
+                // event.object.position[axis] = this.collisionSolver(this.meublesNotDragged.filter(m => m.wall === this.wall), axis);
+
+                break;
+
+            case "left":
+                axis = "x";
+                wallWidth = this.wallConfig.left.width;
+                //corner turn
+                if (event.object.position.x < -60 || event.object.position.z < this.wallConfig.back.width - 100) {
+                    this.wall = "back"
+                    this.object.rotateY(-Math.PI / 2);
+                    this.object.position.x = this.width;
+                    return;
+                }
+                event.object.position.y = 0;
+                event.object.position.z = this.wallConfig.back.width;
+
+
+                // wall constraint
+                event.object.position[axis] = Math.max(this.width, Math.min(wallWidth, event.object.position[axis]))
+                event.object.position[axis] = this.collisionSolver(this.meublesNotDragged.filter(m => m.wall === this.wall), axis);
+
+                break;
+            default:
         }
 
-        //grid magnet
-        // event.object.position.x = 100 * (Math.round(event.object.position.x / 100))
+        //grid magnet 1cm
+        event.object.position[axis] = 10 * (Math.round(event.object.position[axis] / 10))
 
         // console.log("drag", event, event.object.position.x)
         ThreeScene.render();
     }
-    startdrag(event) {
-        console.log("dragstart", event, event.object === this.object)
+    dragStart(event) {
+        console.log("dragstart", this.wall, event, event.object === this.object)
         if (Meuble.dragged) {
             event.target.enabled = false;// deactivation of others
             return
@@ -145,10 +284,12 @@ export default class Meuble {
         // this.meubleDragged = meublesOnScene.find(m => m.object === event.object);
 
         ThreeScene.orbitControls.enabled = false;
+
         // event.object.material.emissive.set(0xaaaaaa);
         // store.dispatch(select(event.object))
+
     }
-    enddrag(event) {
+    dragEnd(event) {
         console.log("dragend", event, Date.now() - this.time)
         ThreeScene.orbitControls.enabled = true;
         // event.object.material.emissive.set(0x000000);
@@ -160,22 +301,28 @@ export default class Meuble {
         const meublesOnScene = store.getState().meublesOnScene
         meublesOnScene.forEach(m => m.dragControls.enabled = true)// reactivation of others
     }
+    /*
+    angle
+    */
+    dragAngle(event) {
+    }
+    dragAngleStart(event) {
+    }
+    dragAngleEnd(event) {
+    }
 
-    getSegment(object) {
-        var box = new THREE.Box3().setFromObject(object);
-        this.box = new THREE.Box3().setFromObject(object);
 
-        const v = new THREE.Vector3();
-        box.getSize(v)
+    getSegment(axis) {
+        const box = new THREE.Box3().setFromObject(this.object);
+        // this.box = new THREE.Box3().setFromObject(object);
+        // const v = new THREE.Vector3();
+        // box.getSize(v)
         // console.log(box.min, box.max, box.getSize());
-        return [box.min.x, box.max.x];
+        return [Math.round(box.min[axis]), Math.round(box.max[axis])];
     }
     getWidth() {
         var box = new THREE.Box3().setFromObject(this.object);
-        const v = new THREE.Vector3();
-        box.getSize(v)
-        // console.log(box.min, box.max, box.getSize());
-        return Math.ceil(v.x);
+        return Math.round(box.max.x - box.min.x);
     }
     getHeight(object) {
         var box = new THREE.Box3().setFromObject(object);

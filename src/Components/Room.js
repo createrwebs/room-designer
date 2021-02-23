@@ -23,7 +23,8 @@ class App extends Component {
 	render() {
 		ThreeScene.updateCamera(this.props)
 		ThreeScene.updateLights(this.props.light)
-		ThreeScene.render()
+		ThreeScene.orbitControls.update();// renders
+		// ThreeScene.render()
 
 		return (
 			<div className="container"
