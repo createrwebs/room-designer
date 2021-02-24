@@ -53,27 +53,27 @@ export default {
 
         this.scene = scene = new THREE.Scene();
         scene.background = new THREE.Color(0xa0a0a0);
-         scene.fog = new THREE.Fog(0xa0a0a0, 7000, 10000);
+        // scene.fog = new THREE.Fog(0xa0a0a0, 7000, 10000);
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
 
         // this.frame_stats = stats = new Stats();
         // stats.begin();
 
-		var renderer_args = {
-			//antialias: true
-		}
-		
-        this.renderer = renderer = new THREE.WebGLRenderer( renderer_args );
-		
-		renderer.shadowMap.enabled = true;
+        var renderer_args = {
+            //antialias: true
+        }
 
-		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		
-		//renderer.gammaInput = true;
-		//renderer.gammaOutput = true;
-		//renderer.gammaFactor = 2.2;
-		//renderer.outputEncoding = THREE.sRGBEncoding;
-		
+        this.renderer = renderer = new THREE.WebGLRenderer(renderer_args);
+
+        renderer.shadowMap.enabled = true;
+
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        //renderer.gammaInput = true;
+        //renderer.gammaOutput = true;
+        //renderer.gammaFactor = 2.2;
+        //renderer.outputEncoding = THREE.sRGBEncoding;
+
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         // renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -127,15 +127,15 @@ export default {
 
         const ceilHeight = 5000//ceiling @2.6m
 
-		var light = new THREE.HemisphereLight( 0xFFFDF4, 0x000000, 1 );
-        light.position.set( 2500, 1700, 2500 );
-		light.castShadow = true;
-		const helper = new THREE.HemisphereLightHelper( light, 100 );
-		scene.add(light);
-		//scene.add( helper );
-		
-        var spotLight = new THREE.SpotLight( 0xffffff, 1.5 );
-        spotLight.position.set( 3000, 5500, 3000 );
+        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, 1);
+        light.position.set(2500, 1700, 2500);
+        // light.castShadow = true;
+        const helper = new THREE.HemisphereLightHelper(light, 100);
+        scene.add(light);
+        //scene.add( helper );
+
+        var spotLight = new THREE.SpotLight(0xffffff, 1.5);
+        spotLight.position.set(3000, 5500, 3000);
         spotLight.penumbra = .4;
         spotLight.decay = 2.5;
         spotLight.distance = 10000;
@@ -146,19 +146,19 @@ export default {
         spotLight.shadow.camera.near = 2;
         spotLight.shadow.camera.far = 6000;
         spotLight.shadow.focus = 5;
-        scene.add( spotLight );
-		
-		scene.add( spotLight.target );
-		spotLight.target.position.set( 2000, 0, 2000 );
-		spotLight.target.updateMatrixWorld();
-		
-        var lightHelper = new THREE.SpotLightHelper( spotLight );
+        scene.add(spotLight);
+
+        scene.add(spotLight.target);
+        spotLight.target.position.set(2000, 0, 2000);
+        spotLight.target.updateMatrixWorld();
+
+        var lightHelper = new THREE.SpotLightHelper(spotLight);
         //scene.add( lightHelper );
 
-        
+
         /* 0,0,0 dot */
 
-        const axesHelper = new THREE.AxesHelper( 15000 );
+        const axesHelper = new THREE.AxesHelper(15000);
         scene.add(axesHelper);
 
         /* floor grid */
@@ -172,30 +172,30 @@ export default {
 
         const wallConfig = config.walls;
         const wallMaterial = new THREE.MeshBasicMaterial({
-			color: 0x7E838D
-		});
-		const groundMaterial = new THREE.MeshPhongMaterial({
-			color: 0xFBFBFB,
-			dithering:true
-		});
-		
-		const geometryGround = new THREE.CircleGeometry(15000, 32);
+            color: 0x7E838D
+        });
+        const groundMaterial = new THREE.MeshPhongMaterial({
+            color: 0xFBFBFB,
+            dithering: true
+        });
+
+        const geometryGround = new THREE.CircleGeometry(15000, 32);
         this.ground = new THREE.Mesh(geometryGround, groundMaterial);
-		this.ground.rotateX(Math.PI / -2);
-		
-		this.ground.castShadow = true; 
-		this.ground.receiveShadow = true;
-		
-		//if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
-		
+        this.ground.rotateX(Math.PI / -2);
+
+        this.ground.castShadow = true;
+        this.ground.receiveShadow = true;
+
+        //if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
+
         scene.add(this.ground);
 
         const geometryRight = new THREE.PlaneGeometry(wallConfig.right.width, 2600, 10, 10);
         this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
         this.wallRight.position.x = wallConfig.right.width / 2;
         this.wallRight.position.y = 2600 / 2;
-		this.wallRight.castShadow = this.wallRight.receiveShadow = true;
-        //scene.add(this.wallRight);
+        this.wallRight.castShadow = this.wallRight.receiveShadow = true;
+        scene.add(this.wallRight);
 
         const geometryBack = new THREE.PlaneGeometry(wallConfig.back.width, 2600, 10, 10);
         this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
@@ -203,17 +203,17 @@ export default {
         this.wallBack.position.x = 0;
         this.wallBack.position.y = 2600 / 2;
         this.wallBack.position.z = wallConfig.back.width / 2;
-		this.wallBack.castShadow = this.wallBack.receiveShadow = true;
-        //scene.add(this.wallBack);
+        this.wallBack.castShadow = this.wallBack.receiveShadow = true;
+        scene.add(this.wallBack);
 
         const geometryLeft = new THREE.PlaneGeometry(wallConfig.left.width, 2600, 10, 10);
         this.wallLeft = new THREE.Mesh(geometryLeft, wallMaterial);
         this.wallLeft.position.x = wallConfig.left.width / 2;
         this.wallLeft.position.y = 2600 / 2;
         this.wallLeft.position.z = wallConfig.back.width;
-		this.wallLeft.rotateY(Math.PI);
-		this.wallLeft.castShadow = this.wallLeft.receiveShadow = true;
-        //scene.add(this.wallLeft);
+        this.wallLeft.rotateY(Math.PI);
+        this.wallLeft.castShadow = this.wallLeft.receiveShadow = true;
+        scene.add(this.wallLeft);
 
     },
     updateCamera(props) {
@@ -253,7 +253,7 @@ export default {
     },
     fbxloadAll() {
         const loader = new FBXLoader(Loader.manager);
-        store.getState().config.fbx.forEach(props => loader.load(`models/${props.file}`, this.fbxloaded.bind(this, props)))
+        store.getState().config.fbx.forEach(props => loader.load(`models/${props.file}.fbx`, this.fbxloaded.bind(this, props)))
     },
     fbxloaded(props, object) {
         this.add(new Meuble(props, object));// meuble to put in the list better than the scene

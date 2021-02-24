@@ -12,7 +12,7 @@
 	},
 	"fbx": [
 		{
-			"file": "COIF-H238.fbx",
+			"file": "COIF-H238",
 			"name": "Module H238 P40 L48",
 			"position": {
 				"wall": "right",
@@ -21,7 +21,7 @@
 			"texture": "chene-blanc.jpeg"
 		},
 		{
-			"file": "ANGLE_H238_45.fbx",
+			"file": "ANGLE_H238_45",
 			"name": "Module Angle P40 L48",
 			"position": {
 				"wall": "right",
@@ -30,7 +30,7 @@
 			"texture": "chene-blanc.jpeg"
 		},
 		{
-			"file": "MOD_H238_P62_L40.fbx",
+			"file": "MOD_H238_P62_L40",
 			"name": "Module H219 P40 L48vvv",
 			"position": {
 				"wall": "right",
@@ -39,7 +39,7 @@
 			"texture": "chene-blanc.jpeg"
 		},
 		{
-			"file": "MOD_H238_P62_L119.fbx",
+			"file": "MOD_H238_P62_L119",
 			"name": "Module H219 P40 L48",
 			"position": {
 				"wall": "back",

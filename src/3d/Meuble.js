@@ -34,8 +34,20 @@ export default class Meuble {
         if (props.texture) {
             const textureLoader = new THREE.TextureLoader();
             textureLoader.load("textures/" + props.texture, this.textureLoaded.bind(this));
-			
+
         }
+
+        const file = this.file.split('_');
+        const type = file.shift();
+        let dim = {}
+        if (type === "MOD") {
+            file.forEach(function (item, index, array) {
+                dim[item.charAt(0)] = parseInt(item.substring(1)) * 10;
+            })
+        }
+        this.dim = dim;
+        console.log(this.dim)
+
 
         /* 			
             object.cursor = 'pointer';
@@ -75,89 +87,116 @@ export default class Meuble {
 
     }
 
-	
+
 
 
     textureLoaded(texture) {
-        
-		
-		texture.repeat.set(0.0075, 0.0075);
-		texture.offset.set( 0.5, 0.5 );
-		
-		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        
-		texture.matrixAutoUpdate = true;
-		texture.updateMatrix ();
+
+        texture.repeat.set(0.0075, 0.0075);
+        texture.offset.set(0.5, 0.5);
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.matrixAutoUpdate = true;
+        texture.updateMatrix();
 
         var material_args = {
-			//color:0xDBDBDB
-			dithering:true
+            //color:0xDBDBDB
+            dithering: true
         };
-		
-        //this.object.castShadow = this.object.receiveShadow = true;
-       
+
         this.object.traverse(function (child) {
 
-            if ( child.name.indexOf("Body") > -1 || child.name.indexOf("bord") > -1 ) {
+            if (child.name.indexOf("Body") > -1 || child.name.indexOf("bord") > -1) {
 
                 material_args.map = texture;
-				material_args.color = '#ffffff';
-				material_args.emissive = '#000000';
-				
-                console.log('bois', material_args);
-				
+                material_args.color = '#ffffff';
+                material_args.emissive = '#000000';
+
+                // console.log('bois', material_args);
+
             } else {
-				if( child.name === 'miroir' ){
-                	const textureLoader = new THREE.TextureLoader();
-            		var mirror_texture = textureLoader.load("textures/mirror.jpg");
-					
-					mirror_texture.rotation = -Math.PI/2;
-					mirror_texture.repeat.set(0.0125, 0.0125);
-					mirror_texture.offset.set( 0.5 , 0.5 );
-					mirror_texture.wrapS = mirror_texture.wrapT = THREE.RepeatWrapping;
-					
-					material_args.map = mirror_texture;
-                	material_args.color = '#ffffff';
-					
-					material_args.emissive = '#15191A';
-					//material_args.emissive = '#ADADAD';
-					
-                	console.log('miroir', material_args);
-					
-				} else if( child.name.indexOf("poignee") > -1 ) {
-					material_args.map = texture;
-					material_args.color = '#0000ff';
-					material_args.emissive = '#000000';
-					
-					console.log('poignee', material_args);
-				} else {
-					material_args.map = texture;
-					material_args.color = '#ff0000';
-					material_args.emissive = '#000000';
-					console.log('autre', material_args);
-				}
+                if (child.name === 'miroir') {
+                    const textureLoader = new THREE.TextureLoader();
+                    var mirror_texture = textureLoader.load("textures/mirror.jpg");
+
+                    mirror_texture.rotation = -Math.PI / 2;
+                    mirror_texture.repeat.set(0.0125, 0.0125);
+                    mirror_texture.offset.set(0.5, 0.5);
+                    mirror_texture.wrapS = mirror_texture.wrapT = THREE.RepeatWrapping;
+
+                    material_args.map = mirror_texture;
+                    material_args.color = '#ffffff';
+                    material_args.emissive = '#15191A';
+
+                    // console.log('miroir', material_args);
+
+                } else if (child.name.indexOf("poignee") > -1) {
+                    material_args.map = texture;
+                    material_args.color = '#0000ff';
+                    material_args.emissive = '#000000';
+
+                    // console.log('poignee', material_args);
+                } else {
+                    material_args.map = texture;
+                    material_args.color = '#ff0000';
+                    material_args.emissive = '#000000';
+                    // console.log('autre', material_args);
+                }
             }
-			
-			var material = new THREE.MeshLambertMaterial( material_args );
-			
-			child.material = material; 
-			child.material.needsUpdate = true;
-			
-			child.castShadow = true; 
-			child.receiveShadow = true;
-			if(child.material.map) child.material.map.anisotropy = 16; 
-			
+
+            var material = new THREE.MeshLambertMaterial(material_args);
+            child.material = material;
+            child.material.needsUpdate = true;
+
             child.castShadow = true;
             child.receiveShadow = true;
-            
-			//child.material.map = texture
-			
+            if (child.material.map) child.material.map.anisotropy = 16;
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+
+            //child.material.map = texture
+
         });
-		
-        //console.log(geometry.attributes.uv)
-		//material.needsUpdate = true;
-		//texture.needsUpdate = true;
-		
+
+
+        /*
+        panneaux lateraux
+        */
+        if (this.dim != {}) {
+
+            var e = 25;
+            material_args.map = texture;
+            material_args.color = '#ffffff';
+            material_args.emissive = '#000000';
+            var material = new THREE.MeshLambertMaterial(material_args);
+
+            const geometry = new THREE.BoxGeometry(e, this.dim.H, this.dim.P);
+            // geometry.computeBoundingSphere();
+            geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error
+            this.panneauLeft = new THREE.Mesh(geometry, material);
+            this.panneauLeft.position.set(-e, 0, 0);
+            this.panneauRight = new THREE.Mesh(geometry, material);
+            this.panneauRight.position.set(this.width - e / 2, 0, 0);
+
+            this.panneauLeft.material = material;
+            this.panneauRight.material = material;
+            this.panneauLeft.material.needsUpdate = true;
+            this.panneauRight.material.needsUpdate = true;
+
+            this.panneauLeft.material.map.anisotropy = 16;
+            this.panneauLeft.castShadow = true;
+            this.panneauLeft.receiveShadow = true;
+            this.panneauRight.material.map.anisotropy = 16;
+            this.panneauRight.castShadow = true;
+            this.panneauRight.receiveShadow = true;
+
+            this.panneauLeft.material.needsUpdate = true;
+            this.panneauRight.material.needsUpdate = true;
+
+            this.object.add(this.panneauLeft);
+            this.object.add(this.panneauRight);
+        }
+
         ThreeScene.render()
     }
     setPosition(position) {
@@ -204,9 +243,12 @@ export default class Meuble {
             // dragControls.addEventListener('hoveroff', this.hoveroff.bind(this))
         }
         else {
-            dragControls.addEventListener('drag', this.dragAngle.bind(this))
-            dragControls.addEventListener('dragstart', this.dragAngleStart.bind(this))
-            dragControls.addEventListener('dragend', this.dragAngleEnd.bind(this))
+            dragControls.addEventListener('drag', this.drag.bind(this))
+            dragControls.addEventListener('dragstart', this.dragStart.bind(this))
+            dragControls.addEventListener('dragend', this.dragEnd.bind(this))
+            // dragControls.addEventListener('drag', this.dragAngle.bind(this))
+            // dragControls.addEventListener('dragstart', this.dragAngleStart.bind(this))
+            // dragControls.addEventListener('dragend', this.dragAngleEnd.bind(this))
         }
         return dragControls;
     }
