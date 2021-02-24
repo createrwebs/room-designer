@@ -34,6 +34,7 @@ export default class Meuble {
         if (props.texture) {
             const textureLoader = new THREE.TextureLoader();
             textureLoader.load("textures/" + props.texture, this.textureLoaded.bind(this));
+			
         }
 
         /* 			
@@ -73,39 +74,90 @@ export default class Meuble {
         }); */
 
     }
+
+	
+
+
     textureLoaded(texture) {
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(10, 10);
-        texture.needsUpdate = true;
+        
+		
+		texture.repeat.set(0.0075, 0.0075);
+		texture.offset.set( 0.5, 0.5 );
+		
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        
+		texture.matrixAutoUpdate = true;
+		texture.updateMatrix ();
 
-        // var geometry = new THREE.PlaneGeometry(4000, 2000, 10);
-        // geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 3000 / 2, 0));
-        const geometry = new THREE.BoxGeometry(1000, 1000, 1000);
-
-        var material = new THREE.MeshBasicMaterial({
-            map: texture,
-            side: THREE.DoubleSide
-        });
-        material.needsUpdate = true;
-        var plane = new THREE.Mesh(geometry);
-        plane.material = material;
-        this.object.material = material;
+        var material_args = {
+			//color:0xDBDBDB
+			dithering:true
+        };
+		
+        //this.object.castShadow = this.object.receiveShadow = true;
+       
         this.object.traverse(function (child) {
-            // console.log('texture object.traverse', child)
 
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
+            if ( child.name.indexOf("Body") > -1 || child.name.indexOf("bord") > -1 ) {
 
+                material_args.map = texture;
+				material_args.color = '#ffffff';
+				material_args.emissive = '#000000';
+				
+                console.log('bois', material_args);
+				
+            } else {
+				if( child.name === 'miroir' ){
+                	const textureLoader = new THREE.TextureLoader();
+            		var mirror_texture = textureLoader.load("textures/mirror.jpg");
+					
+					mirror_texture.rotation = -Math.PI/2;
+					mirror_texture.repeat.set(0.0125, 0.0125);
+					mirror_texture.offset.set( 0.5 , 0.5 );
+					mirror_texture.wrapS = mirror_texture.wrapT = THREE.RepeatWrapping;
+					
+					material_args.map = mirror_texture;
+                	material_args.color = '#ffffff';
+					
+					material_args.emissive = '#15191A';
+					//material_args.emissive = '#ADADAD';
+					
+                	console.log('miroir', material_args);
+					
+				} else if( child.name.indexOf("poignee") > -1 ) {
+					material_args.map = texture;
+					material_args.color = '#0000ff';
+					material_args.emissive = '#000000';
+					
+					console.log('poignee', material_args);
+				} else {
+					material_args.map = texture;
+					material_args.color = '#ff0000';
+					material_args.emissive = '#000000';
+					console.log('autre', material_args);
+				}
             }
-            child.material = material;
+			
+			var material = new THREE.MeshLambertMaterial( material_args );
+			
+			child.material = material; 
+			child.material.needsUpdate = true;
+			
+			child.castShadow = true; 
+			child.receiveShadow = true;
+			if(child.material.map) child.material.map.anisotropy = 16; 
+			
+            child.castShadow = true;
+            child.receiveShadow = true;
+            
+			//child.material.map = texture
+			
         });
-        console.log(geometry.attributes.uv)
-
-
-
-        ThreeScene.scene.add(plane)
+		
+        //console.log(geometry.attributes.uv)
+		//material.needsUpdate = true;
+		//texture.needsUpdate = true;
+		
         ThreeScene.render()
     }
     setPosition(position) {
