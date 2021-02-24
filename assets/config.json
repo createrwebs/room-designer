@@ -12,30 +12,22 @@
 	},
 	"fbx": [
 		{
-			"file": "ANGLE_H238_45.fbx",
-			"name": "Module Angle",
-			"angle": true,
-			"position": {
-				"wall": "right-back"
-			},
-			"texture": "chene-blanc.jpeg"
-		},
-		{
-			"file": "ANGLE_H238_45.fbx",
-			"name": "Module Angle",
-			"angle": true,
-			"position": {
-				"wall": "left-back"
-			},
-			"texture": "chene-blanc.jpeg"
-		},
-		{
 			"file": "COIF-H238.fbx",
 			"name": "Module H238 P40 L48",
 			"position": {
 				"wall": "right",
 				"x": 1065
-			}
+			},
+			"texture": "chene-blanc.jpeg"
+		},
+		{
+			"file": "ANGLE_H238_45.fbx",
+			"name": "Module Angle P40 L48",
+			"position": {
+				"wall": "right",
+				"x": 0
+			},
+			"texture": "chene-blanc.jpeg"
 		},
 		{
 			"file": "MOD_H238_P62_L40.fbx",
@@ -47,37 +39,11 @@
 			"texture": "chene-blanc.jpeg"
 		},
 		{
-			"file": "MOD_H238_LIAISON-P62_P40.fbx",
-			"name": "Module H219 P40 L48",
-			"position": {
-				"wall": "right",
-				"x": 2400
-			},
-			"texture": "chene-blanc.jpeg"
-		},
-		{
-			"file": "MOD_H219_P40_L48.fbx",
-			"name": "Module H219 P40 L48",
-			"position": {
-				"wall": "right",
-				"x": 2900
-			}
-		},
-		{
-			"file": "NYH219P40L048.fbx",
+			"file": "MOD_H238_P62_L119.fbx",
 			"name": "Module H219 P40 L48",
 			"position": {
 				"wall": "back",
-				"x": 2000
-			},
-			"texture": "chene-blanc.jpeg"
-		},
-		{
-			"file": "untitled-scene.fbx",
-			"name": "Module H219 P40 L48",
-			"position": {
-				"wall": "left",
-				"x": 1600
+				"x": 3000
 			},
 			"texture": "chene-blanc.jpeg"
 		}
