@@ -11,8 +11,11 @@ import {
 }
 	from '../api/actions'
 
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Header from './bars/Header';
-import InfoBar from './bars/InfoBar';
+
 import Room from './Room';
 import MeubleInfo from './MeubleInfo';
 // import MeubleList from './MeubleList';
@@ -71,77 +74,24 @@ class App extends Component {
 				height: "100%"
 			}}>
 				<NotificationContainer />
+				<Header />
 				{this.props.configLoaded &&
 					<div className="app">
-						<header className="header">
-							<Header />
-						</header>
-						{/* {this.props.meubleListShowed &&
-						<div className="column-left">
-						<MeubleList />
-						</div>
-					} */}
-						{
-							this.props.meubleInfoShowed &&
-							<div className="column-left">
-								<MeubleInfo />
-							</div>
-						}
-						<div className="column-main" style={{
-							gridColumnStart: this.props.meubleListShowed || this.props.meubleInfoShowed ? 2 : 1,
-						}}>
-							<Room />
-						</div>
-						<footer className="footer">
-							<InfoBar webgl={this.state.webgl} />
-						</footer>
-					</div>
-				}
-				{this.state.showJoinForm &&
-					<div className="websdktest">
-						<form onSubmit={this.handleSubmit}>
-							<div>
-								<input
-									placeholder="meeting number"
-									type="text"
-									autoComplete="meeting_number"
-									maxLength="32"
-									value={this.state.meeting_number}
-									onChange={(e) => this.setState({ meeting_number: e.target.value })}
-								/>
-							</div>
-							<div>
-								<input
-									placeholder="room password"
-									type="text"
-									autoComplete="meeting_pwd"
-									maxLength="32"
-									value={this.state.meeting_pwd}
-									onChange={(e) => this.setState({ meeting_pwd: e.target.value })}
-								/>
-							</div>
-							<div>
-								<input
-									placeholder="nom"
-									type="text"
-									autoComplete="name"
-									maxLength="32"
-									value={this.state.name}
-									onChange={(e) => this.setState({ name: e.target.value })}
-								/>
-							</div>
-							<div>
-								<input
-									placeholder="email"
-									type="text"
-									autoComplete="email"
-									maxLength="32"
-									value={this.state.email}
-									onChange={(e) => this.setState({ email: e.target.value })}
-								/>
-							</div>
-							<input type="submit" value="join" />
-						</form>
+						<Container>
+							<Row>
+								<Col sm={8}>
+									<Room />
+								</Col>
+								{
+									this.props.meubleInfoShowed &&
+									<Col sm={4}><MeubleInfo /></Col>
+								}
+								{
+									this.props.meubleListShowed &&
+									<Col sm={4}><MeubleList /></Col>
+								}
+							</Row>
+						</Container>
 					</div>
 				}
 			</div>

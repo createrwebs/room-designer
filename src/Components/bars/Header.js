@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { } from '../../api/actions'
-import Button from './Button';
+// import Button from './Button';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Navbar from 'react-bootstrap/Navbar';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import FormControl from 'react-bootstrap/FormControl';
 import './bars.css';
 
 class Header extends Component {
@@ -42,21 +48,16 @@ class Header extends Component {
         // const chatText = this.props.chatShowed ? "Masquer les messages" : "Voir les messages"
 
         return (
-            <div className="headerbar">
-                <div style={{ float: 'left' }}>
-                    <Button action={() => { this.raiseHand() }} icon="fa fa-fw fa-hand-paper-o" text="Lever la main" />
-                </div>
-                <div style={{ float: 'left' }}>
-                    <Button action={() => { this.mute("audio") }} icon="fa fa-fw fa-microphone" text={""} status={""} />
-                    <Button action={() => { this.mute("video") }} icon="fa fa-fw fa-video-camera" text={""} status={""} />
-                </div>
-                <div style={{ float: 'left' }}>
-                    <Button action={() => { this.toggleChat() }} icon="fa fa-fw fa-comments-o" text={""} />
-                </div>
-                <div style={{ float: 'right' }}>
-                    <Button action={() => { this.disconnect() }} icon="fa fa-fw fa-power-off" text="Sortir" />
-                </div>
-            </div>
+            <Navbar fixed="top" bg="light" expand="lg">
+                <Navbar.Brand href="#home">Minet3d</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Nav.Link href="#home">Home</Nav.Link>
+                        <Nav.Link href="#link">Link</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
         )
     }
 }

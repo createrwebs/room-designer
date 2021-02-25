@@ -170,9 +170,11 @@ export default class Meuble {
             material_args.emissive = '#000000';
             var material = new THREE.MeshLambertMaterial(material_args);
 
-            const geometry = new THREE.BoxGeometry(e, this.dim.H, this.dim.P);
+            let geometry = new THREE.BoxGeometry(e, this.dim.H, this.dim.P);
             // geometry.computeBoundingSphere();
-            geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error
+            // geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error
+            // geometry.position.set(e / 2, this.dim.H / 2, this.dim.P / 2)
+
             this.panneauLeft = new THREE.Mesh(geometry, material);
             this.panneauLeft.position.set(-e, 0, 0);
             this.panneauRight = new THREE.Mesh(geometry, material);
