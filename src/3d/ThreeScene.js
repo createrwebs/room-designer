@@ -130,7 +130,7 @@ export default {
 		/**/
         const ceilHeight = 5000//ceiling @2.6m
 
-        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, .5);
+        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, .6);
         light.position.set(2500, 1200, 2500);
         const helper = new THREE.HemisphereLightHelper(light, 100);
 
@@ -176,7 +176,7 @@ export default {
 		*/
 		
 		/**/
-		const pointLight = new THREE.PointLight( 0xffffff, .75, 0, 1 );
+		const pointLight = new THREE.PointLight( 0xffffff, .55, 0, 1 );
 		pointLight.position.set( 2500, 3000, 2500 );
 		pointLight.castShadow = true; // default false
 		

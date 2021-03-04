@@ -317,6 +317,18 @@ export default class Meuble {
 				const zpointLightHelper = new THREE.PointLightHelper( zpointLight, 50 );
 				obj.add( zpointLightHelper );*/
 				
+				const width = 700;
+                const height = 10;
+                const intensity = 70;
+                const rectLight = new THREE.RectAreaLight( 0xFFFDEB, intensity,  width, height );
+                rectLight.position.set( 400, 1780, 415 );
+				rectLight.rotation.set( -Math.PI/1.8, 0, 0 );
+                //rectLight.lookAt( 400, 0, 415 );
+				//rectLight.castShadow = true;
+                obj.add( rectLight )
+
+                //const rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
+                //obj.add( rectLightHelper );
 				
 				var material_args = {
 					color: 0xFFF196,
@@ -326,7 +338,7 @@ export default class Meuble {
 				};
 				var material = new THREE.MeshLambertMaterial(material_args);
             	child.material = material;	
-				
+				/**/
 			} else {
 				
 			}
