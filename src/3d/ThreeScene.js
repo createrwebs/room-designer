@@ -24,6 +24,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
 
+
 export default {
     getRendererNodeElement() {
         return this.renderer.domElement
@@ -52,15 +53,15 @@ export default {
 
 
         this.scene = scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xa0a0a0);
-        // scene.fog = new THREE.Fog(0xa0a0a0, 7000, 10000);
+        scene.background = new THREE.Color(0xfefefe);
+         scene.fog = new THREE.Fog(0xfefefe, 10000, 15000);
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
 
         // this.frame_stats = stats = new Stats();
         // stats.begin();
 
         var renderer_args = {
-            //antialias: true
+            antialias: true
         }
 
         this.renderer = renderer = new THREE.WebGLRenderer(renderer_args);
@@ -102,7 +103,7 @@ export default {
 
         // +Z is up in Blender, whereas + Y is up in three.js
         this.camera = camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 40000);
-        camera.position.set(5038, 5089, 1987)
+        camera.position.set(5038, 3500, 1987)
 
         /* controls */
 
@@ -111,7 +112,7 @@ export default {
         orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
         orbitControls.minDistance = 200;
         orbitControls.maxDistance = 10000;//10m
-        orbitControls.target.set(1317, -673, 1832);
+        orbitControls.target.set(2000, 100, 2000);
         // orbitControls.update();
 
         // const interaction = new Interaction(renderer, scene, camera);
@@ -125,36 +126,74 @@ export default {
 
         /* lights */
 
+		
+		/**/
         const ceilHeight = 5000//ceiling @2.6m
 
-        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, 1);
-        light.position.set(2500, 1700, 2500);
-        // light.castShadow = true;
+        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, .5);
+        light.position.set(2500, 1200, 2500);
         const helper = new THREE.HemisphereLightHelper(light, 100);
-        scene.add(light);
+
+		scene.add(light);
         //scene.add( helper );
-
-        var spotLight = new THREE.SpotLight(0xffffff, 1.5);
+		
+		
+		/*
+        var spotLight = new THREE.SpotLight(0xffffff, 1);
         spotLight.position.set(3000, 5500, 3000);
-        spotLight.penumbra = .4;
-        spotLight.decay = 2.5;
-        spotLight.distance = 10000;
-
-        spotLight.castShadow = true;
-        spotLight.shadow.mapSize.width = 1024;
-        spotLight.shadow.mapSize.height = 1024;
-        spotLight.shadow.camera.near = 2;
-        spotLight.shadow.camera.far = 6000;
-        spotLight.shadow.focus = 5;
+        //spotLight.penumbra = .4;
+        //spotLight.decay = 2;
+        spotLight.distance = 6000;
+		
+        
         scene.add(spotLight);
 
         scene.add(spotLight.target);
         spotLight.target.position.set(2000, 0, 2000);
         spotLight.target.updateMatrixWorld();
+		*/
+		
+		/*
+		var directionalLight = new THREE.DirectionalLight(0xffffff,.3);
+        directionalLight.position.set(3000, 5000, 3000);
+        directionalLight.target.position.set(3000, 0, 3000);
 
-        var lightHelper = new THREE.SpotLightHelper(spotLight);
-        //scene.add( lightHelper );
+        directionalLight.castShadow = true;
+        directionalLight.shadowDarkness = 0.05;
 
+        directionalLight.shadowCameraNear = 0;
+        directionalLight.shadowCameraFar = 15000;
+
+        directionalLight.shadowCameraLeft = -2000;
+        directionalLight.shadowCameraRight = 2000;
+        directionalLight.shadowCameraTop = 2000;
+        directionalLight.shadowCameraBottom = -2000;
+		
+		scene.add(directionalLight);
+
+        var lightHelper = new THREE.DirectionalLightHelper(directionalLight,100);
+        scene.add( lightHelper );
+		*/
+		
+		/**/
+		const pointLight = new THREE.PointLight( 0xffffff, .75, 0, 1 );
+		pointLight.position.set( 2500, 3000, 2500 );
+		pointLight.castShadow = true; // default false
+		
+		var PointLightHelper = new THREE.PointLightHelper(pointLight, 100);
+		
+		scene.add( pointLight );
+		scene.add( PointLightHelper );
+		
+		//Set up shadow properties for the light
+		pointLight.shadow.mapSize.width = 2048; // default
+		pointLight.shadow.mapSize.height = 2048; // default
+		pointLight.shadow.camera.near = 0.5; // default
+		pointLight.shadow.camera.far = 10000; // default
+		
+		
+        
+		
 
         /* 0,0,0 dot */
 
@@ -171,20 +210,22 @@ export default {
         /* walls */
 
         const wallConfig = config.walls;
-        const wallMaterial = new THREE.MeshBasicMaterial({
-            color: 0x7E838D
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: 0x7E838D,
+			transparent: true,
+			opacity: .25
         });
-        const groundMaterial = new THREE.MeshPhongMaterial({
-            color: 0xFBFBFB,
-            dithering: true
+        const groundMaterial = new THREE.MeshStandardMaterial({
+            color: 0xFAFAFA,
+			emissive: 0x2C2C2C,
         });
 
-        const geometryGround = new THREE.CircleGeometry(15000, 32);
+        const geometryGround = new THREE.PlaneGeometry(55000, 55000, 12);
         this.ground = new THREE.Mesh(geometryGround, groundMaterial);
         this.ground.rotateX(Math.PI / -2);
 
-        this.ground.castShadow = true;
-        this.ground.receiveShadow = true;
+        //this.ground.castShadow = true;
+        //this.ground.receiveShadow = true;
 
         //if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
 
@@ -194,7 +235,7 @@ export default {
         this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
         this.wallRight.position.x = wallConfig.right.width / 2;
         this.wallRight.position.y = 2600 / 2;
-        this.wallRight.castShadow = this.wallRight.receiveShadow = true;
+        this.wallRight.castShadow = this.wallRight.receiveShadow = false;
         scene.add(this.wallRight);
 
         const geometryBack = new THREE.PlaneGeometry(wallConfig.back.width, 2600, 10, 10);
@@ -203,7 +244,7 @@ export default {
         this.wallBack.position.x = 0;
         this.wallBack.position.y = 2600 / 2;
         this.wallBack.position.z = wallConfig.back.width / 2;
-        this.wallBack.castShadow = this.wallBack.receiveShadow = true;
+        this.wallBack.castShadow = this.wallBack.receiveShadow = false;
         scene.add(this.wallBack);
 
         const geometryLeft = new THREE.PlaneGeometry(wallConfig.left.width, 2600, 10, 10);
@@ -212,7 +253,7 @@ export default {
         this.wallLeft.position.y = 2600 / 2;
         this.wallLeft.position.z = wallConfig.back.width;
         this.wallLeft.rotateY(Math.PI);
-        this.wallLeft.castShadow = this.wallLeft.receiveShadow = true;
+        this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
         scene.add(this.wallLeft);
 
     },
