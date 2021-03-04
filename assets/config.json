@@ -4,7 +4,7 @@
 			"width": 4000
 		},
 		"back": {
-			"width": 4400
+			"width": 5000
 		},
 		"left": {
 			"width": 2000
@@ -12,20 +12,29 @@
 	},
 	"fbx": [
 		{
-			"file": "COIF-H238",
-			"name": "Module H238 P40 L48",
-			"position": {
-				"wall": "right",
-				"x": 1065
-			},
-			"texture": "chene-blanc.jpeg"
-		},
-		{
 			"file": "ANGLE_H238_45",
-			"name": "Module Angle P40 L48",
+			"name": "Module Angle H238",
+			"is_angle": true,
 			"position": {
 				"wall": "right",
 				"x": 0
+			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				}
 			},
 			"texture": "chene-blanc.jpeg"
 		},
@@ -36,6 +45,23 @@
 				"wall": "right",
 				"x": 1900
 			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				}
+			},
 			"texture": "chene-blanc.jpeg"
 		},
 		{
@@ -43,7 +69,103 @@
 			"name": "Module H219 P40 L48",
 			"position": {
 				"wall": "back",
-				"x": 3000
+				"x": 3080
+			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				}
+			},
+			"texture": "chene-blanc.jpeg"
+		},
+		{
+			"file": "MOD_COIF-H238",
+			"name": "Module coiffeuse H238",
+			"position": {
+				"wall": "back",
+				"x": 1875
+			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				}
+			},
+			"texture": "chene-blanc.jpeg"
+		},
+		{
+			"file": "ANGLE_H238_45",
+			"name": "Module Angle H238",
+			"is_angle": true,
+			"position": {
+				"wall": "back",
+				"x": 5000
+			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				}
+			},
+			"texture": "chene-blanc.jpeg"
+		},
+		{
+			"file": "MOD_H238_P62_L40",
+			"name": "Module H219 P40 L48vvv",
+			"position": {
+				"wall": "back",
+				"x": 3900
+			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				}
 			},
 			"texture": "chene-blanc.jpeg"
 		}
