@@ -40,9 +40,9 @@ class Header extends Component {
         // // const screenText = this.props.hasScreenShared ? !this.props.screenShared ? "Partager votre écran" : "Arrêter le partage" : "Partage d'écran désactivé"
         // const screenText = this.props.hasScreenShared ? !this.props.screenShared ? "Partager votre écran" : "Partage en cours" : "Partage d'écran désactivé"
         // const chatText = this.props.chatShowed ? "Masquer les messages" : "Voir les messages"
-
         return (
             <div className="headerbar">
+                <div id="loading_splash" className="pouet">Loading ...</div>
                 <div style={{ float: 'left' }}>
                     <Button action={() => { this.raiseHand() }} icon="fa fa-fw fa-hand-paper-o" text="Lever la main" />
                 </div>

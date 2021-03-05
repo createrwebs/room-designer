@@ -245,6 +245,26 @@ export default {
         scene.add(this.wallLeft);
 
 
+        const animate = function () {
+            requestAnimationFrame(animate);
+           
+            scene.traverse(function ( ob ) {
+                if( ob.name === "groupe-coulissante-2" ){
+                    //console.log( "groupe-coulissante-2 x = ", ob.position.x );
+                    if( ob.position.x > -695 ){
+                        ob.position.x = ob.position.x - 4;
+                    } else {
+                        ob.position.x = 0;
+                    }
+                } 
+            });
+
+            stats.update();
+            renderer.render(scene, camera);
+        };
+
+        animate();
+        
     },
     updateCamera(props) {
         let camera = this.camera
@@ -277,8 +297,10 @@ export default {
             console.log(`orbitControls.target.set(${Math.round(this.orbitControls.target.x)},${Math.round(this.orbitControls.target.y)},${Math.round(this.orbitControls.target.z)})`);
         }
 
-        this.frame_stats.update();
-        this.renderer.render(this.scene, this.camera);
+        
+
+        //this.frame_stats.update();
+        //this.renderer.render(this.scene, this.camera);
 
     },
     fbxloadAll() {

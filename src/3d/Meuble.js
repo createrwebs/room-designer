@@ -53,7 +53,6 @@ export default class Meuble {
         //console.log(this.dim)
 
 		
-		
 		if (props.textures) {
 			
 			
@@ -90,11 +89,8 @@ export default class Meuble {
 
             Promise.all(texturePromises).then(loadedTextures => {
 				
-				//console.log( "textures loaded ! ", loadedTextures );
-				
 				// on a chargé et créé les textures, on les colle comme propriété dans le groupe pour pouvoir les retrouver facilement plus tard.
 				object.textures = loadedTextures;
-				
 				this.texturesLoaded( loadedTextures );
 				
             });
@@ -145,13 +141,20 @@ export default class Meuble {
 	
 
 	texturesLoaded(textures) {
+        
 		var obj = this.object;
 		var scene = this.scene;
 		const loader = new THREE.TextureLoader();
 		// affecter des materiaux sur les diffrents sous objets
-		
+		console.log( obj );
+        if( !this ){
+            return false;
+        }
+        
 		this.object.traverse(function (child) {
-			if(child.geometry){
+			
+            
+            if( child.geometry ){
                 child.geometry.computeBoundingSphere();
             }
 
@@ -160,7 +163,7 @@ export default class Meuble {
                 // les bodies sont les elements en bois mineurs (supports, renforts etc ...)
 				var text = obj.textures[1].metas.texture.clone();
 				text.needsUpdate = true;
-				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
 				text.repeat.set(0.005, 0.005);
 				
 				var material_args = {
@@ -176,7 +179,65 @@ export default class Meuble {
 				material.bumpMap.repeat.set(0.005, 0.005);
 				
             	child.material = material;
+
+			} else if ( child.name.indexOf("porte") > -1 ) {
 				
+                /*
+                mettre une texture sur la porte
+                */
+				var text = obj.textures[3].metas.texture.clone();
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
+				text.repeat.set(0.01, 0.005);
+				text.offset.set(0.5, 0.5);
+				
+				var material_args = {
+					//color:0x000fff,
+					roughness: 0.45,
+					emissive: 0x0D0D0D,
+					map: text,
+					bumpMap: text,
+					bumpScale:2,
+					fog:false
+				};
+				
+				var material = new THREE.MeshStandardMaterial(material_args);
+            	child.material = material;
+                
+                /*
+                grouper la porte avec sa poignée et les mettre invisibles
+                */
+                var childStrIndexarr = child.name.split("-");
+                var childStrIndex = childStrIndexarr[ childStrIndexarr.length-1 ];
+
+                for(var propName in obj.children) {
+                    if(obj.children.hasOwnProperty(propName)) {
+                        if( obj.children[propName].name === 'metal-poignee-' + childStrIndex ){
+                            const group = new THREE.Group();
+                            group.name = 'groupe-coulissante-' + childStrIndex;
+
+                            var porte = child.clone();
+                            var poignee = obj.children[propName].clone();
+
+                            group.add( porte );
+                            group.add( poignee );
+
+                            obj.add( group );
+
+                            child.visible = false;
+                            obj.children[propName].visible = false;
+
+                            obj.updateMatrix();
+                            
+                        }
+                        
+                    }
+                    
+                }
+             
+
+                
+                
 			} else if ( child.name.indexOf("panneau") > -1 ) {
 				
                 // panneaux prefabs droite et gauche
@@ -436,143 +497,6 @@ export default class Meuble {
 	}
 
 
-
-
-
-    textureLoaded(textures) {
-
-        //texture.repeat.set(0.0075, 0.0075);
-        //texture.offset.set(0.5, 0.5);
-        //textures.wrapS = textures.wrapT = THREE.RepeatWrapping;
-        //textures.matrixAutoUpdate = true;
-        //texture.updateMatrix();
-
-        var material_args = {
-            //color:0xDBDBDB
-            dithering: true,
-			needsUpdate:true
-        };
-		
-        this.object.traverse(function (child) {
-			
-			
-            if (child.name.indexOf("Body") > -1 || child.name.indexOf("bord") > -1) {
-				
-				
-				textures[0].val.repeat.set(0.0075, 0.0075);
-        		textures[0].val.offset.set(0.5, 0.5);
-				textures[0].val.rotation = Math.PI/2;
-        		textures[0].val.wrapS = textures[0].val.wrapT = THREE.RepeatWrapping;
-				
-                material_args.map = textures[0].val;
-                material_args.color = '#FFB700';
-                material_args.emissive = '#000000';
-             
-			} else {
-                if (child.name === 'miroir') {
-                    const textureLoader = new THREE.TextureLoader();
-                    var mirror_texture = textureLoader.load("textures/mirror.jpg");
-
-                    mirror_texture.rotation = -Math.PI / 2;
-                    mirror_texture.repeat.set(0.0125, 0.0125);
-                    mirror_texture.offset.set(0.5, 0.5);
-                    mirror_texture.wrapS = mirror_texture.wrapT = THREE.RepeatWrapping;
-
-                    material_args.map = mirror_texture;
-                    material_args.color = '#ffffff';
-                    material_args.emissive = '#15191A';
-
-                    // console.log('miroir', material_args);
-
-                } else if (child.name.indexOf("poignee") > -1) {
-                    
-					//material_args.map = texture;
-                    material_args.color = '#0000ff';
-                    material_args.emissive = '#000000';
-
-                    // console.log('poignee', material_args);
-                } else {
-                    textures[0].val.repeat.set(0.0075, 0.0075);
-        			textures[0].val.offset.set(0.5, 0.5);
-					material_args.map = textures[0].val;
-                    material_args.color = '#ff0000';
-                    material_args.emissive = '#000000';
-                    console.log('autre', material_args);
-                }
-            }
-
-            var material = new THREE.MeshLambertMaterial(material_args);
-            child.material = material;
-            child.material.needsUpdate = true;
-
-            child.castShadow = true;
-            child.receiveShadow = true;
-            if (child.material.map) child.material.map.anisotropy = 16;
-
-            child.castShadow = true;
-            child.receiveShadow = true;
-
-            //child.material.map = texture
-
-        });
-
-
-        /*
-        panneaux lateraux
-        */
-        if (this.dim != {}) {
-
-            var e = 25;
-			//texture.repeat.set(1, 1);
-			
-			var material_bords_args = {
-            	color:0x0DC400,
-            	dithering: true,
-				//map:textures[0].val,
-				emissive:0x000000
-        	};
-			
-            
-			
-            var material_bords = new THREE.MeshLambertMaterial(material_bords_args);
-			//material_bords.map.repeat.set(1, 1);
-			material_bords.needsUpdate = true;
-			
-            const geometry = new THREE.BoxGeometry(e, this.dim.H, this.dim.P);
-			
-            // geometry.computeBoundingSphere();
-            geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error
-            this.panneauLeft = new THREE.Mesh(geometry, material_bords);
-            this.panneauLeft.position.set(-e, 0, 0);
-            this.panneauRight = new THREE.Mesh(geometry, material_bords);
-            this.panneauRight.position.set(this.width - e / 2, 0, 0);
-			
-			this.panneauLeft.name = "bord_gauche_fab";
-			this.panneauRight.name = "bord_droit_fab";
-			
-            this.panneauLeft.material = material_bords;
-            this.panneauRight.material = material_bords;
-            this.panneauLeft.material.needsUpdate = true;
-            this.panneauRight.material.needsUpdate = true;
-
-            //this.panneauLeft.material.map.anisotropy = 16;
-            this.panneauLeft.castShadow = true;
-            this.panneauLeft.receiveShadow = true;
-            //this.panneauRight.material.map.anisotropy = 16;
-            this.panneauRight.castShadow = true;
-            this.panneauRight.receiveShadow = true;
-
-            this.panneauLeft.material.needsUpdate = true;
-            this.panneauRight.material.needsUpdate = true;
-			
-			console.log( this.panneauLeft );
-			
-            this.object.add(this.panneauLeft);
-            this.object.add(this.panneauRight);
-        }
-		
-        ThreeScene.render()
-    }
     setPosition(position) {
         switch (position.wall) {
             case "right":

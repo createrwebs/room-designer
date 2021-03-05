@@ -35,3 +35,16 @@ body {
   grid-column-end: 3;
   overflow-y: auto;
 }
+.pouet{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background-color:rgba(0,0,0,.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}

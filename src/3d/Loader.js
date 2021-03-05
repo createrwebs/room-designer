@@ -16,13 +16,17 @@ export default {
         this.manager.onError = this.loadManagerError.bind(this);
     },
     loadManagerStart(url, itemsLoaded, itemsTotal) {
-        // console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+         console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
     },
     loadManagerLoad() {
         store.dispatch(allLoaded())
     },
     loadManagerProgress(url, itemsLoaded, itemsTotal) {
-        // console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+         console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+         if( itemsLoaded == itemsTotal ){
+            console.log('y nous zont tout loadé', document);
+            document.getElementById('loading_splash').style.display = "none";
+         }
     },
     loadManagerError(url) {
         // console.log('There was an error loading ' + url);

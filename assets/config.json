@@ -34,6 +34,37 @@
 	},
 	"fbx": [
 		{
+			"file": "NYC231H238PP_G",
+			"name": "Armoire 3 portes coulissantes",
+			"position": {
+				"wall": "left",
+				"x": 3400
+			},
+			"textures": {
+				"hori": {
+					"url": "chene-blanc-hori.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"vert": {
+					"url": "chene-blanc-vert.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":90
+				},
+				"fond": {
+					"url": "cuir.jpg",
+					"label": "Chêne blanc",
+					"angle_fil":0
+				},
+				"portes": {
+					"url": "chene-charleston-vert.jpg",
+					"label": "Chêne charleston",
+					"angle_fil":0	
+				}
+			},
+			"texture": "chene-blanc.jpeg"
+		},
+		{
 			"file": "ANGLE_H238_45",
 			"name": "Module Angle H238",
 			"is_angle": true,
