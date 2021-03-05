@@ -10,6 +10,28 @@
 			"width": 2000
 		}
 	},
+	"scene_params": {
+		"backgroundColor": "#fefefe",
+		"fogEnabled": false,
+		"fog": {
+			"color": "0xfefefe",
+			"near": 10000,
+			"far": 15000
+		},
+		"properties": {
+			"antialias": false,
+			"powerPreference": "low-power",
+            "failIfMajorPerformanceCaveat": false
+		},
+		"shadowMap": {
+			"enabled": false,
+			"type": "BasicShadowMap"
+		},
+		"lightsShadowMapSize": {
+			"width": 1024,
+			"height": 1024
+		}
+	},
 	"fbx": [
 		{
 			"file": "ANGLE_H238_45",
