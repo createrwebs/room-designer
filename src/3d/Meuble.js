@@ -90,7 +90,7 @@ export default class Meuble {
 
             Promise.all(texturePromises).then(loadedTextures => {
 				
-				console.log( "textures loaded ! ", loadedTextures );
+				//console.log( "textures loaded ! ", loadedTextures );
 				
 				// on a chargé et créé les textures, on les colle comme propriété dans le groupe pour pouvoir les retrouver facilement plus tard.
 				object.textures = loadedTextures;
@@ -151,10 +151,13 @@ export default class Meuble {
 		// affecter des materiaux sur les diffrents sous objets
 		
 		this.object.traverse(function (child) {
-			//console.log('child object => ', child.name);
-			
-			
+			if(child.geometry){
+                child.geometry.computeBoundingSphere();
+            }
+
 			if ( child.name.indexOf("Body") > -1 ) {
+
+                // les bodies sont les elements en bois mineurs (supports, renforts etc ...)
 				var text = obj.textures[1].metas.texture.clone();
 				text.needsUpdate = true;
 				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
@@ -165,7 +168,7 @@ export default class Meuble {
 					emissive: 0x0D0D0D,
 					roughness: 0.35,
 					map: text,
-					bumpMap: text, // loader.load('textures/cuir-bump.jpg'),
+					bumpMap: text,
 					bumpScale:5,
 					fog:false
 				};
@@ -176,9 +179,10 @@ export default class Meuble {
 				
 			} else if ( child.name.indexOf("panneau") > -1 ) {
 				
+                // panneaux prefabs droite et gauche
 				var text = obj.textures[1].metas.texture.clone();
 				text.needsUpdate = true;
-				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
 				text.repeat.set(1, 1);
 				text.offset.set(0.5, 0.5);
 				
@@ -197,9 +201,11 @@ export default class Meuble {
             	child.material = material;
 				
 			} else if ( child.name.indexOf("top") > -1 || child.name.indexOf("bottom") > -1 ) {
+
+                // planche de dessus / dessous
 				var text = obj.textures[0].metas.texture.clone();
 				text.needsUpdate = true;
-				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
 				text.repeat.set(0.015, 0.010);
 				text.offset.set(0.5, 0.5);
 				
@@ -218,9 +224,11 @@ export default class Meuble {
             	child.material = material;
 				
 			} else if ( child.name.indexOf("facade") > -1 ) {
+
+                // facades fil horizontal (par exemple facade tiroir de la coiffeuse)
 				var text = obj.textures[0].metas.texture.clone();
 				text.needsUpdate = true;
-				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
 				text.repeat.set(0.015, 0.010);
 				text.offset.set(0.5, 0.5);
 				
@@ -239,10 +247,12 @@ export default class Meuble {
             	child.material = material;
 				
 			} else if ( child.name.indexOf("cuir") > -1 ) {
-				var text = obj.textures[2].metas.texture.clone();
+
+				// habillage interieur cuir
+                var text = obj.textures[2].metas.texture.clone();
 				
 				text.needsUpdate = true;
-				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
 				
 				text.repeat.set(0.03, 0.03);
 				text.offset.set(0.5, 0.5);
@@ -251,7 +261,7 @@ export default class Meuble {
 					//color:0xff00ff,
 					roughness: 0.48,
 					emissive: 0x030303,
-					bumpMap: text,
+					bumpMap: text,  // loader.load('textures/cuir-bump.jpg'),
 					bumpScale:7.5,
 					map: text,
 					fog:false,
@@ -262,10 +272,11 @@ export default class Meuble {
             	child.material = material;
 				
 			} else if ( child.name.indexOf("etagere") > -1 ) {
-				var text = obj.textures[2].metas.texture.clone();
 				
+                // étagères
+                var text = obj.textures[2].metas.texture.clone();
 				text.needsUpdate = true;
-				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
 				
 				text.repeat.set(0.03, 0.03);
 				text.offset.set(0.5, 0.5);
@@ -284,10 +295,10 @@ export default class Meuble {
             	child.material = material;
 				
 			} else if ( child.name.indexOf("metal") > -1 || child.name.indexOf("poignee") > -1 ) {
+                // trucs en métal
 				var material_args = {
 					//color: 0xD6E3E2,
 					specular: 0xffffff,
-					roughness: 0.15,
 					emissive: 0x0D0D0D,
 					fog:false
 				};
@@ -295,38 +306,38 @@ export default class Meuble {
             	child.material = material;
 				
 			} else if ( child.name.indexOf("miroir") > -1 ) {
-				
+				                
 				// poser un vrai miroir devant le modele
-				
-				var mirror = new Reflector( new THREE.BoxGeometry( 72, 81, 1 ), {
+                var mirrorBox = new THREE.BoxBufferGeometry( 72, 81, 1 );
+                mirrorBox.computeBoundingSphere();
+                mirrorBox.matrixWorldNeedsUpdate = true;
+
+                child.geometry.computeBoundingSphere();
+                child.geometry.matrixWorldNeedsUpdate = true;
+
+                console.log( child.geometry.boundingSphere );
+
+				var mirror = new Reflector( mirrorBox, {
 					color: new THREE.Color(0x7F7F7F),
-					textureWidth: 1536,
-					textureHeight: 1024,
+					textureWidth: window.innerWidth,
+					textureHeight: window.innerHeight,
 				});
-				mirror.position.set(40,136.5, 2.5);
+                mirror.position.set(40,136.5, 2.5);
+                mirror.matrixWorldNeedsUpdate = true;
+                mirror.geometry.computeBoundingSphere();
+				
 				child.add( mirror );
 				
 			} else if ( child.name.indexOf("led") > -1 ) {
-			
-				/*const zpointLight = new THREE.PointLight( 0xff0000, 1, 1000 );
-				zpointLight.castShadow = true;
-				zpointLight.position.set(400,1780,380);
 				
-				obj.add( zpointLight );
-				
-				const zpointLightHelper = new THREE.PointLightHelper( zpointLight, 50 );
-				obj.add( zpointLightHelper );*/
-				
-				const width = 700;
-                const height = 10;
-                const intensity = 70;
-                const rectLight = new THREE.RectAreaLight( 0xFFFDEB, intensity,  width, height );
+                // lumière de la led
+                const rectLight = new THREE.RectAreaLight( 0xFFFDEB, 70, 700, 10 );
+                rectLight.name = "LedLight"
                 rectLight.position.set( 400, 1780, 415 );
 				rectLight.rotation.set( -Math.PI/1.8, 0, 0 );
-                //rectLight.lookAt( 400, 0, 415 );
-				//rectLight.castShadow = true;
-                obj.add( rectLight )
+                //obj.add( rectLight ) // <-- il faudrait plutot attacher la lumière au child
 
+                
                 //const rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
                 //obj.add( rectLightHelper );
 				
@@ -338,7 +349,7 @@ export default class Meuble {
 				};
 				var material = new THREE.MeshLambertMaterial(material_args);
             	child.material = material;	
-				/**/
+				
 			} else {
 				
 			}
@@ -382,15 +393,19 @@ export default class Meuble {
 			//material_bords.map.repeat.set(1, 1);
 			material_bords.needsUpdate = true;
 			
-            const geometry = new THREE.BoxGeometry(e, this.dim.H, this.dim.P);
-			
+           
+			const geometry = new THREE.BoxBufferGeometry( e, this.dim.H, this.dim.P );
+
             //geometry.computeBoundingSphere();
-            geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error => je pense que tu ne peux faire le translate que quand il a été ajouté dans la scene
-			
+            //geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error => je pense que tu ne peux faire le translate que quand il a été ajouté dans la scene
+			//geometry.attributes.position = new BufferAttribute( newPos, 2 );
+            //geometry.position.set( e / 2, this.dim.H / 2, this.dim.P / 2 );
+
             this.panneauLeft = new THREE.Mesh(geometry, material_bords);
-            this.panneauLeft.position.set(-e, 0, 0);
+            this.panneauLeft.position.set( e / 2, this.dim.H / 2, this.dim.P / 2 );
+
             this.panneauRight = new THREE.Mesh(geometry, material_bords);
-            this.panneauRight.position.set(this.width - e / 2, 0, 0);
+            this.panneauRight.position.set( this.width - e / 2, this.dim.H / 2, this.dim.P / 2 );
 			
 			this.panneauLeft.name = "bord_gauche_fab";
 			this.panneauRight.name = "bord_droit_fab";

@@ -15,7 +15,7 @@ import Meuble from './Meuble'
 import * as THREE from "three";
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 // import { Scene } from 'three';
-// import Stats from 'three/examples/jsm/libs/stats.module'
+ import Stats from 'three/examples/jsm/libs/stats.module'
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
@@ -25,12 +25,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { Interaction } from 'three.interaction';
 
 
+
 export default {
     getRendererNodeElement() {
         return this.renderer.domElement
     },
     getStatNodeElement() {
-        // return this.frame_stats.dom
+         return this.frame_stats.dom
     },
     setup(config) {
         window.ts = this// f12 helper
@@ -52,31 +53,55 @@ export default {
         // console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
 
 
+
+        var scene_params = config.scene_params;
+
+
         this.scene = scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xfefefe);
-         scene.fog = new THREE.Fog(0xfefefe, 10000, 15000);
+        scene.background = new THREE.Color( scene_params.backgroundColor );
+
+        if( scene_params.fogEnabled ){
+            scene.fog = new THREE.Fog( scene_params.fog.color, scene_params.fog.near, scene_params.fog.far );
+        }
+        
+
+
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
 
-        // this.frame_stats = stats = new Stats();
-        // stats.begin();
+         this.frame_stats = stats = new Stats();
+         document.body.appendChild( stats.dom );
+         stats.begin();
 
-        var renderer_args = {
-            antialias: true
-        }
+         
+        var renderer_args = scene_params.properties
 
         this.renderer = renderer = new THREE.WebGLRenderer(renderer_args);
 
-        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.enabled = scene_params.shadowMap.enabled;
 
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-        //renderer.gammaInput = true;
-        //renderer.gammaOutput = true;
-        //renderer.gammaFactor = 2.2;
-        //renderer.outputEncoding = THREE.sRGBEncoding;
+        /*
+        Shadow maps possibles =>
+        THREE.BasicShadowMap
+        THREE.PCFShadowMap
+        THREE.PCFSoftShadowMap
+        THREE.VSMShadowMap
+        */
+        if( scene_params.shadowMap.type === "BasicShadowMap" ){
+            renderer.shadowMap.type = THREE.BasicShadowMap;
+        } else if( scene_params.shadowMap.type === "PCFShadowMap" ) {
+            renderer.shadowMap.type = THREE.PCFShadowMap;
+        } else if( scene_params.shadowMap.type === "PCFSoftShadowMap" ) {
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        } else if( scene_params.shadowMap.type === "VSMShadowMap" ) {
+            renderer.shadowMap.type = THREE.VSMShadowMap;
+        } else {
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        }
+        
 
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
+
         // renderer.toneMapping = THREE.ACESFilmicToneMapping;
         // renderer.toneMappingExposure = 1;
         // renderer.outputEncoding = THREE.sRGBEncoding;
@@ -102,8 +127,8 @@ export default {
         /* camera */
 
         // +Z is up in Blender, whereas + Y is up in three.js
-        this.camera = camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 40000);
-        camera.position.set(5038, 3500, 1987)
+        this.camera = camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 15000);
+        camera.position.set(5038, 2000, 1987)
 
         /* controls */
 
@@ -112,7 +137,7 @@ export default {
         orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
         orbitControls.minDistance = 200;
         orbitControls.maxDistance = 10000;//10m
-        orbitControls.target.set(2000, 100, 2000);
+        orbitControls.target.set(2000, 1000, 2000);
         // orbitControls.update();
 
         // const interaction = new Interaction(renderer, scene, camera);
@@ -130,6 +155,8 @@ export default {
 		/**/
         const ceilHeight = 5000//ceiling @2.6m
 
+
+        /* lumière moyenne ambiance */
         var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, .6);
         light.position.set(2500, 1200, 2500);
         const helper = new THREE.HemisphereLightHelper(light, 100);
@@ -137,45 +164,7 @@ export default {
 		scene.add(light);
         //scene.add( helper );
 		
-		
-		/*
-        var spotLight = new THREE.SpotLight(0xffffff, 1);
-        spotLight.position.set(3000, 5500, 3000);
-        //spotLight.penumbra = .4;
-        //spotLight.decay = 2;
-        spotLight.distance = 6000;
-		
-        
-        scene.add(spotLight);
-
-        scene.add(spotLight.target);
-        spotLight.target.position.set(2000, 0, 2000);
-        spotLight.target.updateMatrixWorld();
-		*/
-		
-		/*
-		var directionalLight = new THREE.DirectionalLight(0xffffff,.3);
-        directionalLight.position.set(3000, 5000, 3000);
-        directionalLight.target.position.set(3000, 0, 3000);
-
-        directionalLight.castShadow = true;
-        directionalLight.shadowDarkness = 0.05;
-
-        directionalLight.shadowCameraNear = 0;
-        directionalLight.shadowCameraFar = 15000;
-
-        directionalLight.shadowCameraLeft = -2000;
-        directionalLight.shadowCameraRight = 2000;
-        directionalLight.shadowCameraTop = 2000;
-        directionalLight.shadowCameraBottom = -2000;
-		
-		scene.add(directionalLight);
-
-        var lightHelper = new THREE.DirectionalLightHelper(directionalLight,100);
-        scene.add( lightHelper );
-		*/
-		
-		/**/
+		/* plafonnier */
 		const pointLight = new THREE.PointLight( 0xffffff, .55, 0, 1 );
 		pointLight.position.set( 2500, 3000, 2500 );
 		pointLight.castShadow = true; // default false
@@ -185,9 +174,8 @@ export default {
 		scene.add( pointLight );
 		scene.add( PointLightHelper );
 		
-		//Set up shadow properties for the light
-		pointLight.shadow.mapSize.width = 2048; // default
-		pointLight.shadow.mapSize.height = 2048; // default
+		pointLight.shadow.mapSize.width = scene_params.lightsShadowMapSize.width; //2048; // default
+		pointLight.shadow.mapSize.height = scene_params.lightsShadowMapSize.height; //2048 // default
 		pointLight.shadow.camera.near = 0.5; // default
 		pointLight.shadow.camera.far = 10000; // default
 		
@@ -256,6 +244,7 @@ export default {
         this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
         scene.add(this.wallLeft);
 
+
     },
     updateCamera(props) {
         let camera = this.camera
@@ -288,7 +277,7 @@ export default {
             console.log(`orbitControls.target.set(${Math.round(this.orbitControls.target.x)},${Math.round(this.orbitControls.target.y)},${Math.round(this.orbitControls.target.z)})`);
         }
 
-        // this.frame_stats.update();
+        this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
 
     },
