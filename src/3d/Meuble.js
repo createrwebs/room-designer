@@ -14,6 +14,9 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
 // import { TextureLoader } from 'src/loaders/TextureLoader.js';
 
+// miroir
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
+
 export default class Meuble {
     static dragged = null;
     constructor (props, object) {
@@ -28,25 +31,78 @@ export default class Meuble {
         // this.segment = this.getSegment(object)// store width for performance collision
         this.dragControls = this.setDraggable();
         this.setPosition(props.position);
-        console.log("Meuble", this.name, this.width);
+        console.log("Loaded module ", this.name, this.width);
 
         // charger l'objet 'obj' demandé
         if (props.texture) {
-            const textureLoader = new THREE.TextureLoader();
-            textureLoader.load("textures/" + props.texture, this.textureLoaded.bind(this));
-
+            
+			//const textureLoader = new THREE.TextureLoader();
+            //textureLoader.load("textures/" + props.texture, this.textureLoaded.bind(this));
+			
         }
-
-        const file = this.file.split('_');
+		
+		const file = this.file.split('_');
         const type = file.shift();
         let dim = {}
-        if (type === "MOD") {
+        if ( type === "MOD" ) {
             file.forEach(function (item, index, array) {
                 dim[item.charAt(0)] = parseInt(item.substring(1)) * 10;
             })
         }
         this.dim = dim;
-        console.log(this.dim)
+        //console.log(this.dim)
+
+		
+		
+		if (props.textures) {
+			
+			
+			
+			const textureLoader = new THREE.TextureLoader();
+
+            var texturePromises = [], path = 'textures/';
+
+            for (var key in props.textures) {
+				texturePromises.push( new Promise((resolve, reject) => {
+					var metas = props.textures[key];
+					var name = key;
+					var url = path + metas.url;
+					var angle_fil = metas.angle_fil;
+					var label = metas.label;
+
+					textureLoader.load(url, texture => {
+						texture.name = label;
+						metas.angle_fil = angle_fil;
+						metas.texture = texture;
+						
+						if (metas.texture instanceof THREE.Texture) resolve( { name: name, metas } );
+					  },
+					  xhr => {
+						console.log(url + ' ' + (xhr.loaded / xhr.total * 100) + '% loaded');
+					  },
+					  xhr => {
+						reject(new Error(xhr + 'An error occurred loading while loading: ' + metas.url));
+					  }
+					);
+
+				}));
+            }			
+
+            Promise.all(texturePromises).then(loadedTextures => {
+				
+				//console.log( "textures loaded ! ", loadedTextures );
+				
+				// on a chargé et créé les textures, on les colle comme propriété dans le groupe pour pouvoir les retrouver facilement plus tard.
+				object.textures = loadedTextures;
+				
+				this.texturesLoaded( loadedTextures );
+				
+            });
+			
+		}
+		
+		
+
 
 
         /* 			
@@ -86,34 +142,333 @@ export default class Meuble {
         }); */
 
     }
+	
+
+	texturesLoaded(textures) {
+		var obj = this.object;
+		var scene = this.scene;
+		const loader = new THREE.TextureLoader();
+		// affecter des materiaux sur les diffrents sous objets
+		
+		this.object.traverse(function (child) {
+			if(child.geometry){
+                child.geometry.computeBoundingSphere();
+            }
+
+			if ( child.name.indexOf("Body") > -1 ) {
+
+                // les bodies sont les elements en bois mineurs (supports, renforts etc ...)
+				var text = obj.textures[1].metas.texture.clone();
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+				text.repeat.set(0.005, 0.005);
+				
+				var material_args = {
+					//color:0xff0000,
+					emissive: 0x0D0D0D,
+					roughness: 0.35,
+					map: text,
+					bumpMap: text,
+					bumpScale:5,
+					fog:false
+				};
+				var material = new THREE.MeshStandardMaterial(material_args);
+				material.bumpMap.repeat.set(0.005, 0.005);
+				
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("panneau") > -1 ) {
+				
+                // panneaux prefabs droite et gauche
+				var text = obj.textures[1].metas.texture.clone();
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
+				text.repeat.set(1, 1);
+				text.offset.set(0.5, 0.5);
+				
+				var material_args = {
+					//color:0x000fff,
+					roughness: 0.45,
+					emissive: 0x0D0D0D,
+					map: text,
+					bumpMap: text,
+					bumpScale:1,
+					fog:false
+				};
+				
+				var material = new THREE.MeshStandardMaterial(material_args);
+				material.bumpMap.repeat.set(0.01, 0.005);
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("top") > -1 || child.name.indexOf("bottom") > -1 ) {
+
+                // planche de dessus / dessous
+				var text = obj.textures[0].metas.texture.clone();
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
+				text.repeat.set(0.015, 0.010);
+				text.offset.set(0.5, 0.5);
+				
+				var material_args = {
+					//color:0x0000ff,
+					roughness: 0.45,
+					emissive: 0x0D0D0D,
+					map: text,
+					bumpMap: text,
+					bumpScale:1,
+					fog:false
+				};
+				
+				var material = new THREE.MeshStandardMaterial(material_args);
+				material.bumpMap.repeat.set(0.015, 0.010);
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("facade") > -1 ) {
+
+                // facades fil horizontal (par exemple facade tiroir de la coiffeuse)
+				var text = obj.textures[0].metas.texture.clone();
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
+				text.repeat.set(0.015, 0.010);
+				text.offset.set(0.5, 0.5);
+				
+				var material_args = {
+					//color:0x0000ff,
+					roughness: 0.45,
+					emissive: 0x0D0D0D,
+					map: text,
+					bumpMap: text,
+					bumpScale:2.5,
+					fog:false
+				};
+				
+				var material = new THREE.MeshStandardMaterial(material_args);
+				material.bumpMap.repeat.set(0.015, 0.010);
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("cuir") > -1 ) {
+
+				// habillage interieur cuir
+                var text = obj.textures[2].metas.texture.clone();
+				
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
+				
+				text.repeat.set(0.03, 0.03);
+				text.offset.set(0.5, 0.5);
+				
+				var material_args = {
+					//color:0xff00ff,
+					roughness: 0.48,
+					emissive: 0x030303,
+					bumpMap: text,  // loader.load('textures/cuir-bump.jpg'),
+					bumpScale:7.5,
+					map: text,
+					fog:false,
+					
+				};
+				var material = new THREE.MeshStandardMaterial(material_args);
+				material.bumpMap.repeat.set(0.03, 0.03);
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("etagere") > -1 ) {
+				
+                // étagères
+                var text = obj.textures[2].metas.texture.clone();
+				text.needsUpdate = true;
+				text.wrapS = text.wrapT = THREE.RepeatWrapping;
+				
+				text.repeat.set(0.03, 0.03);
+				text.offset.set(0.5, 0.5);
+				
+				var material_args = {
+					//color:0xf0ff0f,
+					roughness: 0.35,
+					emissive: 0x0D0D0D,
+					map: text,
+					bumpMap: text,
+					bumpScale:5,
+					fog:false
+				};
+				var material = new THREE.MeshStandardMaterial(material_args);
+				material.bumpMap.repeat.set(0.03, 0.03);
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("metal") > -1 || child.name.indexOf("poignee") > -1 ) {
+                // trucs en métal
+				var material_args = {
+					//color: 0xD6E3E2,
+					specular: 0xffffff,
+					emissive: 0x0D0D0D,
+					fog:false
+				};
+				var material = new THREE.MeshPhongMaterial(material_args);
+            	child.material = material;
+				
+			} else if ( child.name.indexOf("miroir") > -1 ) {
+				                
+				// poser un vrai miroir devant le modele
+                var mirrorBox = new THREE.BoxBufferGeometry( 72, 81, 1 );
+                mirrorBox.computeBoundingSphere();
+                mirrorBox.matrixWorldNeedsUpdate = true;
+
+                child.geometry.computeBoundingSphere();
+                child.geometry.matrixWorldNeedsUpdate = true;
+
+                console.log( child.geometry.boundingSphere );
+
+				var mirror = new Reflector( mirrorBox, {
+					color: new THREE.Color(0x7F7F7F),
+					textureWidth: window.innerWidth,
+					textureHeight: window.innerHeight,
+				});
+                mirror.position.set(40,136.5, 2.5);
+                mirror.matrixWorldNeedsUpdate = true;
+                mirror.geometry.computeBoundingSphere();
+				
+				child.add( mirror );
+				
+			} else if ( child.name.indexOf("led") > -1 ) {
+				
+                // lumière de la led
+                const rectLight = new THREE.RectAreaLight( 0xFFFDEB, 70, 700, 10 );
+                rectLight.name = "LedLight"
+                rectLight.position.set( 400, 1780, 415 );
+				rectLight.rotation.set( -Math.PI/1.8, 0, 0 );
+                //obj.add( rectLight ) // <-- il faudrait plutot attacher la lumière au child
+
+                
+                //const rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
+                //obj.add( rectLightHelper );
+				
+				var material_args = {
+					color: 0xFFF196,
+					emissiveIntensity: 5,
+					emissive: 0x7D7C6F,
+					fog:false
+				};
+				var material = new THREE.MeshLambertMaterial(material_args);
+            	child.material = material;	
+				
+			} else {
+				
+			}
+			
+            
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+           
+			
+		});
+		
+		
+		/*
+        panneaux lateraux
+        */
+        if (this.dim != {}) {
+
+            var e = 25;
+			//texture.repeat.set(1, 1);
+			
+			var text = obj.textures[1].metas.texture.clone();
+            text.needsUpdate = true;
+            text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
+            text.repeat.set(.5, 1);
+			text.offset.set(0.5, 1);
+			
+			var material_bords_args = {
+            	//color:0x0DC400,
+            	emissive: 0x0D0D0D,
+				roughness: 0.45,
+				map:text,
+				bumpMap: text,
+				bumpScale:1,
+				fog:false
+        	};
+			
+            
+			
+            var material_bords = new THREE.MeshStandardMaterial(material_bords_args);
+			//material_bords.map.repeat.set(1, 1);
+			material_bords.needsUpdate = true;
+			
+           
+			const geometry = new THREE.BoxBufferGeometry( e, this.dim.H, this.dim.P );
+
+            //geometry.computeBoundingSphere();
+            //geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error => je pense que tu ne peux faire le translate que quand il a été ajouté dans la scene
+			//geometry.attributes.position = new BufferAttribute( newPos, 2 );
+            //geometry.position.set( e / 2, this.dim.H / 2, this.dim.P / 2 );
+
+            this.panneauLeft = new THREE.Mesh(geometry, material_bords);
+            this.panneauLeft.position.set( e / 2, this.dim.H / 2, this.dim.P / 2 );
+
+            this.panneauRight = new THREE.Mesh(geometry, material_bords);
+            this.panneauRight.position.set( this.width - e / 2, this.dim.H / 2, this.dim.P / 2 );
+			
+			this.panneauLeft.name = "bord_gauche_fab";
+			this.panneauRight.name = "bord_droit_fab";
+			
+            this.panneauLeft.material = material_bords;
+            this.panneauRight.material = material_bords;
+            this.panneauLeft.material.needsUpdate = true;
+            this.panneauRight.material.needsUpdate = true;
+
+            //this.panneauLeft.material.map.anisotropy = 16;
+            this.panneauLeft.castShadow = true;
+            this.panneauLeft.receiveShadow = true;
+            //this.panneauRight.material.map.anisotropy = 16;
+            this.panneauRight.castShadow = true;
+            this.panneauRight.receiveShadow = true;
+
+            this.panneauLeft.material.needsUpdate = true;
+            this.panneauRight.material.needsUpdate = true;
+			
+			//console.log( this.panneauLeft );
+			
+            this.object.add(this.panneauLeft);
+            this.object.add(this.panneauRight);
+        }
+		
+		
+		ThreeScene.render();
+	}
 
 
 
 
-    textureLoaded(texture) {
 
-        texture.repeat.set(0.0075, 0.0075);
-        texture.offset.set(0.5, 0.5);
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.matrixAutoUpdate = true;
-        texture.updateMatrix();
+    textureLoaded(textures) {
+
+        //texture.repeat.set(0.0075, 0.0075);
+        //texture.offset.set(0.5, 0.5);
+        //textures.wrapS = textures.wrapT = THREE.RepeatWrapping;
+        //textures.matrixAutoUpdate = true;
+        //texture.updateMatrix();
 
         var material_args = {
             //color:0xDBDBDB
-            dithering: true
+            dithering: true,
+			needsUpdate:true
         };
-
+		
         this.object.traverse(function (child) {
-
+			
+			
             if (child.name.indexOf("Body") > -1 || child.name.indexOf("bord") > -1) {
-
-                material_args.map = texture;
-                material_args.color = '#ffffff';
+				
+				
+				textures[0].val.repeat.set(0.0075, 0.0075);
+        		textures[0].val.offset.set(0.5, 0.5);
+				textures[0].val.rotation = Math.PI/2;
+        		textures[0].val.wrapS = textures[0].val.wrapT = THREE.RepeatWrapping;
+				
+                material_args.map = textures[0].val;
+                material_args.color = '#FFB700';
                 material_args.emissive = '#000000';
-
-                // console.log('bois', material_args);
-
-            } else {
+             
+			} else {
                 if (child.name === 'miroir') {
                     const textureLoader = new THREE.TextureLoader();
                     var mirror_texture = textureLoader.load("textures/mirror.jpg");
@@ -130,16 +485,19 @@ export default class Meuble {
                     // console.log('miroir', material_args);
 
                 } else if (child.name.indexOf("poignee") > -1) {
-                    material_args.map = texture;
+                    
+					//material_args.map = texture;
                     material_args.color = '#0000ff';
                     material_args.emissive = '#000000';
 
                     // console.log('poignee', material_args);
                 } else {
-                    material_args.map = texture;
+                    textures[0].val.repeat.set(0.0075, 0.0075);
+        			textures[0].val.offset.set(0.5, 0.5);
+					material_args.map = textures[0].val;
                     material_args.color = '#ff0000';
                     material_args.emissive = '#000000';
-                    // console.log('autre', material_args);
+                    console.log('autre', material_args);
                 }
             }
 
@@ -165,38 +523,54 @@ export default class Meuble {
         if (this.dim != {}) {
 
             var e = 25;
-            material_args.map = texture;
-            material_args.color = '#ffffff';
-            material_args.emissive = '#000000';
-            var material = new THREE.MeshLambertMaterial(material_args);
-
+			//texture.repeat.set(1, 1);
+			
+			var material_bords_args = {
+            	color:0x0DC400,
+            	dithering: true,
+				//map:textures[0].val,
+				emissive:0x000000
+        	};
+			
+            
+			
+            var material_bords = new THREE.MeshLambertMaterial(material_bords_args);
+			//material_bords.map.repeat.set(1, 1);
+			material_bords.needsUpdate = true;
+			
             const geometry = new THREE.BoxGeometry(e, this.dim.H, this.dim.P);
+			
             // geometry.computeBoundingSphere();
             geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error
-            this.panneauLeft = new THREE.Mesh(geometry, material);
+            this.panneauLeft = new THREE.Mesh(geometry, material_bords);
             this.panneauLeft.position.set(-e, 0, 0);
-            this.panneauRight = new THREE.Mesh(geometry, material);
+            this.panneauRight = new THREE.Mesh(geometry, material_bords);
             this.panneauRight.position.set(this.width - e / 2, 0, 0);
-
-            this.panneauLeft.material = material;
-            this.panneauRight.material = material;
+			
+			this.panneauLeft.name = "bord_gauche_fab";
+			this.panneauRight.name = "bord_droit_fab";
+			
+            this.panneauLeft.material = material_bords;
+            this.panneauRight.material = material_bords;
             this.panneauLeft.material.needsUpdate = true;
             this.panneauRight.material.needsUpdate = true;
 
-            this.panneauLeft.material.map.anisotropy = 16;
+            //this.panneauLeft.material.map.anisotropy = 16;
             this.panneauLeft.castShadow = true;
             this.panneauLeft.receiveShadow = true;
-            this.panneauRight.material.map.anisotropy = 16;
+            //this.panneauRight.material.map.anisotropy = 16;
             this.panneauRight.castShadow = true;
             this.panneauRight.receiveShadow = true;
 
             this.panneauLeft.material.needsUpdate = true;
             this.panneauRight.material.needsUpdate = true;
-
+			
+			console.log( this.panneauLeft );
+			
             this.object.add(this.panneauLeft);
             this.object.add(this.panneauRight);
         }
-
+		
         ThreeScene.render()
     }
     setPosition(position) {

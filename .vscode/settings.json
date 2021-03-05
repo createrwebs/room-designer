@@ -1,3 +1,4 @@
 {
-    "team.appInsights.enabled": false
+    "team.appInsights.enabled": false,
+    "workbench.colorTheme": "Default Light+"
 }

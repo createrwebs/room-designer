@@ -21,8 +21,8 @@ class App extends Component {
 		ThreeScene.fbxloadAll()
 	}
 	render() {
-		ThreeScene.updateCamera(this.props)
-		ThreeScene.updateLights(this.props.light)
+		//ThreeScene.updateCamera(this.props)
+		//ThreeScene.updateLights(this.props.light)
 		ThreeScene.orbitControls.update();// renders
 		// ThreeScene.render()
 

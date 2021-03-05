@@ -91,6 +91,7 @@ class App extends Component {
 							gridColumnStart: this.props.meubleListShowed || this.props.meubleInfoShowed ? 2 : 1,
 						}}>
 							<Room />
+						
 						</div>
 						<footer className="footer">
 							<InfoBar webgl={this.state.webgl} />
