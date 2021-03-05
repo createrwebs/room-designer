@@ -3,10 +3,21 @@ import { connect } from 'react-redux';
 import { } from '../../api/actions'
 import Button from './Button';
 import './bars.css';
+import ThreeScene from '../../3d/ThreeScene';
 
 class Header extends Component {
     disconnect() {
-        // ConnectionHelper.disconnect();
+        
+        var cond = ThreeScene.renderer.shadowMap.enabled;
+
+        if( !cond ){
+            ThreeScene.renderer.shadowMap.enabled = true;
+        } else {
+            ThreeScene.renderer.shadowMap.enabled = false;
+        }
+        ThreeScene.renderer.shadowMap.needsUpdate = true;
+        /**/
+        
     }
     shareScreen(share) {
         // if (!this.props.hasScreenShared) return;
@@ -52,6 +63,9 @@ class Header extends Component {
                 </div>
                 <div style={{ float: 'left' }}>
                     <Button action={() => { this.toggleChat() }} icon="fa fa-fw fa-comments-o" text={""} />
+                </div>
+                <div style={{ float: 'right' }}>
+                    ds
                 </div>
                 <div style={{ float: 'right' }}>
                     <Button action={() => { this.disconnect() }} icon="fa fa-fw fa-power-off" text="Sortir" />

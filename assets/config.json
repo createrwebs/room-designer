@@ -11,15 +11,16 @@
 		}
 	},
 	"scene_params": {
-		"backgroundColor": "#fefefe",
-		"fogEnabled": false,
+		"backgroundColor": "#D2D2D2",
+		"groundColor": "#cecece",
+		"fogEnabled": true,
 		"fog": {
-			"color": "0xfefefe",
+			"color": "#D2D2D2",
 			"near": 10000,
 			"far": 15000
 		},
 		"properties": {
-			"antialias": false,
+			"antialias": true,
 			"powerPreference": "low-power",
             "failIfMajorPerformanceCaveat": false
 		},

@@ -27,7 +27,7 @@ class App extends Component {
 		// ThreeScene.render()
 
 		return (
-			<div className="container"
+			<div id="canvas_wrapper" className="container"
 				ref={this.myRef}
 				style={{
 					// backgroundColor: 'white',

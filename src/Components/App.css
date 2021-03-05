@@ -13,10 +13,12 @@ body {
 
 .app .header {
   grid-column: 1/3;
+  
 }
 
 .app .footer {
   grid-column: 1/3;
+  display: none;
 }
 
 .grid-main {
@@ -34,7 +36,18 @@ body {
 .column-main {
   grid-column-end: 3;
   overflow-y: auto;
+  
 }
+
+.column-main .container{
+  height: calc( 100vh - 27px )!important;
+  overflow: hidden;
+}
+
+#canvas_wrapper{
+  position: relative;
+}
+
 .pouet{
   position:absolute;
   top:0;

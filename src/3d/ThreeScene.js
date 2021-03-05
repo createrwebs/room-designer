@@ -37,6 +37,8 @@ export default {
         window.ts = this// f12 helper
 
         let camera, scene, renderer, orbitControls, stats, manager;
+        
+        
 
         Loader.setup();
         /*         this.manager = manager = new THREE.LoadingManager();
@@ -68,9 +70,7 @@ export default {
 
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
 
-         this.frame_stats = stats = new Stats();
-         document.body.appendChild( stats.dom );
-         stats.begin();
+         
 
          
         var renderer_args = scene_params.properties
@@ -98,9 +98,8 @@ export default {
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         }
         
-
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
 
         // renderer.toneMapping = THREE.ACESFilmicToneMapping;
         // renderer.toneMappingExposure = 1;
@@ -111,6 +110,10 @@ export default {
         // renderer.setClearColor(0xFFFFFF);
 
         // /* renderer.domElement.addEventListener("click", onclick, true);
+
+        
+        this.frame_stats = stats = new Stats();
+
         var selectedObject;
         var raycaster = new THREE.Raycaster();
         function onclick(event) {
@@ -204,7 +207,7 @@ export default {
 			opacity: .25
         });
         const groundMaterial = new THREE.MeshStandardMaterial({
-            color: 0xFAFAFA,
+            color: scene_params.groundColor,
 			emissive: 0x2C2C2C,
         });
 
@@ -244,9 +247,21 @@ export default {
         this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
         scene.add(this.wallLeft);
 
+        
 
         const animate = function () {
             requestAnimationFrame(animate);
+
+            var container = document.getElementById('canvas_wrapper');
+            if( container ){
+
+                renderer.setPixelRatio( container.offsetWidth / container.offsetHeight );
+                renderer.setSize( container.offsetWidth, container.offsetHeight );
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+            }
+
+            
            
             scene.traverse(function ( ob ) {
                 if( ob.name === "groupe-coulissante-2" ){
@@ -288,7 +303,10 @@ export default {
         }
     },
     allLoaded() {
-        // this.orbitControls.update();
+        // putain obligé de gratter au fin fond pour mettre les stats dans le container plutot que dans le body !!
+        this.frame_stats.dom.style.position = "absolute";
+        document.getElementById('canvas_wrapper').appendChild( this.frame_stats.dom );
+        this.frame_stats.begin();
     },
     render() {
         // console.log(`render ${this}`);
