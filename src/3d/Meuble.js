@@ -26,6 +26,14 @@ export default class Meuble {
         this.name = props.name;
         this.wall = props.position.wall;
         this.angle = props.angle;
+        if( props.animables ){
+            this.object.animables = props.animables;
+        } else {
+            this.object.animables = [];
+        }
+        
+        //console.log("animables ", props.animables);
+
         this.wallConfig = store.getState().config.walls;
         this.width = this.getWidth()// store width for performance collision
         // this.segment = this.getSegment(object)// store width for performance collision
@@ -207,7 +215,7 @@ export default class Meuble {
                 /*
                 grouper la porte avec sa poignée et les mettre invisibles
                 */
-                var childStrIndexarr = child.name.split("-");
+                /*var childStrIndexarr = child.name.split("-");
                 var childStrIndex = childStrIndexarr[ childStrIndexarr.length-1 ];
 
                 for(var propName in obj.children) {
@@ -233,7 +241,7 @@ export default class Meuble {
                         
                     }
                     
-                }
+                }*/
              
 
                 
@@ -492,10 +500,56 @@ export default class Meuble {
             this.object.add(this.panneauRight);
         }
 		
-		
+		this.createGroups();
+
 		ThreeScene.render();
 	}
 
+    createGroups() {
+        var obj = this.object;
+		var scene = this.scene;
+        if( this.object.animables.length ){
+            console.log( "animables ", this.object.animables );
+        
+        
+            this.object.traverse(function (child) {
+
+                /*
+                    grouper la porte avec sa poignée et les mettre invisibles
+                    
+                    var childStrIndexarr = child.name.split("-");
+                    var childStrIndex = childStrIndexarr[ childStrIndexarr.length-1 ];
+
+                    for(var propName in obj.children) {
+                        if(obj.children.hasOwnProperty(propName)) {
+                            if( obj.children[propName].name === 'metal-poignee-' + childStrIndex ){
+                                const group = new THREE.Group();
+                                group.name = 'groupe-coulissante-' + childStrIndex;
+
+                                var porte = child.clone();
+                                var poignee = obj.children[propName].clone();
+
+                                group.add( porte );
+                                group.add( poignee );
+
+                                obj.add( group );
+
+                                child.visible = false;
+                                obj.children[propName].visible = false;
+
+                                obj.updateMatrix();
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    */
+
+
+            });
+        }
+    }
 
     setPosition(position) {
         switch (position.wall) {

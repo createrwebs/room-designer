@@ -252,9 +252,9 @@ export default {
         const animate = function () {
             requestAnimationFrame(animate);
 
+            /* resize et pixelratio update quand la fenetre change de taille */
             var container = document.getElementById('canvas_wrapper');
             if( container ){
-
                 renderer.setPixelRatio( container.offsetWidth / container.offsetHeight );
                 renderer.setSize( container.offsetWidth, container.offsetHeight );
                 camera.aspect = container.offsetWidth / container.offsetHeight;
@@ -263,16 +263,21 @@ export default {
 
             
            
+            /* animer une pauvre porte */
             scene.traverse(function ( ob ) {
-                if( ob.name === "groupe-coulissante-2" ){
+
+                /*if( ob.name === "groupe-coulissante-2" ){
                     //console.log( "groupe-coulissante-2 x = ", ob.position.x );
-                    if( ob.position.x > -695 ){
-                        ob.position.x = ob.position.x - 4;
+                    if( ob.position.x > -690 ){
+                        ob.position.x = ob.position.x - 5;
+                        // 690 = 5 * 138
                     } else {
                         ob.position.x = 0;
                     }
-                } 
+                } */
             });
+
+
 
             stats.update();
             renderer.render(scene, camera);
@@ -319,7 +324,7 @@ export default {
 
         //this.frame_stats.update();
         //this.renderer.render(this.scene, this.camera);
-
+        
     },
     fbxloadAll() {
         const loader = new FBXLoader(Loader.manager);

@@ -73,6 +73,7 @@ class App extends Component {
 				<NotificationContainer />
 				{this.props.configLoaded &&
 					<div className="app">
+						<div id="loading_splash" className="pouet">Loading ...</div>
 						<header className="header">
 							<Header />
 						</header>

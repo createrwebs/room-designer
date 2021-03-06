@@ -38,14 +38,13 @@ body {
   overflow-y: auto;
   
 }
+.headerbar{
+  position: relative;
+}
 
 .column-main .container{
   height: calc( 100vh - 27px )!important;
   overflow: hidden;
-}
-
-#canvas_wrapper{
-  position: relative;
 }
 
 .pouet{
@@ -60,4 +59,9 @@ body {
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
+  z-index: 98;
+}
+
+#canvas_wrapper{
+  position: relative;
 }

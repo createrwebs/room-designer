@@ -53,7 +53,7 @@ class Header extends Component {
         // const chatText = this.props.chatShowed ? "Masquer les messages" : "Voir les messages"
         return (
             <div className="headerbar">
-                <div id="loading_splash" className="pouet">Loading ...</div>
+                
                 <div style={{ float: 'left' }}>
                     <Button action={() => { this.raiseHand() }} icon="fa fa-fw fa-hand-paper-o" text="Lever la main" />
                 </div>
