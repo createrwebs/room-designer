@@ -68,7 +68,7 @@ main > .scene_wrapper {
   height: 100vh;
 }
 .minetnavbar {
-  background-color: #34373e;
+  background-color: #3b3f47;
 }
 .canvas-wrapper {
   background-color: #fafafa;
@@ -101,6 +101,10 @@ footer {
   color: white;
   display: inline-flex;
   margin: 0 5px;
+}
+
+.tools_wrapper.dropdown:hover .btn-bar{
+  color: white;
 }
 
 

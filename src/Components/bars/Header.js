@@ -55,7 +55,9 @@ class Header extends Component {
             <div className="headerbarz">
                 <nav className="navbar navbar-expand-md navbar-dark fixed-top minetnavbar">
 					<div className="container-fluid">
-					<a className="navbar-brand" href="#">Meubles Minet</a>
+					<a className="navbar-brand" href="#">
+                        <img src="images/logo_small.gif"></img>
+                    </a>
 					<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 						<span className="navbar-toggler-icon"></span>
 					</button>
