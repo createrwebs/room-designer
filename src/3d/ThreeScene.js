@@ -248,7 +248,7 @@ export default {
         scene.add(this.wallLeft);
 
         
-
+        // on enterframe obligatoire pour pouvoir jouer des animations, mais je crois qu'il y a un truc nouveau ( renderer.loop() )
         const animate = function () {
             requestAnimationFrame(animate);
 
@@ -263,18 +263,14 @@ export default {
 
             
            
-            /* animer une pauvre porte */
+            /* animer les choses animables */
             scene.traverse(function ( ob ) {
-
-                /*if( ob.name === "groupe-coulissante-2" ){
-                    //console.log( "groupe-coulissante-2 x = ", ob.position.x );
-                    if( ob.position.x > -690 ){
-                        ob.position.x = ob.position.x - 5;
-                        // 690 = 5 * 138
-                    } else {
-                        ob.position.x = 0;
-                    }
-                } */
+                if( ob.animable ){
+                    var axe = ob.groupProps.axe;
+                    var from = parseInt( ob.groupProps.from );
+                    var to = parseInt( ob.groupProps.to );
+                    ob.position[`${axe}`] = Math.sin( Date.now() * 0.001 ) * Math.PI * to;
+                } 
             });
 
 
@@ -324,7 +320,7 @@ export default {
 
         //this.frame_stats.update();
         //this.renderer.render(this.scene, this.camera);
-        
+
     },
     fbxloadAll() {
         const loader = new FBXLoader(Loader.manager);

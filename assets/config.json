@@ -37,20 +37,35 @@
 		{
 			"file": "NYC231H238PP_G",
 			"name": "Armoire 3 portes coulissantes",
-			"animables": [
+			"subGroups": [
 				{
+					"name": "Porte 1",
+					"animable": false,
+					"axe": "x",
+					"from": 0,
+					"to": 200,
 					"parent": "porte-1",
 					"childs": [
 						"metal-poignee-1"
 					]
 				},
 				{
+					"name": "Porte 2",
+					"animable": false,
+					"axe": "x",
+					"from": 0,
+					"to": 200,
 					"parent": "porte-2",
 					"childs": [
 						"metal-poignee-2"
 					]
 				},
 				{
+					"name": "Porte 3",
+					"animable": true,
+					"axe": "x",
+					"from": 0,
+					"to": 200,
 					"parent": "porte-3",
 					"childs": [
 						"metal-poignee-3"

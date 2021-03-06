@@ -26,14 +26,12 @@ export default class Meuble {
         this.name = props.name;
         this.wall = props.position.wall;
         this.angle = props.angle;
-        if( props.animables ){
-            this.object.animables = props.animables;
+        if( props.subGroups ){
+            this.object.subGroups = props.subGroups;
         } else {
-            this.object.animables = [];
+            this.object.subGroups = [];
         }
         
-        //console.log("animables ", props.animables);
-
         this.wallConfig = store.getState().config.walls;
         this.width = this.getWidth()// store width for performance collision
         // this.segment = this.getSegment(object)// store width for performance collision
@@ -154,7 +152,7 @@ export default class Meuble {
 		var scene = this.scene;
 		const loader = new THREE.TextureLoader();
 		// affecter des materiaux sur les diffrents sous objets
-		console.log( obj );
+		//console.log( obj );
         if( !this ){
             return false;
         }
@@ -384,7 +382,7 @@ export default class Meuble {
                 child.geometry.computeBoundingSphere();
                 child.geometry.matrixWorldNeedsUpdate = true;
 
-                console.log( child.geometry.boundingSphere );
+                //console.log( child.geometry.boundingSphere );
 
 				var mirror = new Reflector( mirrorBox, {
 					color: new THREE.Color(0x7F7F7F),
@@ -505,49 +503,52 @@ export default class Meuble {
 		ThreeScene.render();
 	}
 
+    /* si l'objet contient des sous groupes, les créer et cacher les meshes d'origine  */
     createGroups() {
         var obj = this.object;
 		var scene = this.scene;
-        if( this.object.animables.length ){
-            console.log( "animables ", this.object.animables );
-        
-        
+
+        if( this.object.subGroups.length ){
+            
             this.object.traverse(function (child) {
-
-                /*
-                    grouper la porte avec sa poignée et les mettre invisibles
-                    
-                    var childStrIndexarr = child.name.split("-");
-                    var childStrIndex = childStrIndexarr[ childStrIndexarr.length-1 ];
-
-                    for(var propName in obj.children) {
-                        if(obj.children.hasOwnProperty(propName)) {
-                            if( obj.children[propName].name === 'metal-poignee-' + childStrIndex ){
+                
+                if( child.parent.type === "Scene" ){
+                    return false;
+                } else {
+                    for (let i = 0; i < obj.subGroups.length; i++) {
+                        if ( child.name === obj.subGroups[i].parent ) {
+                            
+                            for (let j = 0; j < obj.subGroups[i].childs.length; j++) {
+                                
                                 const group = new THREE.Group();
-                                group.name = 'groupe-coulissante-' + childStrIndex;
+                                group.name = obj.subGroups[i].name;
+                                group.animable = obj.subGroups[i].animable;
+                                group.groupProps = obj.subGroups[i];
 
-                                var porte = child.clone();
-                                var poignee = obj.children[propName].clone();
+                                var target = obj.getObjectByName( obj.subGroups[i].childs[j] );
+                                var parent = child.clone();
+                                var subChild = target.clone();
 
-                                group.add( porte );
-                                group.add( poignee );
+                                group.add( parent );
+                                group.add( subChild );
 
                                 obj.add( group );
 
                                 child.visible = false;
-                                obj.children[propName].visible = false;
+                                obj.getObjectByName( obj.subGroups[i].childs[j] ).visible = false;
 
                                 obj.updateMatrix();
-                                
+
+                                console.log( group );
                             }
-                            
                         }
                         
                     }
-                    */
 
+                }
 
             });
+            
         }
     }
 
