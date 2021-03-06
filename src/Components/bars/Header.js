@@ -68,7 +68,7 @@ class Header extends Component {
 
 						<li className="nav-item">
 							
-                        <Button action={() => { this.disconnect() }} icon="fa fa-fw fa-power-off" text="Toggle shadows"/>
+                            <a className="nav-link" href="#">Link</a>
 						</li>
                         <li className="nav-item">
 							<a className="nav-link" href="#">Link</a>

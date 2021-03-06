@@ -11,7 +11,8 @@ import {
 }
 	from '../api/actions'
 
-import Header from './bars/Header';
+	import Header from './bars/Header';
+	import Toolbar from './bars/Toolbar';
 import InfoBar from './bars/InfoBar';
 import Room from './Room';
 import MeubleInfo from './MeubleInfo';
@@ -20,6 +21,12 @@ import MeubleInfo from './MeubleInfo';
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
+
+
 import './App.css';
 
 const params = window.location.search.substr(1).split(',');
@@ -74,22 +81,20 @@ class App extends Component {
 <main className="">
 	
   <div className="scene_wrapper">
-    
 	  <div className="row h-100">
-		  <div className="col-9 h-100 px-0 canvas-wrapper">
+		<div className="col-9 h-100 px-0 canvas-wrapper">
+		  	<div className="toolbar">
+				<Toolbar />
+			</div>			
+			<div className="column-main">
+				<Room />
+			</div>
 
-		  <div className="column-main" style={{
-							gridColumnStart: this.props.meubleListShowed || this.props.meubleInfoShowed ? 2 : 1,
-						}}>
-							<Room />
-						
-						</div>
-
-		  </div>
+		</div>
 		  
-		  <div className="col-3 column-left">
+		<div className="col-3 column-left">
 		  	<MeubleInfo />
-		  </div>
+		</div>
 		  
 	  </div>
 	  
