@@ -15,7 +15,7 @@ import Meuble from './Meuble'
 import * as THREE from "three";
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 // import { Scene } from 'three';
-// import Stats from 'three/examples/jsm/libs/stats.module'
+ import Stats from 'three/examples/jsm/libs/stats.module'
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
@@ -24,17 +24,21 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
 
+
+
 export default {
     getRendererNodeElement() {
         return this.renderer.domElement
     },
     getStatNodeElement() {
-        // return this.frame_stats.dom
+         return this.frame_stats.dom
     },
     setup(config) {
         window.ts = this// f12 helper
 
         let camera, scene, renderer, orbitControls, stats, manager;
+        
+        
 
         Loader.setup();
         /*         this.manager = manager = new THREE.LoadingManager();
@@ -51,31 +55,52 @@ export default {
         // console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
 
 
+
+        var scene_params = config.scene_params;
+
+
         this.scene = scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xa0a0a0);
-        // scene.fog = new THREE.Fog(0xa0a0a0, 7000, 10000);
+        scene.background = new THREE.Color( scene_params.backgroundColor );
+
+        if( scene_params.fogEnabled ){
+            scene.fog = new THREE.Fog( scene_params.fog.color, scene_params.fog.near, scene_params.fog.far );
+        }
+        
+
+
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
 
-        // this.frame_stats = stats = new Stats();
-        // stats.begin();
+         
 
-        var renderer_args = {
-            //antialias: true
-        }
+         
+        var renderer_args = scene_params.properties
 
         this.renderer = renderer = new THREE.WebGLRenderer(renderer_args);
 
-        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.enabled = scene_params.shadowMap.enabled;
 
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        /*
+        Shadow maps possibles =>
+        THREE.BasicShadowMap
+        THREE.PCFShadowMap
+        THREE.PCFSoftShadowMap
+        THREE.VSMShadowMap
+        */
+        if( scene_params.shadowMap.type === "BasicShadowMap" ){
+            renderer.shadowMap.type = THREE.BasicShadowMap;
+        } else if( scene_params.shadowMap.type === "PCFShadowMap" ) {
+            renderer.shadowMap.type = THREE.PCFShadowMap;
+        } else if( scene_params.shadowMap.type === "PCFSoftShadowMap" ) {
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        } else if( scene_params.shadowMap.type === "VSMShadowMap" ) {
+            renderer.shadowMap.type = THREE.VSMShadowMap;
+        } else {
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        }
+        
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
 
-        //renderer.gammaInput = true;
-        //renderer.gammaOutput = true;
-        //renderer.gammaFactor = 2.2;
-        //renderer.outputEncoding = THREE.sRGBEncoding;
-
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
         // renderer.toneMapping = THREE.ACESFilmicToneMapping;
         // renderer.toneMappingExposure = 1;
         // renderer.outputEncoding = THREE.sRGBEncoding;
@@ -85,6 +110,10 @@ export default {
         // renderer.setClearColor(0xFFFFFF);
 
         // /* renderer.domElement.addEventListener("click", onclick, true);
+
+        
+        this.frame_stats = stats = new Stats();
+
         var selectedObject;
         var raycaster = new THREE.Raycaster();
         function onclick(event) {
@@ -101,8 +130,8 @@ export default {
         /* camera */
 
         // +Z is up in Blender, whereas + Y is up in three.js
-        this.camera = camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 40000);
-        camera.position.set(5038, 5089, 1987)
+        this.camera = camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 15000);
+        camera.position.set(5038, 2000, 1987)
 
         /* controls */
 
@@ -111,7 +140,7 @@ export default {
         orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
         orbitControls.minDistance = 200;
         orbitControls.maxDistance = 10000;//10m
-        orbitControls.target.set(1317, -673, 1832);
+        orbitControls.target.set(2000, 1000, 2000);
         // orbitControls.update();
 
         // const interaction = new Interaction(renderer, scene, camera);
@@ -125,36 +154,37 @@ export default {
 
         /* lights */
 
+		
+		/**/
         const ceilHeight = 5000//ceiling @2.6m
 
-        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, 1);
-        light.position.set(2500, 1700, 2500);
-        // light.castShadow = true;
+
+        /* lumière moyenne ambiance */
+        var light = new THREE.HemisphereLight(0xFFFDF4, 0x000000, .6);
+        light.position.set(2500, 1200, 2500);
         const helper = new THREE.HemisphereLightHelper(light, 100);
-        scene.add(light);
+
+		scene.add(light);
         //scene.add( helper );
-
-        var spotLight = new THREE.SpotLight(0xffffff, 1.5);
-        spotLight.position.set(3000, 5500, 3000);
-        spotLight.penumbra = .4;
-        spotLight.decay = 2.5;
-        spotLight.distance = 10000;
-
-        spotLight.castShadow = true;
-        spotLight.shadow.mapSize.width = 1024;
-        spotLight.shadow.mapSize.height = 1024;
-        spotLight.shadow.camera.near = 2;
-        spotLight.shadow.camera.far = 6000;
-        spotLight.shadow.focus = 5;
-        scene.add(spotLight);
-
-        scene.add(spotLight.target);
-        spotLight.target.position.set(2000, 0, 2000);
-        spotLight.target.updateMatrixWorld();
-
-        var lightHelper = new THREE.SpotLightHelper(spotLight);
-        //scene.add( lightHelper );
-
+		
+		/* plafonnier */
+		const pointLight = new THREE.PointLight( 0xffffff, .55, 0, 1 );
+		pointLight.position.set( 2500, 3000, 2500 );
+		pointLight.castShadow = true; // default false
+		
+		var PointLightHelper = new THREE.PointLightHelper(pointLight, 100);
+		
+		scene.add( pointLight );
+		scene.add( PointLightHelper );
+		
+		pointLight.shadow.mapSize.width = scene_params.lightsShadowMapSize.width; //2048; // default
+		pointLight.shadow.mapSize.height = scene_params.lightsShadowMapSize.height; //2048 // default
+		pointLight.shadow.camera.near = 0.5; // default
+		pointLight.shadow.camera.far = 10000; // default
+		
+		
+        
+		
 
         /* 0,0,0 dot */
 
@@ -171,20 +201,22 @@ export default {
         /* walls */
 
         const wallConfig = config.walls;
-        const wallMaterial = new THREE.MeshBasicMaterial({
-            color: 0x7E838D
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: 0x7E838D,
+			transparent: true,
+			opacity: .25
         });
-        const groundMaterial = new THREE.MeshPhongMaterial({
-            color: 0xFBFBFB,
-            dithering: true
+        const groundMaterial = new THREE.MeshStandardMaterial({
+            color: scene_params.groundColor,
+			emissive: 0x2C2C2C,
         });
 
-        const geometryGround = new THREE.CircleGeometry(15000, 32);
+        const geometryGround = new THREE.PlaneGeometry(55000, 55000, 12);
         this.ground = new THREE.Mesh(geometryGround, groundMaterial);
         this.ground.rotateX(Math.PI / -2);
 
-        this.ground.castShadow = true;
-        this.ground.receiveShadow = true;
+        //this.ground.castShadow = true;
+        //this.ground.receiveShadow = true;
 
         //if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
 
@@ -194,7 +226,7 @@ export default {
         this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
         this.wallRight.position.x = wallConfig.right.width / 2;
         this.wallRight.position.y = 2600 / 2;
-        this.wallRight.castShadow = this.wallRight.receiveShadow = true;
+        this.wallRight.castShadow = this.wallRight.receiveShadow = false;
         scene.add(this.wallRight);
 
         const geometryBack = new THREE.PlaneGeometry(wallConfig.back.width, 2600, 10, 10);
@@ -203,7 +235,7 @@ export default {
         this.wallBack.position.x = 0;
         this.wallBack.position.y = 2600 / 2;
         this.wallBack.position.z = wallConfig.back.width / 2;
-        this.wallBack.castShadow = this.wallBack.receiveShadow = true;
+        this.wallBack.castShadow = this.wallBack.receiveShadow = false;
         scene.add(this.wallBack);
 
         const geometryLeft = new THREE.PlaneGeometry(wallConfig.left.width, 2600, 10, 10);
@@ -212,9 +244,43 @@ export default {
         this.wallLeft.position.y = 2600 / 2;
         this.wallLeft.position.z = wallConfig.back.width;
         this.wallLeft.rotateY(Math.PI);
-        this.wallLeft.castShadow = this.wallLeft.receiveShadow = true;
+        this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
         scene.add(this.wallLeft);
 
+        
+        // on enterframe obligatoire pour pouvoir jouer des animations, mais je crois qu'il y a un truc nouveau ( renderer.loop() )
+        const animate = function () {
+            requestAnimationFrame(animate);
+
+            /* resize et pixelratio update quand la fenetre change de taille */
+            var container = document.getElementById('canvas_wrapper');
+            if( container ){
+                renderer.setPixelRatio( container.offsetWidth / container.offsetHeight );
+                renderer.setSize( container.offsetWidth, container.offsetHeight );
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+            }
+
+            
+           
+            /* animer les choses animables */
+            scene.traverse(function ( ob ) {
+                if( ob.animable ){
+                    var axe = ob.groupProps.axe;
+                    var from = parseInt( ob.groupProps.from );
+                    var to = parseInt( ob.groupProps.to );
+                    ob.position[`${axe}`] = Math.sin( Date.now() * 0.001 ) * Math.PI * to;
+                } 
+            });
+
+
+
+            stats.update();
+            renderer.render(scene, camera);
+        };
+
+        animate();
+        
     },
     updateCamera(props) {
         let camera = this.camera
@@ -238,7 +304,10 @@ export default {
         }
     },
     allLoaded() {
-        // this.orbitControls.update();
+        // putain obligé de gratter au fin fond pour mettre les stats dans le container plutot que dans le body !!
+        this.frame_stats.dom.style.position = "absolute";
+        document.getElementById('canvas_wrapper').appendChild( this.frame_stats.dom );
+        this.frame_stats.begin();
     },
     render() {
         // console.log(`render ${this}`);
@@ -247,8 +316,10 @@ export default {
             console.log(`orbitControls.target.set(${Math.round(this.orbitControls.target.x)},${Math.round(this.orbitControls.target.y)},${Math.round(this.orbitControls.target.z)})`);
         }
 
-        // this.frame_stats.update();
-        this.renderer.render(this.scene, this.camera);
+        
+
+        //this.frame_stats.update();
+        //this.renderer.render(this.scene, this.camera);
 
     },
     fbxloadAll() {

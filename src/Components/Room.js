@@ -21,13 +21,13 @@ class App extends Component {
 		ThreeScene.fbxloadAll()
 	}
 	render() {
-		ThreeScene.updateCamera(this.props)
-		ThreeScene.updateLights(this.props.light)
+		//ThreeScene.updateCamera(this.props)
+		//ThreeScene.updateLights(this.props.light)
 		ThreeScene.orbitControls.update();// renders
 		// ThreeScene.render()
 
 		return (
-			<div className="container"
+			<div id="canvas_wrapper" className="con"
 				ref={this.myRef}
 				style={{
 					// backgroundColor: 'white',

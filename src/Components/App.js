@@ -11,16 +11,20 @@ import {
 }
 	from '../api/actions'
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Header from './bars/Header';
-
+import Toolbar from './bars/Toolbar';
+import InfoBar from './bars/InfoBar';
 import Room from './Room';
 import MeubleInfo from './MeubleInfo';
 // import MeubleList from './MeubleList';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
 
 
 import './App.css';
@@ -62,36 +66,116 @@ class App extends Component {
 	}
 	render() {
 		return (
-			<div className="container" style={{
-				// backgroundColor: 'white',
-				// position: 'absolute',
-				top: '0',
-				left: '0',
-				// padding: '6px',
-				display: 'block',
-				// zIndex: 99999,
-				width: "100%",
-				height: "100%"
-			}}>
+			<div className="main">
+				<header>
+					<Header />
+
+				</header>
+
+
+				<div id="loading_splash" className="pouet">Loading ...</div>
 				<NotificationContainer />
 				<Header />
 				{this.props.configLoaded &&
-					<div className="app">
-						<Container>
-							<Row>
-								<Col sm={8}>
-									<Room />
-								</Col>
-								{
-									this.props.meubleInfoShowed &&
-									<Col sm={4}><MeubleInfo /></Col>
-								}
-								{
-									this.props.meubleListShowed &&
-									<Col sm={4}><MeubleList /></Col>
-								}
-							</Row>
-						</Container>
+					<div className="">
+
+						<main className="">
+
+							<div className="scene_wrapper">
+								<div className="row h-100">
+									<div className="col-9 h-100 px-0 canvas-wrapper">
+										<div className="toolbar">
+											<Toolbar />
+										</div>
+										<div className="column-main">
+											<Room />
+										</div>
+
+									</div>
+
+									<div className="col-3 column-left">
+										<MeubleInfo />
+									</div>
+
+								</div>
+
+
+
+							</div>
+
+
+
+						</main>
+
+
+						{/* {this.props.meubleListShowed &&
+						<div className="column-left">
+						<MeubleList />
+						</div>
+					} */}
+						{
+							this.props.meubleInfoShowed &&
+							<div className="column-left">
+
+							</div>
+						}
+						<footer className="footer mt-auto py-2">
+							<div className="container">
+								<span className="">
+									<InfoBar webgl={this.state.webgl} />
+
+
+								</span>
+							</div>
+						</footer>
+
+					</div>
+				}
+				{this.state.showJoinForm &&
+					<div className="websdktest">
+						<form onSubmit={this.handleSubmit}>
+							<div>
+								<input
+									placeholder="meeting number"
+									type="text"
+									autoComplete="meeting_number"
+									maxLength="32"
+									value={this.state.meeting_number}
+									onChange={(e) => this.setState({ meeting_number: e.target.value })}
+								/>
+							</div>
+							<div>
+								<input
+									placeholder="room password"
+									type="text"
+									autoComplete="meeting_pwd"
+									maxLength="32"
+									value={this.state.meeting_pwd}
+									onChange={(e) => this.setState({ meeting_pwd: e.target.value })}
+								/>
+							</div>
+							<div>
+								<input
+									placeholder="nom"
+									type="text"
+									autoComplete="name"
+									maxLength="32"
+									value={this.state.name}
+									onChange={(e) => this.setState({ name: e.target.value })}
+								/>
+							</div>
+							<div>
+								<input
+									placeholder="email"
+									type="text"
+									autoComplete="email"
+									maxLength="32"
+									value={this.state.email}
+									onChange={(e) => this.setState({ email: e.target.value })}
+								/>
+							</div>
+							<input type="submit" value="join" />
+						</form>
 					</div>
 				}
 			</div>

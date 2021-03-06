@@ -9,10 +9,21 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import FormControl from 'react-bootstrap/FormControl';
 import './bars.css';
+import ThreeScene from '../../3d/ThreeScene';
 
 class Header extends Component {
     disconnect() {
-        // ConnectionHelper.disconnect();
+
+        var cond = ThreeScene.renderer.shadowMap.enabled;
+
+        if (!cond) {
+            ThreeScene.renderer.shadowMap.enabled = true;
+        } else {
+            ThreeScene.renderer.shadowMap.enabled = false;
+        }
+        ThreeScene.renderer.shadowMap.needsUpdate = true;
+        /**/
+
     }
     shareScreen(share) {
         // if (!this.props.hasScreenShared) return;
@@ -46,18 +57,47 @@ class Header extends Component {
         // // const screenText = this.props.hasScreenShared ? !this.props.screenShared ? "Partager votre écran" : "Arrêter le partage" : "Partage d'écran désactivé"
         // const screenText = this.props.hasScreenShared ? !this.props.screenShared ? "Partager votre écran" : "Partage en cours" : "Partage d'écran désactivé"
         // const chatText = this.props.chatShowed ? "Masquer les messages" : "Voir les messages"
-
         return (
-            <Navbar fixed="top" bg="light" expand="lg">
-                <Navbar.Brand href="#home">Minet3d</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
-                        <Nav.Link href="#link">Link</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
+            <div className="headerbarz">
+                <nav className="navbar navbar-expand-md navbar-dark fixed-top minetnavbar">
+                    <div className="container-fluid">
+                        <a className="navbar-brand" href="#">
+                            <img src="images/logo_small.gif"></img>
+                        </a>
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarCollapse">
+                            <ul className="navbar-nav me-auto mb-2 mb-md-0">
+
+                                <li className="nav-item">
+                                    <a className="nav-link active" aria-current="page" href="#">Home</a>
+                                </li>
+
+                                <li className="nav-item">
+
+                                    <a className="nav-link" href="#">Link</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Link</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Link</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Link</a>
+                                </li>
+
+                                <li className="nav-item">
+                                    <a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
         )
     }
 }
