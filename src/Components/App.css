@@ -28,9 +28,7 @@ body {
 }
 
 .column-left {
-  grid-column-start: 1;
-  grid-column-end: 1;
-  overflow-y: auto;
+  box-shadow: 0px 0px 7px #444444;
 }
 
 .column-main {
@@ -42,8 +40,8 @@ body {
   position: relative;
 }
 
-.column-main .container{
-  height: calc( 100vh - 27px )!important;
+.column-main .con{
+  height: calc( 100vh - 56px )!important;
   overflow: hidden;
 }
 
@@ -64,4 +62,22 @@ body {
 
 #canvas_wrapper{
   position: relative;
+}
+main > .scene_wrapper {
+  padding: 56px 15px 0;
+  height: 100vh;
+}
+.minetnavbar {
+  background-color: #34373e;
+}
+.canvas-wrapper {
+  background-color: #fafafa;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
 }

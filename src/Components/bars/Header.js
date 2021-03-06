@@ -52,24 +52,43 @@ class Header extends Component {
         // const screenText = this.props.hasScreenShared ? !this.props.screenShared ? "Partager votre écran" : "Partage en cours" : "Partage d'écran désactivé"
         // const chatText = this.props.chatShowed ? "Masquer les messages" : "Voir les messages"
         return (
-            <div className="headerbar">
+            <div className="headerbarz">
+                <nav className="navbar navbar-expand-md navbar-dark fixed-top minetnavbar">
+					<div className="container-fluid">
+					<a className="navbar-brand" href="#">Meubles Minet</a>
+					<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+						<span className="navbar-toggler-icon"></span>
+					</button>
+					<div className="collapse navbar-collapse" id="navbarCollapse">
+						<ul className="navbar-nav me-auto mb-2 mb-md-0">
+						
+                        <li className="nav-item">
+							<a className="nav-link active" aria-current="page" href="#">Home</a>
+						</li>
+
+						<li className="nav-item">
+							
+                        <Button action={() => { this.disconnect() }} icon="fa fa-fw fa-power-off" text="Toggle shadows"/>
+						</li>
+                        <li className="nav-item">
+							<a className="nav-link" href="#">Link</a>
+						</li>
+                        <li className="nav-item">
+							<a className="nav-link" href="#">Link</a>
+						</li>
+                        <li className="nav-item">
+							<a className="nav-link" href="#">Link</a>
+						</li>
+
+						<li className="nav-item">
+							<a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</a>
+						</li>
+
+						</ul>
+					</div>
+					</div>
+				</nav>
                 
-                <div style={{ float: 'left' }}>
-                    <Button action={() => { this.raiseHand() }} icon="fa fa-fw fa-hand-paper-o" text="Lever la main" />
-                </div>
-                <div style={{ float: 'left' }}>
-                    <Button action={() => { this.mute("audio") }} icon="fa fa-fw fa-microphone" text={""} status={""} />
-                    <Button action={() => { this.mute("video") }} icon="fa fa-fw fa-video-camera" text={""} status={""} />
-                </div>
-                <div style={{ float: 'left' }}>
-                    <Button action={() => { this.toggleChat() }} icon="fa fa-fw fa-comments-o" text={""} />
-                </div>
-                <div style={{ float: 'right' }}>
-                    ds
-                </div>
-                <div style={{ float: 'right' }}>
-                    <Button action={() => { this.disconnect() }} icon="fa fa-fw fa-power-off" text="Sortir" />
-                </div>
             </div>
         )
     }

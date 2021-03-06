@@ -18,8 +18,8 @@ import MeubleInfo from './MeubleInfo';
 // import MeubleList from './MeubleList';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-
-
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 const params = window.location.search.substr(1).split(',');
@@ -59,24 +59,49 @@ class App extends Component {
 	}
 	render() {
 		return (
-			<div className="container" style={{
-				// backgroundColor: 'white',
-				// position: 'absolute',
-				top: '0',
-				left: '0',
-				// padding: '6px',
-				display: 'block',
-				// zIndex: 99999,
-				width: "100%",
-				height: "100%"
-			}}>
+			<div className="main">
+				<header>
+					<Header />
+				
+				</header>
+
+
+				<div id="loading_splash" className="pouet">Loading ...</div>
 				<NotificationContainer />
 				{this.props.configLoaded &&
-					<div className="app">
-						<div id="loading_splash" className="pouet">Loading ...</div>
-						<header className="header">
-							<Header />
-						</header>
+					<div className="">
+						
+<main className="">
+	
+  <div className="scene_wrapper">
+    
+	  <div className="row h-100">
+		  <div className="col-9 h-100 px-0 canvas-wrapper">
+
+		  <div className="column-main" style={{
+							gridColumnStart: this.props.meubleListShowed || this.props.meubleInfoShowed ? 2 : 1,
+						}}>
+							<Room />
+						
+						</div>
+
+		  </div>
+		  
+		  <div className="col-3 column-left">
+		  	<MeubleInfo />
+		  </div>
+		  
+	  </div>
+	  
+	  
+	  
+  </div>	
+	
+	
+
+</main>
+
+
 						{/* {this.props.meubleListShowed &&
 						<div className="column-left">
 						<MeubleList />
@@ -85,18 +110,19 @@ class App extends Component {
 						{
 							this.props.meubleInfoShowed &&
 							<div className="column-left">
-								<MeubleInfo />
+								
 							</div>
 						}
-						<div className="column-main" style={{
-							gridColumnStart: this.props.meubleListShowed || this.props.meubleInfoShowed ? 2 : 1,
-						}}>
-							<Room />
-						
-						</div>
-						<footer className="footer">
+						<footer className="footer mt-auto py-2">
+						<div className="container">
+							<span className="">
 							<InfoBar webgl={this.state.webgl} />
+
+
+							</span>
+						</div>
 						</footer>
+						
 					</div>
 				}
 				{this.state.showJoinForm &&
