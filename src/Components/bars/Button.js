@@ -1,6 +1,8 @@
 import React from 'react';
 import './bars.css';
 
+// to be removed when bootstrap handles all buttons
+
 export default function Button(props) {
   const { icon, text, action, cursor, status } = props;
   return (

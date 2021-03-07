@@ -13,19 +13,12 @@ import {
 
 import Header from './bars/Header';
 import Toolbar from './bars/Toolbar';
-import InfoBar from './bars/InfoBar';
+import Footer from './bars/Footer';
 import Room from './Room';
 import MeubleInfo from './MeubleInfo';
 // import MeubleList from './MeubleList';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/js/fontawesome'
-import '@fortawesome/fontawesome-free/js/solid'
-import '@fortawesome/fontawesome-free/js/regular'
-import '@fortawesome/fontawesome-free/js/brands'
-
 
 import './App.css';
 
@@ -122,7 +115,7 @@ class App extends Component {
 						<footer className="footer mt-auto py-2">
 							<div className="container">
 								<span className="">
-									<InfoBar webgl={this.state.webgl} />
+									<Footer webgl={this.state.webgl} />
 
 
 								</span>

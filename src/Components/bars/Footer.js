@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { moderator } from '../../API/Config'
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 import Button from './Button';
 import './bars.css';
 import {
@@ -8,7 +9,7 @@ import {
     setLight,
     logCamera
 } from '../../api/actions'
-class InfoBar extends Component {
+class Footer extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -17,28 +18,20 @@ class InfoBar extends Component {
     modifyProps(prop) {
         this.props.setCamera(prop)
     }
+
+    /*
+    https://react-bootstrap.netlify.app/components/navbar/
+    */
+
     render() {
         return (
-            <div className="infobar" >
-                <div>
-                    <i className="fa fa-fw fa-server" />
-                    <span>
+            <Navbar fixed="bottom" className="minetnavbar">
+                <Navbar.Collapse className="justify-content-end">
+                    <Navbar.Text>
                         {this.props.webgl}
-                    </span>
-                </div>
-                {this.props.jitsiLogged &&
-                    <div>
-                        <i className="fa fa-fw fa-handshake-o" />
-                        <span>
-                            {`Minet3d`}
-                        </span>
-                    </div>
-                }
-                <div>
-                    {/*  <i className="fa fa-fw fa-unlock-alt" />
-                    <span>
-                        {` ${this.props.roomName} ouverte `}
-                    </span> */}
+                    </Navbar.Text>
+                </Navbar.Collapse>
+                <Navbar.Collapse className="justify-content-end">
                     fov
                     <input
                         placeholder="fov"
@@ -60,17 +53,16 @@ class InfoBar extends Component {
                         autoComplete="focus"
                         value={this.props.focus}
                         onChange={(e) => this.modifyProps({ focus: e.target.value })} />
-                    {/* <Button action={() => { this.lockRoom() }} icon="fa fa-fw fa-lock" text={"Verrouiller la salle"} /> */}
+                </Navbar.Collapse>
+                <div>
+                    <Button action={() => { this.props.setLight() }} icon="fa fa-fw fa-lightbulb" text={"Eclairer"} />
                 </div>
                 <div>
-                    <Button action={() => { this.props.setLight() }} icon="fa fa-fw fa-lightbulb-o" text={"Eclairer"} />
-                </div>
-                <div>
-                    <Button action={() => { this.props.logCamera() }} icon="fa fa-fw fa-video-camera" text={"Camera position"} status={this.props.cameraLog ? "active" : "deactivated"} />
+                    <Button action={() => { this.props.logCamera() }} icon="fa fa-fw fa-video" text={"Camera position"} status={this.props.cameraLog ? "active" : "deactivated"} />
                 </div>
                 {this.props.selection &&
                     <div>
-                        <i className="fa fa-fw fa-hand-pointer-o" />
+                        <i className="fa fa-fw fa-hand-point-up" />
                         <span>
                             {this.props.selection.name}
                         </span>
@@ -78,14 +70,15 @@ class InfoBar extends Component {
                 }
                 {this.props.dragged &&
                     <div>
-                        <i className="fa fa-fw fa-arrows-h" />
+                        <i className="fa fa-fw fa-arrows-alt" />
                         <span>
                             {this.props.dragged.name}
                         </span>
                     </div>
                 }
-            </div>
+            </Navbar>
         )
+
     }
 }
 const mapStateToProps = (state) => {
@@ -103,4 +96,4 @@ const mapDispatchToProps = {
     setLight,
     logCamera
 };
-export default connect(mapStateToProps, mapDispatchToProps)(InfoBar)
+export default connect(mapStateToProps, mapDispatchToProps)(Footer)
