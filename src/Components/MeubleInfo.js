@@ -18,7 +18,6 @@ class MeubleInfo extends Component {
         };
     }
     render() {
-        console.log("MeubleInfo  render");
         return (
             <div className="meubleinfo">
                 {this.props.selection &&
@@ -29,7 +28,13 @@ class MeubleInfo extends Component {
                         <span>
                             {this.props.selection.name}<br />
                             {this.props.selection.file}<br />
-                        largeur: {this.props.selection.width}
+                        largeur: {this.props.selection.width}<br />
+                        wall: {this.props.selection.wall}<br />
+                        angle: {this.props.selection.angle}<br />
+                        largeur: {this.props.selection.position}<br />
+                        H: {this.props.selection.dim.H}<br />
+                        P: {this.props.selection.dim.P}<br />
+                        L: {this.props.selection.dim.L}<br />
                         </span>
                     </div>
                 }
@@ -38,7 +43,7 @@ class MeubleInfo extends Component {
     }
 }
 function mapStateToProps(state, props) {
-    console.log("MeubleInfo  mapStateToProps", state.selection);
+    // console.log("MeubleInfo  mapStateToProps", state.selection);
 
     return {
         selection: state.selection,

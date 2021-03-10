@@ -1,5 +1,5 @@
 // import axios from 'axios'
-import { domainURL } from './Config'
+// import { domainURL } from './Config'
 
 export function getConfig() {
 	return fetch(`./config.json`, {

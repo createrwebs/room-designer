@@ -2,33 +2,33 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import ThreeScene from '../3d/ThreeScene';
+import MainScene from '../3d/MainScene';
 const localhost = window.location.hostname.indexOf('localhost') !== -1;
 
 class App extends Component {
 	constructor (props) {
 		super(props);
-		this.myRef = React.createRef();
+		this.canvasWrapperRef = React.createRef();
 
 		this.state = {
 		};
 	}
 	componentDidMount() {
-		const node = this.myRef.current;
-		node.appendChild(ThreeScene.getRendererNodeElement());
-		// if (localhost) node.appendChild(ThreeScene.getStatNodeElement());
+		const node = this.canvasWrapperRef.current;
+		node.appendChild(MainScene.getRendererNodeElement());
+		if (localhost) node.appendChild(MainScene.getStatNodeElement());
 
-		ThreeScene.fbxloadAll()
+		MainScene.fbxloadAll()
 	}
 	render() {
-		//ThreeScene.updateCamera(this.props)
-		//ThreeScene.updateLights(this.props.light)
-		ThreeScene.orbitControls.update();// renders
-		// ThreeScene.render()
+		// MainScene.updateCamera(this.props)
+		// MainScene.updateLights(this.props.light)
+		MainScene.orbitControls.update();// renders
+		// MainScene.render()
 
 		return (
-			<div id="canvas_wrapper" className="con"
-				ref={this.myRef}
+			<div id="canvas-wrapper" className="con"
+				ref={this.canvasWrapperRef}
 				style={{
 					// backgroundColor: 'white',
 					// position: 'absolute',
@@ -45,8 +45,6 @@ class App extends Component {
 	}
 }
 const mapStateToProps = (state) => {
-	// console.log("Room mapStateToProps", state)
-
 	return {
 		fov: state.camera.fov,
 		zoom: state.camera.zoom,

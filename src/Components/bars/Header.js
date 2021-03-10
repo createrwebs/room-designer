@@ -14,7 +14,7 @@ class Header extends Component {
     render() {
         const handleSelect = (eventKey) => alert(`selected ${eventKey}`);
         return (
-            <Navbar fixed="top" variant="pills" activeKey="1" onSelect={handleSelect} className="minetnavbar">
+            <Navbar fixed="top" variant="pills" onSelect={handleSelect} className="minetnavbar">
                 <Navbar.Brand href="#home">
                     <img
                         src="./images/logo_small.gif"

@@ -1,5 +1,5 @@
 import { NotificationManager } from 'react-notifications';
-import ThreeScene from '../3d/ThreeScene';
+import MainScene from '../3d/MainScene';
 import {
     CameraEvent,
     ObjectEvent,
@@ -13,6 +13,7 @@ const initialState = {
     dragged: null,
     selection: null,
     cameraLog: false,
+    allAssetsLoaded: false,
     camera: {
         fov: 70,
         zoom: 1.0,
@@ -29,7 +30,7 @@ export const reducer = (state = initialState, action) => {
                 ...state, light: !state.light
             }
         case SceneEvent.SETCONFIG:
-            ThreeScene.setup(action.config)
+            MainScene.setup(action.config)
             return {
                 ...state, config: action.config
             }
@@ -43,9 +44,9 @@ export const reducer = (state = initialState, action) => {
                 ...state, cameraLog: !state.cameraLog
             }
         case ObjectEvent.ALLLOADED:
-            ThreeScene.allLoaded();
+            MainScene.allLoaded();
             return {
-                ...state
+                ...state, allAssetsLoaded: true
             }
         case ObjectEvent.SELECT:
             return {
