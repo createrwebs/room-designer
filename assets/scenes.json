@@ -1,0 +1,328 @@
+[
+	{
+		"name": "La chambre de Vianney",
+		"walls": {
+			"right": {
+				"width": 4000
+			},
+			"back": {
+				"width": 5000
+			},
+			"left": {
+				"width": 2000
+			}
+		},
+		"meubles": [
+			{
+				"file": "ANGLE_H238_45",
+				"position": {
+					"wall": "back",
+					"x": 5000
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "MOD_COIF-H238",
+				"position": {
+					"wall": "back",
+					"x": 1875
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "ANGLE_H238_45",
+				"position": {
+					"wall": "right",
+					"x": 0
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "MOD_H238_P62_L40",
+				"position": {
+					"wall": "right",
+					"x": 1900
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "MOD_H238_P62_L119_TP",
+				"position": {
+					"wall": "back",
+					"x": 3900
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "MOD_H238_P62_L119",
+				"position": {
+					"wall": "back",
+					"x": 3080
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "NYC231H238PP_G",
+				"position": {
+					"wall": "left",
+					"x": 3400
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"portes": {
+						"url": "chene-charleston-vert.jpg",
+						"label": "Chêne charleston",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			}
+		]
+	},
+	{
+		"name": "La salle d'encodage",
+		"walls": {
+			"right": {
+				"width": 9240
+			}
+		},
+		"meubles": [
+			{
+				"file": "NYC231H238PP_G",
+				"position": {
+					"wall": "right",
+					"x": 0
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"portes": {
+						"url": "chene-charleston-vert.jpg",
+						"label": "Chêne charleston",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "NYC231H238PP_G",
+				"position": {
+					"wall": "right",
+					"x": 2310
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"portes": {
+						"url": "chene-charleston-vert.jpg",
+						"label": "Chêne charleston",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "NYC231H238PP_G",
+				"position": {
+					"wall": "right",
+					"x": 4620
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"portes": {
+						"url": "chene-charleston-vert.jpg",
+						"label": "Chêne charleston",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			},
+			{
+				"file": "NYC231H238PP_G",
+				"position": {
+					"wall": "right",
+					"x": 6930
+				},
+				"textures": {
+					"hori": {
+						"url": "chene-blanc-hori.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"vert": {
+						"url": "chene-blanc-vert.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 90
+					},
+					"fond": {
+						"url": "cuir.jpg",
+						"label": "Chêne blanc",
+						"angle_fil": 0
+					},
+					"portes": {
+						"url": "chene-charleston-vert.jpg",
+						"label": "Chêne charleston",
+						"angle_fil": 0
+					}
+				},
+				"texture": "chene-blanc.jpeg"
+			}
+		]
+	}
+]

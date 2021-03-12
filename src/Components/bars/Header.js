@@ -3,6 +3,11 @@ import { connect } from 'react-redux';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Navbar from 'react-bootstrap/Navbar';
+import {
+    loadScene
+}
+    from '../../api/actions'
+
 import './bars.css';
 
 class Header extends Component {
@@ -12,9 +17,8 @@ class Header extends Component {
     */
 
     render() {
-        const handleSelect = (eventKey) => alert(`selected ${eventKey}`);
         return (
-            <Navbar fixed="top" variant="pills" onSelect={handleSelect} className="minetnavbar">
+            <Navbar fixed="top" variant="pills" onSelect={this.props.loadScene} className="minetnavbar">
                 <Navbar.Brand href="#home">
                     <img
                         src="./images/logo_small.gif"
@@ -22,7 +26,7 @@ class Header extends Component {
                         alt="Meubles Minet logo"
                     />
                 </Navbar.Brand>
-                <Nav.Item>
+                {/*                 <Nav.Item>
                     <Nav.Link eventKey="1" href="#/home">
                         NavLink 1 content
                     </Nav.Link>
@@ -36,13 +40,13 @@ class Header extends Component {
                     <Nav.Link eventKey="3" disabled>
                         NavLink 3 content
                     </Nav.Link>
-                </Nav.Item>
-                <NavDropdown title="Dropdown" id="nav-dropdown">
-                    <NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item eventKey="4.2">Another action</NavDropdown.Item>
-                    <NavDropdown.Item eventKey="4.3">Something else here</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item eventKey="4.4">Separated link</NavDropdown.Item>
+                </Nav.Item> */}
+                <NavDropdown title="Les dressings" id="nav-dropdown">
+                    {this.props.scenes && this.props.scenes
+                        .sort((a, b) => a.name - b.name)
+                        .map((s, idx) =>
+                            <NavDropdown.Item key={idx} eventKey={s.name}>{s.name}</NavDropdown.Item>
+                        )}
                 </NavDropdown>
             </Navbar>
         )
@@ -50,8 +54,10 @@ class Header extends Component {
 }
 const mapStateToProps = (state) => {
     return {
+        scenes: state.scenes
     }
 }
 const mapDispatchToProps = {
+    loadScene
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

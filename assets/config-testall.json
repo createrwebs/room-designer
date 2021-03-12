@@ -1,0 +1,275 @@
+{
+    "walls": {
+        "right": {
+            "width": 4000
+        },
+        "back": {
+            "width": 5000
+        },
+        "left": {
+            "width": 2000
+        }
+    },
+    "scene_params": {
+        "backgroundColor": "#D2D2D2",
+        "groundColor": "#cecece",
+        "fogEnabled": true,
+        "fog": {
+            "color": "#D2D2D2",
+            "near": 10000,
+            "far": 15000
+        },
+        "properties": {
+            "antialias": true,
+            "powerPreference": "low-power",
+            "failIfMajorPerformanceCaveat": false
+        },
+        "shadowMap": {
+            "enabled": false,
+            "type": "BasicShadowMap"
+        },
+        "lightsShadowMapSize": {
+            "width": 1024,
+            "height": 1024
+        }
+    },
+    "fbx": [
+        {
+            "file": "ANGLE_H238_45",
+            "name": "Module Angle H238",
+            "is_angle": true,
+            "position": {
+                "wall": "back",
+                "x": 5000
+            },
+            "textures": {
+                "hori": {
+                    "url": "chene-blanc-hori.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "vert": {
+                    "url": "chene-blanc-vert.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 90
+                },
+                "fond": {
+                    "url": "cuir.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                }
+            },
+            "texture": "chene-blanc.jpeg"
+        },
+        {
+            "file": "COIF-H219",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "COIF-H238",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "H219-L48-GLACE-Dr v2",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "H219-L48-Verre-Dr v1",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "MOD_COIF-H238",
+            "name": "Module coiffeuse H238",
+            "position": {
+                "wall": "back",
+                "x": 1875
+            },
+            "textures": {
+                "hori": {
+                    "url": "chene-blanc-hori.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "vert": {
+                    "url": "chene-blanc-vert.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 90
+                },
+                "fond": {
+                    "url": "cuir.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                }
+            },
+            "texture": "chene-blanc.jpeg"
+        },
+        {
+            "file": "MOD_H219_P40_L48",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "MOD_H219_P62_L40",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "MOD_H238_LIAISON-P62_P40",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "MOD_H238_P62_L40",
+            "name": "Module H219 P40 L48vvv",
+            "position": {
+                "wall": "right",
+                "x": 1900
+            },
+            "textures": {
+                "hori": {
+                    "url": "chene-blanc-hori.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "vert": {
+                    "url": "chene-blanc-vert.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 90
+                },
+                "fond": {
+                    "url": "cuir.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                }
+            },
+            "texture": "chene-blanc.jpeg"
+        },
+        {
+            "file": "MOD_H238_P62_L119_TP",
+            "name": "Module H219 P40 L48vvv",
+            "position": {
+                "wall": "back",
+                "x": 3900
+            },
+            "textures": {
+                "hori": {
+                    "url": "chene-blanc-hori.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "vert": {
+                    "url": "chene-blanc-vert.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 90
+                },
+                "fond": {
+                    "url": "cuir.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                }
+            },
+            "texture": "chene-blanc.jpeg"
+        },
+        {
+            "file": "MOD_H238_P62_L119",
+            "name": "Module H219 P40 L48",
+            "position": {
+                "wall": "back",
+                "x": 3080
+            },
+            "textures": {
+                "hori": {
+                    "url": "chene-blanc-hori.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "vert": {
+                    "url": "chene-blanc-vert.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 90
+                },
+                "fond": {
+                    "url": "cuir.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                }
+            },
+            "texture": "chene-blanc.jpeg"
+        },
+        {
+            "file": "NYC231H238PP_G",
+            "name": "Armoire 3 portes coulissantes",
+            "subGroups": [
+                {
+                    "name": "Porte 1",
+                    "animable": false,
+                    "axe": "x",
+                    "from": 0,
+                    "to": 200,
+                    "parent": "porte-1",
+                    "childs": [
+                        "metal-poignee-1"
+                    ]
+                },
+                {
+                    "name": "Porte 2",
+                    "animable": false,
+                    "axe": "x",
+                    "from": 0,
+                    "to": 200,
+                    "parent": "porte-2",
+                    "childs": [
+                        "metal-poignee-2"
+                    ]
+                },
+                {
+                    "name": "Porte 3",
+                    "animable": true,
+                    "axe": "x",
+                    "from": 0,
+                    "to": 200,
+                    "parent": "porte-3",
+                    "childs": [
+                        "metal-poignee-3"
+                    ]
+                }
+            ],
+            "position": {
+                "wall": "left",
+                "x": 3400
+            },
+            "textures": {
+                "hori": {
+                    "url": "chene-blanc-hori.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "vert": {
+                    "url": "chene-blanc-vert.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 90
+                },
+                "fond": {
+                    "url": "cuir.jpg",
+                    "label": "Chêne blanc",
+                    "angle_fil": 0
+                },
+                "portes": {
+                    "url": "chene-charleston-vert.jpg",
+                    "label": "Chêne charleston",
+                    "angle_fil": 0
+                }
+            },
+            "texture": "chene-blanc.jpeg"
+        },
+        {
+            "file": "NYC231H238PP",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "NYCOIFH238.fbx-2 Separations",
+            "name": "Module coiffeuse H238"
+        },
+        {
+            "file": "NYH219P40L048",
+            "name": "Module coiffeuse H238"
+        }
+    ]
+}

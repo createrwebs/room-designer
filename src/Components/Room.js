@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+
 import MainScene from '../3d/MainScene';
+import Loader from '../3d/Loader'
+import Draggable from '../3d/Draggable'
+
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+
 const localhost = window.location.hostname.indexOf('localhost') !== -1;
 
 class App extends Component {
@@ -18,7 +25,23 @@ class App extends Component {
 		node.appendChild(MainScene.getRendererNodeElement());
 		if (localhost) node.appendChild(MainScene.getStatNodeElement());
 
-		MainScene.fbxloadAll()
+		// MainScene.fbxloadAll()
+		this.fbxloadAll()
+	}
+	fbxloadAll() {
+
+		// here or on reducers ?
+
+		Loader.setup();
+		const loader = new FBXLoader(Loader.manager);
+		this.props.fbxs.forEach(props => loader.load(`models/${props.file}.fbx`, this.fbxloaded.bind(this, props)))
+	}
+	fbxloaded(props, object) {
+		// this.add(new Draggable(props, object));// meuble to put in the list better than the scene
+
+		if (props.position) {
+			MainScene.add(new Draggable(props, object));
+		}
 	}
 	render() {
 		// MainScene.updateCamera(this.props)
@@ -45,7 +68,9 @@ class App extends Component {
 	}
 }
 const mapStateToProps = (state) => {
+
 	return {
+		fbxs: state.config.fbx,
 		fov: state.camera.fov,
 		zoom: state.camera.zoom,
 		focus: state.camera.focus,

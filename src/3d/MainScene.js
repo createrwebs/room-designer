@@ -15,14 +15,12 @@ import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 // import { Scene } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module'
 
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 // Controls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
 
-import Loader from './Loader'
 import Draggable from './Draggable'
 import { setupLights } from './Lights'
 
@@ -36,13 +34,16 @@ export default {
     setup(config) {
         window.ts = this// f12 helper
 
+        const scene_params = this.scene_params = config.scene_params;
         let camera, scene, renderer, orbitControls, stats, manager;
 
-        Loader.setup();
-
-        var scene_params = config.scene_params;
-
-        this.scene = scene = new THREE.Scene();
+        if (this.scene) {
+            this.scene.clear()
+        }
+        else {
+            this.scene = new THREE.Scene();
+        }
+        scene = this.scene
         scene.background = new THREE.Color(scene_params.backgroundColor);
 
         if (scene_params.fogEnabled) {
@@ -132,11 +133,7 @@ export default {
         scene.add(mesh);
         */
 
-        /* lights */
-
-        const ceilHeight = 5000//ceiling @2.6m
-
-        setupLights(scene, scene_params)
+        this.setupLights()
 
         /* 0,0,0 dot */
 
@@ -152,6 +149,11 @@ export default {
 
         /* ground */
 
+        const groundMaterial = new THREE.MeshStandardMaterial({
+            color: scene_params.groundColor,
+            emissive: 0x2C2C2C,
+        });
+
         const geometryGround = new THREE.PlaneGeometry(55000, 55000, 12);
         this.ground = new THREE.Mesh(geometryGround, groundMaterial);
         this.ground.rotateX(Math.PI / -2);
@@ -162,42 +164,7 @@ export default {
 
         /* walls */
 
-        const wallConfig = config.walls;
-        const wallMaterial = new THREE.MeshStandardMaterial({
-            color: 0x7E838D,
-            transparent: true,
-            opacity: .25
-        });
-        const groundMaterial = new THREE.MeshStandardMaterial({
-            color: scene_params.groundColor,
-            emissive: 0x2C2C2C,
-        });
-
-        const geometryRight = new THREE.PlaneGeometry(wallConfig.right.width, 2600, 10, 10);
-        this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
-        this.wallRight.position.x = wallConfig.right.width / 2;
-        this.wallRight.position.y = 2600 / 2;
-        this.wallRight.castShadow = this.wallRight.receiveShadow = false;
-        scene.add(this.wallRight);
-
-        const geometryBack = new THREE.PlaneGeometry(wallConfig.back.width, 2600, 10, 10);
-        this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
-        this.wallBack.rotateY(Math.PI / 2)
-        this.wallBack.position.x = 0;
-        this.wallBack.position.y = 2600 / 2;
-        this.wallBack.position.z = wallConfig.back.width / 2;
-        this.wallBack.castShadow = this.wallBack.receiveShadow = false;
-        scene.add(this.wallBack);
-
-        const geometryLeft = new THREE.PlaneGeometry(wallConfig.left.width, 2600, 10, 10);
-        this.wallLeft = new THREE.Mesh(geometryLeft, wallMaterial);
-        this.wallLeft.position.x = wallConfig.left.width / 2;
-        this.wallLeft.position.y = 2600 / 2;
-        this.wallLeft.position.z = wallConfig.back.width;
-        this.wallLeft.rotateY(Math.PI);
-        this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
-        scene.add(this.wallLeft);
-
+        this.setupWalls(config.walls)
 
         // on enterframe obligatoire pour pouvoir jouer des animations, mais je crois qu'il y a un truc nouveau ( renderer.loop() )
         const animate = function () {
@@ -228,6 +195,51 @@ export default {
 
         // animate();
 
+    },
+    setupLights() {
+        setupLights(this.scene, this.scene_params)
+    },
+    setupWalls(wallConfig) {
+        if (this.wallRight) this.scene.remove(this.wallRight);
+        if (this.wallBack) this.scene.remove(this.wallBack);
+        if (this.wallLeft) this.scene.remove(this.wallLeft);
+
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: 0x7E838D,
+            transparent: true,
+            opacity: .25
+        });
+
+        if (wallConfig.right) {
+            const geometryRight = new THREE.PlaneGeometry(wallConfig.right.width, 2600, 10, 10);
+            this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
+            this.wallRight.position.x = wallConfig.right.width / 2;
+            this.wallRight.position.y = 2600 / 2;
+            this.wallRight.castShadow = this.wallRight.receiveShadow = false;
+            this.scene.add(this.wallRight);
+        }
+
+        if (wallConfig.back) {
+            const geometryBack = new THREE.PlaneGeometry(wallConfig.back.width, 2600, 10, 10);
+            this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
+            this.wallBack.rotateY(Math.PI / 2)
+            this.wallBack.position.x = 0;
+            this.wallBack.position.y = 2600 / 2;
+            this.wallBack.position.z = wallConfig.back.width / 2;
+            this.wallBack.castShadow = this.wallBack.receiveShadow = false;
+            this.scene.add(this.wallBack);
+        }
+
+        if (wallConfig.left) {
+            const geometryLeft = new THREE.PlaneGeometry(wallConfig.left.width, 2600, 10, 10);
+            this.wallLeft = new THREE.Mesh(geometryLeft, wallMaterial);
+            this.wallLeft.position.x = wallConfig.left.width / 2;
+            this.wallLeft.position.y = 2600 / 2;
+            this.wallLeft.position.z = wallConfig.back.width;
+            this.wallLeft.rotateY(Math.PI);
+            this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
+            this.scene.add(this.wallLeft);
+        }
     },
     updateCamera(props) {
         let camera = this.camera
@@ -269,13 +281,7 @@ export default {
         this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
     },
-    fbxloadAll() {
-        const loader = new FBXLoader(Loader.manager);
-        store.getState().config.fbx.forEach(props => loader.load(`models/${props.file}.fbx`, this.fbxloaded.bind(this, props)))
-    },
-    fbxloaded(props, object) {
-        this.add(new Draggable(props, object));// meuble to put in the list better than the scene
-    },
+
     add(meuble) {
         this.scene.add(meuble.object);
         // this.render();

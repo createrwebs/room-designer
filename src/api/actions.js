@@ -1,18 +1,21 @@
 
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
+    SETSCENES: 'setscenes',
+    LOADSCENE: 'loadscene',
     SETLIGHT: 'setlight',
 }
 export const CameraEvent = {
     SET: 'set',
     LOG: 'log'
 }
-export const ObjectEvent = {
+export const MeubleEvent = {
     ALLLOADED: 'allLoaded',
     ADD: 'add',
     REMOVE: 'remove',
     SELECT: 'select',
     DRAG: 'drag',
+    DROP: 'drop',
 }
 
 export const logCamera = () => {
@@ -30,6 +33,16 @@ export const setConfig = (config) => {
         type: SceneEvent.SETCONFIG, config
     }
 }
+export const setScenes = (scenes) => {
+    return {
+        type: SceneEvent.SETSCENES, scenes
+    }
+}
+export const loadScene = (name) => {
+    return {
+        type: SceneEvent.LOADSCENE, name
+    }
+}
 export const setLight = () => {
     return {
         type: SceneEvent.SETLIGHT
@@ -37,26 +50,31 @@ export const setLight = () => {
 }
 export const allLoaded = () => {
     return {
-        type: ObjectEvent.ALLLOADED
+        type: MeubleEvent.ALLLOADED
     }
 }
 export const drag = (meuble) => {
     return {
-        type: ObjectEvent.DRAG, meuble
+        type: MeubleEvent.DRAG, meuble
     }
 }
 export const add = (meuble) => {
     return {
-        type: ObjectEvent.ADD, meuble
+        type: MeubleEvent.ADD, meuble
     }
 }
 export const remove = (meuble) => {
     return {
-        type: ObjectEvent.REMOVE, meuble
+        type: MeubleEvent.REMOVE, meuble
     }
 }
 export const select = (meuble) => {
     return {
-        type: ObjectEvent.SELECT, meuble
+        type: MeubleEvent.SELECT, meuble
+    }
+}
+export const drop = (meuble) => {
+    return {
+        type: MeubleEvent.DROP, meuble
     }
 }

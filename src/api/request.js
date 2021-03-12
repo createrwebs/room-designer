@@ -1,8 +1,8 @@
 // import axios from 'axios'
 // import { domainURL } from './Config'
 
-export function getConfig() {
-	return fetch(`./config.json`, {
+export function getJson(name) {
+	return fetch(`./${name}.json`, {
 		method: "GET",
 		// mode: 'cors',
 		headers: {
@@ -10,14 +10,11 @@ export function getConfig() {
 			'Content-Type': 'application/json'
 		},
 		cache: 'default'
-	}).then(res => {
-		return res.json();
-	}
-	).then(usr => {
-		return usr
-	}).catch(e => {
-		console.log(e);
-	});
+	})
+		.then(res => res.json())
+		.catch(e => {
+			console.log(e);
+		});
 }
 
 /* export function getInfo(id) {

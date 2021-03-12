@@ -4,9 +4,9 @@ import { NotificationContainer } from 'react-notifications';
 // import 'react-notifications/lib/notifications.css';
 
 // import config from '../config.json';// config is dynamic loaded
-import { getConfig } from '../api/request';
+import { getJson } from '../api/request';
 import {
-	setConfig
+	setConfig, setScenes
 }
 	from '../api/actions'
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
@@ -16,7 +16,9 @@ import Toolbar from './bars/Toolbar';
 import Footer from './bars/Footer';
 import Room from './Room';
 import MeubleInfo from './MeubleInfo';
-// import MeubleList from './MeubleList';
+import Composer from './Composer';
+import Texturer from './Texturer';
+import MeubleList from './MeubleList';
 
 import './App.css';
 
@@ -27,11 +29,17 @@ class App extends Component {
 			webgl: WEBGL.isWebGLAvailable() ? "WEBGL is available" : "WEBGL is UNAVAILABLE"
 		};
 
-		getConfig()
+		getJson("config")
 			.then(c => this.props.setConfig(c))
 			.catch(e => {
 				console.log("load config error", e);
-			});
+			})
+
+		getJson("scenes")
+			.then(c => this.props.setScenes(c))
+			.catch(e => {
+				console.log("load scenes error", e);
+			})
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.onWindowResize);
@@ -66,22 +74,29 @@ class App extends Component {
 											<Room />
 										</div>
 									</div>
-									<div className="col-3 column-left">
-										<MeubleInfo />
-									</div>
+									{this.props.meubleInfoShowed &&
+										<div className="col-3 column-left">
+											<MeubleInfo />
+										</div>
+									}
+									{this.props.meubleListShowed &&
+										<div className="column-left">
+											<MeubleList />
+										</div>
+									}
+									{this.props.composerShowed &&
+										<div className="column-left">
+											<Composer />
+										</div>
+									}
+									{this.props.texturerShowed &&
+										<div className="column-left">
+											<Texturer />
+										</div>
+									}
 								</div>
 							</div>
 						</main>
-						{/* {this.props.meubleListShowed &&
-						<div className="column-left">
-						<MeubleList />
-						</div>
-						} */}
-						{
-							this.props.meubleInfoShowed &&
-							<div className="column-left">
-							</div>
-						}
 						<footer className="footer mt-auto py-2">
 							<div className="container">
 								<Footer webgl={this.state.webgl} />
@@ -97,11 +112,13 @@ const mapStateToProps = (state) => {
 	return {
 		configLoaded: state.config != null,
 		allAssetsLoaded: state.allAssetsLoaded,
-		meubleListShowed: false,//state.main.meubleListShowed,
+		meubleListShowed: state.layout.meubleListShowed,
+		composerShowed: state.layout.composerShowed,
+		texturerShowed: state.layout.texturerShowed,
 		meubleInfoShowed: state.selection != null,
 	}
 }
 const mapDispatchToProps = {
-	setConfig
+	setConfig, setScenes
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App)
