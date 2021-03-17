@@ -53,57 +53,44 @@ class App extends Component {
 	render() {
 		return (
 			<div className="main">
-				<header>
-					<Header />
-				</header>
 				{!this.props.allAssetsLoaded &&
-					<div id="loading_splash" className="pouet">Loading ...</div>
+					<div className="loading">Loading ...</div>
 				}
 				<NotificationContainer />
 				<Header />
 				{this.props.configLoaded &&
-					<div className="">
-						<main className="">
-							<div className="scene_wrapper">
-								<div className="row h-100">
-									<div className="col-9 h-100 px-0 canvas-wrapper">
-										<div className="toolbar">
-											<Toolbar />
-										</div>
-										<div className="column-main">
-											<Room />
-										</div>
-									</div>
-									{this.props.meubleInfoShowed &&
-										<div className="col-3 column-left">
-											<MeubleInfo />
-										</div>
-									}
-									{this.props.meubleListShowed &&
-										<div className="column-left">
-											<MeubleList />
-										</div>
-									}
-									{this.props.composerShowed &&
-										<div className="column-left">
-											<Composer />
-										</div>
-									}
-									{this.props.texturerShowed &&
-										<div className="column-left">
-											<Texturer />
-										</div>
-									}
+					<div className="scene-wrapper">
+						<div className="row h-100">
+							<div className="col-9 h-100 px-0 canvas-wrapper">
+								<div className="column-main">
+									<Toolbar />
+									<Room />
 								</div>
 							</div>
-						</main>
-						<footer className="footer mt-auto py-2">
-							<div className="container">
-								<Footer webgl={this.state.webgl} />
-							</div>
-						</footer>
+							{this.props.meubleInfoShowed &&
+								<div className="col-3 column-left">
+									<MeubleInfo />
+								</div>
+							}
+							{this.props.meubleListShowed &&
+								<div className="column-left">
+									<MeubleList />
+								</div>
+							}
+							{this.props.composerShowed &&
+								<div className="column-left">
+									<Composer />
+								</div>
+							}
+							{this.props.texturerShowed &&
+								<div className="column-left">
+									<Texturer />
+								</div>
+							}
+						</div>
 					</div>
 				}
+				<Footer webgl={this.state.webgl} />
 			</div>
 		)
 	}

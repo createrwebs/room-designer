@@ -20,7 +20,7 @@ const initialState = {
     dragged: null,
     selection: null,
     cameraLog: false,
-    // currentScene: null,
+    currentScene: null,
     allAssetsLoaded: false,
     camera: {
         fov: 70,
@@ -34,7 +34,7 @@ const initialState = {
         texturerShowed: false,
     }
 }
-
+let currentScene, localScenes, scenes
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
 
@@ -48,11 +48,73 @@ export const reducer = (state = initialState, action) => {
                 ...state, config: action.config
             }
         case SceneEvent.SETSCENES:
+            scenes = action.scenes
+            localScenes = localStorage && localStorage.getItem('scenes');
+            if (localScenes) scenes.push(...JSON.parse(localScenes))
             return {
-                ...state, scenes: action.scenes
+                ...state, scenes
+            }
+        case SceneEvent.NEWSCENE:
+            scenes = []
+            localScenes = localStorage && localStorage.getItem('scenes');
+            if (localScenes) scenes.push(...JSON.parse(localScenes))
+
+            let k = 1;
+            let name = "Nouvelle composition"
+            while (scenes.find(s => s.name === name) != null)
+                name = `Nouvelle composition ${k++}`
+
+            currentScene = {
+                name,
+                walls: state.config.walls,
+                meubles: []
+            }
+            scenes.push(currentScene)
+            localStorage.setItem('scenes', JSON.stringify(scenes));
+
+            MainScene.scene.clear();
+            MainScene.setupLights();
+            MainScene.setupWalls(currentScene.walls)
+            MainScene.render()
+            return {
+                ...state, currentScene: currentScene
+            }
+        case SceneEvent.SAVESCENE:
+            if (state.currentScene) {
+                scenes = []
+                localScenes = localStorage && localStorage.getItem('scenes');
+                if (localScenes) scenes.push(...JSON.parse(localScenes))
+
+                const item = scenes.find(s => s.name === state.currentScene.name)
+                const idx = scenes.indexOf(item)
+                if (idx >= 0)
+                    scenes[idx] = state.currentScene
+
+                localStorage.setItem('scenes', JSON.stringify(scenes));
+            }
+            return {
+                ...state
+            }
+        case SceneEvent.SAVESCENETOFILE:
+            if (state.currentScene) {
+                const uriContent = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(state.currentScene));
+                var pom = document.createElement('a');
+                pom.setAttribute('href', uriContent);
+                pom.setAttribute('download', `${state.currentScene.name}.minet`);
+                if (document.createEvent) {
+                    var event = document.createEvent('MouseEvents');
+                    event.initEvent('click', true, true);
+                    pom.dispatchEvent(event);
+                }
+                else {
+                    pom.click();
+                }
+            }
+            return {
+                ...state
             }
         case SceneEvent.LOADSCENE:
-            const currentScene = state.scenes.find(s => s.name == action.name)
+            currentScene = state.scenes.find(s => s.name == action.name)
             if (currentScene) {
                 const loader = new FBXLoader(Loader.manager);
                 MainScene.scene.clear();
@@ -63,10 +125,40 @@ export const reducer = (state = initialState, action) => {
                         MainScene.add(new Draggable(props, object));
                     }
                 }))
+                MainScene.render()
             }
             return {
                 ...state, currentScene: currentScene
             }
+        case SceneEvent.SETCURRENTSCENEPROP:
+            return {
+                ...state, currentScene: Object.assign(state.currentScene, action.prop)
+            }
+        case SceneEvent.SETCURRENTSCENEWALL:
+            currentScene = state.currentScene;
+            if (action.checked) {
+                currentScene.walls[action.wall] = 4000
+            }
+            else {
+                delete currentScene.walls[action.wall]
+            }
+            MainScene.setupWalls(currentScene.walls)
+            MainScene.render()
+            return {
+                ...state, currentScene
+            }
+        case SceneEvent.SETCURRENTSCENEWALLLENGTH:
+            console.log("ooo", action)
+            currentScene = state.currentScene;
+            currentScene.walls[action.wall] = action.length
+
+            // mapDispatchToProps on Room for currentScene, to update and render Three mainscene, or :
+            MainScene.setupWalls(currentScene.walls)
+            MainScene.render()
+            return {
+                ...state, currentScene
+            }
+
         case CameraEvent.SET:
             const camera = Object.assign(state.camera, action.prop);
             return {

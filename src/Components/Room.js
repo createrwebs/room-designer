@@ -23,7 +23,7 @@ class App extends Component {
 	componentDidMount() {
 		const node = this.canvasWrapperRef.current;
 		node.appendChild(MainScene.getRendererNodeElement());
-		if (localhost) node.appendChild(MainScene.getStatNodeElement());
+		// if (localhost) node.appendChild(MainScene.getStatNodeElement());
 
 		// MainScene.fbxloadAll()
 		this.fbxloadAll()

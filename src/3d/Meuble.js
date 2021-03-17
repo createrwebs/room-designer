@@ -190,7 +190,7 @@ export default class Meuble {
                 this.object.rotateY(Math.PI);
                 this.object.position.x = position.x;
                 this.object.position.y = 0;
-                this.object.position.z = wallConfig.back.width;
+                this.object.position.z = wallConfig.back;
                 break;
             case "right-back":
                 this.object.position.x = 0;
@@ -201,7 +201,7 @@ export default class Meuble {
                 this.object.rotateY(Math.PI / 2);
                 this.object.position.x = 0;
                 this.object.position.y = 0;
-                this.object.position.z = wallConfig.back.width;
+                this.object.position.z = wallConfig.back;
                 break;
             default:
         }

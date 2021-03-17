@@ -1,13 +1,13 @@
 import React from 'react';
-import './bars.css';
+import './button.css';
 
-// to be removed when bootstrap handles all buttons
+// to be removed when bootstrap handles all buttons ?
 
 export default function Button(props) {
   const { icon, text, action, cursor, status } = props;
   return (
     <div className={`btn-bar ${status}`} onClick={action} title={text} style={{ cursor: cursor !== null ? cursor : 'inherit' }}>
-      <i className={`${icon}`} />
+      <i className={`${icon} fixed-width`} />
       {/* <span>{text}</span> */}
     </div>
   );

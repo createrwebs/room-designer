@@ -1,16 +1,26 @@
 [
 	{
+		"name": "simple scene",
+		"walls": {
+			"right": 4000,
+			"back": 2500
+		},
+		"meubles": [
+			{
+				"file": "MOD_COIF-H238",
+				"position": {
+					"wall": "right",
+					"x": 500
+				}
+			}
+		]
+	},
+	{
 		"name": "La chambre de Vianney",
 		"walls": {
-			"right": {
-				"width": 4000
-			},
-			"back": {
-				"width": 5000
-			},
-			"left": {
-				"width": 2000
-			}
+			"right": 4000,
+			"back": 5000,
+			"left": 2000
 		},
 		"meubles": [
 			{
@@ -198,9 +208,7 @@
 	{
 		"name": "La salle d'encodage",
 		"walls": {
-			"right": {
-				"width": 9240
-			}
+			"right": 9240
 		},
 		"meubles": [
 			{

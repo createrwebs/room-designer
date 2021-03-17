@@ -89,8 +89,25 @@ export default class Draggable extends Meuble {
 
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
-        Draggable.WallConfig = store.getState().currentScene ?
-            store.getState().currentScene.walls : store.getState().config.walls;
+        const scene = store.getState().currentScene
+        const config = store.getState().config
+        if (scene) {
+            ['right', 'back', 'left'].map(w => {
+                if (scene.walls[w])
+                    Draggable.WallConfig[w] = {
+                        length: scene.walls[w]
+                    }
+            })
+        }
+        else {
+            ['right', 'back', 'left'].map(w => {
+                if (config.walls[w])
+                    Draggable.WallConfig[w] = {
+                        length: config.walls[w]
+                    }
+            })
+        }
+
         Draggable.setupWallConstraints(this)
         Draggable.Nowtime = Date.now();
         Draggable.axis = Draggable.getAxisForWall(this.wall);
@@ -116,15 +133,15 @@ export default class Draggable extends Meuble {
     static setupWallConstraints(meuble) {
         if (Draggable.WallConfig.right) {
             Draggable.WallConfig.right.min = 0
-            Draggable.WallConfig.right.max = Draggable.WallConfig.right.width - meuble.width
+            Draggable.WallConfig.right.max = Draggable.WallConfig.right.length - meuble.width
         }
         if (Draggable.WallConfig.back) {
             Draggable.WallConfig.back.min = meuble.width
-            Draggable.WallConfig.back.max = Draggable.WallConfig.back.width
+            Draggable.WallConfig.back.max = Draggable.WallConfig.back.length
         }
         if (Draggable.WallConfig.left) {
             Draggable.WallConfig.left.min = meuble.width
-            Draggable.WallConfig.left.max = Draggable.WallConfig.left.width
+            Draggable.WallConfig.left.max = Draggable.WallConfig.left.length
         }
     }
 
@@ -147,8 +164,8 @@ export default class Draggable extends Meuble {
             lastMeuble = m;
             lastPos = m.position;
         })
-        if (Draggable.WallConfig[wall].width - (segment ? segment.max : 0) >= meuble.width) {
-            Space.onWall[wall].push(new Space((segment ? segment.max : 0), Draggable.WallConfig[wall].width, lastMeuble, null))
+        if (Draggable.WallConfig[wall].length - (segment ? segment.max : 0) >= meuble.width) {
+            Space.onWall[wall].push(new Space((segment ? segment.max : 0), Draggable.WallConfig[wall].length, lastMeuble, null))
         }
         // console.log(`Spaces.onWall ${wall}`, Space.onWall[wall]);
         if (Space.onWall[wall].length == 0) {
@@ -200,7 +217,7 @@ export default class Draggable extends Meuble {
         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
             return
         }
-        let wallWidth = Draggable.WallConfig[this.wall].width;
+        let wallLength = Draggable.WallConfig[this.wall].length;
         let axis;
         Draggable.axis = Draggable.getAxisForWall(this.wall);
         switch (this.wall) {
@@ -229,7 +246,7 @@ export default class Draggable extends Meuble {
                     return;
                 }
                 if (Draggable.WallConfig.left
-                    && event.object.position.z > Draggable.switchWallThreshold + wallWidth
+                    && event.object.position.z > Draggable.switchWallThreshold + wallLength
                     && Space.onWall["left"].length > 0) {
                     this.wall = "left"
                     this.object.rotateY(Math.PI / 2);
@@ -239,7 +256,7 @@ export default class Draggable extends Meuble {
             case "left":
                 axis = "x";
                 event.object.position.y = 0;
-                event.object.position.z = Draggable.WallConfig.back.width;
+                event.object.position.z = Draggable.WallConfig.back.length;
                 if (Draggable.WallConfig.back
                     && event.object.position.x < - Draggable.switchWallThreshold//corner turn
                     && Space.onWall["back"].length > 0) {

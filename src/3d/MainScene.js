@@ -210,32 +210,32 @@ export default {
             opacity: .25
         });
 
-        if (wallConfig.right) {
-            const geometryRight = new THREE.PlaneGeometry(wallConfig.right.width, 2600, 10, 10);
+        if (wallConfig.right > 0) {
+            const geometryRight = new THREE.PlaneGeometry(wallConfig.right, 2600, 10, 10);
             this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
-            this.wallRight.position.x = wallConfig.right.width / 2;
+            this.wallRight.position.x = wallConfig.right / 2;
             this.wallRight.position.y = 2600 / 2;
             this.wallRight.castShadow = this.wallRight.receiveShadow = false;
             this.scene.add(this.wallRight);
         }
 
-        if (wallConfig.back) {
-            const geometryBack = new THREE.PlaneGeometry(wallConfig.back.width, 2600, 10, 10);
+        if (wallConfig.back > 0) {
+            const geometryBack = new THREE.PlaneGeometry(wallConfig.back, 2600, 10, 10);
             this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
             this.wallBack.rotateY(Math.PI / 2)
             this.wallBack.position.x = 0;
             this.wallBack.position.y = 2600 / 2;
-            this.wallBack.position.z = wallConfig.back.width / 2;
+            this.wallBack.position.z = wallConfig.back / 2;
             this.wallBack.castShadow = this.wallBack.receiveShadow = false;
             this.scene.add(this.wallBack);
         }
 
-        if (wallConfig.left) {
-            const geometryLeft = new THREE.PlaneGeometry(wallConfig.left.width, 2600, 10, 10);
+        if (wallConfig.left > 0) {
+            const geometryLeft = new THREE.PlaneGeometry(wallConfig.left, 2600, 10, 10);
             this.wallLeft = new THREE.Mesh(geometryLeft, wallMaterial);
-            this.wallLeft.position.x = wallConfig.left.width / 2;
+            this.wallLeft.position.x = wallConfig.left / 2;
             this.wallLeft.position.y = 2600 / 2;
-            this.wallLeft.position.z = wallConfig.back.width;
+            this.wallLeft.position.z = wallConfig.back;
             this.wallLeft.rotateY(Math.PI);
             this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
             this.scene.add(this.wallLeft);

@@ -38,10 +38,6 @@
             "file": "ANGLE_H238_45",
             "name": "Module Angle H238",
             "is_angle": true,
-            "position": {
-                "wall": "back",
-                "x": 5000
-            },
             "textures": {
                 "hori": {
                     "url": "chene-blanc-hori.jpg",
@@ -80,10 +76,6 @@
         {
             "file": "MOD_COIF-H238",
             "name": "Module coiffeuse H238",
-            "position": {
-                "wall": "back",
-                "x": 1875
-            },
             "textures": {
                 "hori": {
                     "url": "chene-blanc-hori.jpg",
@@ -118,10 +110,6 @@
         {
             "file": "MOD_H238_P62_L40",
             "name": "Module H219 P40 L48vvv",
-            "position": {
-                "wall": "right",
-                "x": 1900
-            },
             "textures": {
                 "hori": {
                     "url": "chene-blanc-hori.jpg",
@@ -144,10 +132,6 @@
         {
             "file": "MOD_H238_P62_L119_TP",
             "name": "Module H219 P40 L48vvv",
-            "position": {
-                "wall": "back",
-                "x": 3900
-            },
             "textures": {
                 "hori": {
                     "url": "chene-blanc-hori.jpg",
@@ -170,10 +154,6 @@
         {
             "file": "MOD_H238_P62_L119",
             "name": "Module H219 P40 L48",
-            "position": {
-                "wall": "back",
-                "x": 3080
-            },
             "textures": {
                 "hori": {
                     "url": "chene-blanc-hori.jpg",
@@ -231,10 +211,6 @@
                     ]
                 }
             ],
-            "position": {
-                "wall": "left",
-                "x": 3400
-            },
             "textures": {
                 "hori": {
                     "url": "chene-blanc-hori.jpg",

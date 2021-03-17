@@ -1,3 +1,37 @@
+.toolbar {
+    z-index: 5;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    margin: 6px;
+}
+
+.toolbar>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px;
+}
+
+.toolpanels {
+    z-index: 6;
+    position: absolute;
+    top: 40px;
+    padding: 12px;
+}
+
+.floatingbar {
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #2c2c2c;
+    color: white;
+    background: #484f61;
+}
+
+
+
+
+
 .headerbar {
     background: #444444;
     color: gainsboro;
@@ -58,57 +92,4 @@
 
 .infobar input[type="number"] {
     width: 34px;
-}
-
-.btn-bar {
-    cursor: pointer;
-    border: none;
-    padding: 5px 8px;
-    color: rgb(175, 175, 175);
-    display: inline-block;
-}
-
-.btn-bar.npl {
-    padding-left: 3px;
-}
-.btn-bar.npr {
-    padding-right: 3px;
-}
-
-.btn-bar:hover,
-.btn-bar:focus {
-    text-decoration: none;
-    outline: none;
-    color: white;
-}
-
-.btn-bar>span {
-    font-size: 12px;
-    display: block;
-    color: white;
-}
-
-.active {
-    color: green;
-}
-
-.active:hover {
-    color: chartreuse;
-}
-
-.inactive {
-    color: orangered;
-}
-
-.inactive:hover {
-    color: red;
-}
-
-.deactivated {
-    color: darkgrey;
-    cursor: default;
-}
-
-.deactivated:hover {
-    color: darkgrey;
 }

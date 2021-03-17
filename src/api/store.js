@@ -1,9 +1,12 @@
 // import { createStore } from 'redux'
 import { createStore, applyMiddleware } from 'redux';
 import { reducer } from './reducers'
-// import { createLogger } from 'redux-logger';
+import { createLogger } from 'redux-logger';
 
-// const loggerMiddleware = createLogger();
+const logger = createLogger({
+    // collapsed: true,// Three bug
+    // diff: true
+});
 
 
 
@@ -15,9 +18,7 @@ function configure(preloadedState) {
     const store = createStore(
         reducer,
         preloadedState,
-        applyMiddleware(
-            // loggerMiddleware
-        )
+        applyMiddleware(logger)
     );
     // if (module.hot) {
     // 	// Enable Webpack hot module replacement for reducers

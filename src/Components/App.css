@@ -41,12 +41,17 @@ body {
   position: relative;
 }
 
+.minetnavbar {
+  color: white;
+  background-color: #3b3f47;
+}
+
 .column-main .con {
   height: calc(100vh - 56px) !important;
   overflow: hidden;
 }
 
-.pouet {
+.loading {
   position: absolute;
   top: 0;
   left: 0;
@@ -65,49 +70,7 @@ body {
   position: relative;
 }
 
-main>.scene_wrapper {
-  padding: 56px 15px 0;
-  height: 100vh;
-}
-
-.minetnavbar {
-  background-color: #3b3f47;
-}
-
-.canvas-wrapper {
-  background-color: #fafafa;
+.scene-wrapper {
   position: relative;
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-}
-
-.canvas-wrapper .toolbar {
-  width: 100%;
-  display: flex;
-  position: absolute;
-  z-index: 2;
-  align-items: center;
-  justify-content: center;
-  margin: 0px;
-  padding: 10px;
-}
-
-.canvas-wrapper .toolbar .tools_wrapper {
-  background: #484f61;
-  border-radius: 3px;
-  box-shadow: 0px 0px 5px #2c2c2c;
-  color: white;
-  display: inline-flex;
-  margin: 0 5px;
-}
-
-.tools_wrapper.dropdown:hover .btn-bar {
-  color: white;
+  /* height: 100vh; */
 }

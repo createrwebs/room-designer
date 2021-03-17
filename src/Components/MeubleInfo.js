@@ -31,7 +31,7 @@ class MeubleInfo extends Component {
                         largeur: {this.props.selection.width}<br />
                         wall: {this.props.selection.wall}<br />
                         angle: {this.props.selection.angle}<br />
-                        largeur: {this.props.selection.position}<br />
+                        position: {this.props.selection.position}<br />
                         H: {this.props.selection.dim.H}<br />
                         P: {this.props.selection.dim.P}<br />
                         L: {this.props.selection.dim.L}<br />

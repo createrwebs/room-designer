@@ -2,8 +2,14 @@
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
     SETSCENES: 'setscenes',
+    NEWSCENE: 'newscene',
+    SAVESCENE: 'savescene',
+    SAVESCENETOFILE: 'savescenetofile',
     LOADSCENE: 'loadscene',
     SETLIGHT: 'setlight',
+    SETCURRENTSCENEPROP: 'setcurrentsceneprop',
+    SETCURRENTSCENEWALL: 'setcurrentscenewall',
+    SETCURRENTSCENEWALLLENGTH: 'setcurrentscenewalllength',
 }
 export const CameraEvent = {
     SET: 'set',
@@ -38,6 +44,37 @@ export const setScenes = (scenes) => {
         type: SceneEvent.SETSCENES, scenes
     }
 }
+export const newScene = () => {
+    return {
+        type: SceneEvent.NEWSCENE
+    }
+}
+export const saveScene = () => {
+    return {
+        type: SceneEvent.SAVESCENE
+    }
+}
+export const saveSceneToFile = () => {
+    return {
+        type: SceneEvent.SAVESCENETOFILE
+    }
+}
+export const setCurrentSceneProp = (prop) => {
+    return {
+        type: SceneEvent.SETCURRENTSCENEPROP, prop
+    }
+}
+export const setCurrentSceneWall = (wall, checked) => {
+    return {
+        type: SceneEvent.SETCURRENTSCENEWALL, wall, checked
+    }
+}
+export const setCurrentSceneWallLength = (wall, length) => {
+    return {
+        type: SceneEvent.SETCURRENTSCENEWALLLENGTH, wall, length
+    }
+}
+
 export const loadScene = (name) => {
     return {
         type: SceneEvent.LOADSCENE, name

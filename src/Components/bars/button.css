@@ -1,0 +1,53 @@
+.btn-bar {
+    cursor: pointer;
+    border: none;
+    padding: 5px 6px;
+    color: rgb(175, 175, 175);
+    display: inline-block;
+}
+
+.btn-bar.npl {
+    padding-left: 3px;
+}
+
+.btn-bar.npr {
+    padding-right: 3px;
+}
+
+.btn-bar:hover,
+.btn-bar:focus {
+    text-decoration: none;
+    outline: none;
+    color: white;
+}
+
+.btn-bar>span {
+    font-size: 12px;
+    display: block;
+    color: white;
+}
+
+.active {
+    color: green;
+}
+
+.active:hover {
+    color: chartreuse;
+}
+
+.inactive {
+    color: orangered;
+}
+
+.inactive:hover {
+    color: red;
+}
+
+.deactivated {
+    color: darkgrey;
+    cursor: default;
+}
+
+.deactivated:hover {
+    color: darkgrey;
+}
