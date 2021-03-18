@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { drop } from '../api/actions'
+import { drop, clickMeubleLine } from '../api/actions'
 import { getMeubleName } from '../api/Utils';
 import MeubleLine from './MeubleLine';
 import Button from './bars/Button';
@@ -39,6 +39,7 @@ class MeubleList extends Component {
                             <MeubleLine key={idx}
                                 file={u.file}
                                 name={u.name}
+                                click={this.props.clickMeubleLine}
                             />)}
                 </div>
             </div>
@@ -53,6 +54,6 @@ function mapStateToProps(state, props) {
     };
 }
 const mapDispatchToProps = {
-    drop
+    drop, clickMeubleLine
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MeubleList);

@@ -6,7 +6,7 @@ import { NotificationContainer } from 'react-notifications';
 // import config from '../config.json';// config is dynamic loaded
 import { getJson } from '../api/request';
 import {
-	setConfig, setScenes
+	setConfig, setScenes, loadScene
 }
 	from '../api/actions'
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
@@ -40,7 +40,11 @@ class App extends Component {
 			.catch(e => {
 				console.log("load scenes error", e);
 			})
+			.then(setScenesAction => {
+				if (setScenesAction.scenes.length > 0) this.props.loadScene(setScenesAction.scenes[0].name)
+			})
 	}
+
 	componentDidMount() {
 		window.addEventListener('resize', this.onWindowResize);
 	}
@@ -106,6 +110,6 @@ const mapStateToProps = (state) => {
 	}
 }
 const mapDispatchToProps = {
-	setConfig, setScenes
+	setConfig, setScenes, loadScene
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App)

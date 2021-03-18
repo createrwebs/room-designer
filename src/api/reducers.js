@@ -12,7 +12,7 @@ import Loader from '../3d/Loader'
 import MainScene from '../3d/MainScene';
 import Draggable from '../3d/Draggable'
 
-
+const loader = new FBXLoader(Loader.manager);
 const initialState = {
     config: null,
     scenes: [],
@@ -116,7 +116,7 @@ export const reducer = (state = initialState, action) => {
         case SceneEvent.LOADSCENE:
             currentScene = state.scenes.find(s => s.name == action.name)
             if (currentScene) {
-                const loader = new FBXLoader(Loader.manager);
+
                 MainScene.scene.clear();
                 MainScene.setupLights();
                 MainScene.setupWalls(currentScene.walls)
@@ -190,6 +190,28 @@ export const reducer = (state = initialState, action) => {
                 return m !== action.meuble
             })
             return { ...state, meublesOnScene: meublesOnScene2 };
+        case MeubleEvent.CLICKMEUBLELINE:
+            const props = state.config.fbx.find(f => f.file === action.file)
+
+            loader.load(`models/${props.file}.fbx`, object => {
+
+                // find front wall, best location for new Meuble
+                let wall = Object.keys(state.currentScene.walls)[0] || "right"
+                const intersects = MainScene.getRaycasterIntersect()
+                const intersect = intersects.find(i => i.object.name.includes("wall-"))
+                if (intersect) wall = intersect.object.name.substring("wall-".length)
+                console.log("front wall found", wall)
+
+                // place on front wall ? ..Draggable routines ! //TODO
+                props.position = {
+                    wall,
+                    x: 0
+                }
+                MainScene.add(new Draggable(props, object));
+            })
+            MainScene.render()
+
+            return { ...state };
         default:
             return state;
     }

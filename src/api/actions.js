@@ -22,6 +22,7 @@ export const MeubleEvent = {
     SELECT: 'select',
     DRAG: 'drag',
     DROP: 'drop',
+    CLICKMEUBLELINE: 'clickmeubleline'
 }
 
 export const logCamera = () => {
@@ -113,5 +114,10 @@ export const select = (meuble) => {
 export const drop = (meuble) => {
     return {
         type: MeubleEvent.DROP, meuble
+    }
+}
+export const clickMeubleLine = (file) => {
+    return {
+        type: MeubleEvent.CLICKMEUBLELINE, file
     }
 }

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 // import shave from 'shave';
 // import Button from './bars/Button';
 
-class UserLine extends Component {
+class MeubleLine extends Component {
     render() {
-        // shave('.userline-span', 18);
+        // shave('.Meubleline-span', 18);
         return (
-            <div className={`userline`}>
+            <div className={`meubleline`} onClick={e => this.props.click(this.props.file)}>
                 <span>
                     {this.props.name}<br />
                     {this.props.file}<br />
@@ -15,4 +15,4 @@ class UserLine extends Component {
         );
     }
 }
-export default UserLine
+export default MeubleLine

@@ -95,10 +95,10 @@ export default {
         /* raycaster */
 
         var selectedObject;
-        var raycaster = new THREE.Raycaster();
         // /* renderer.domElement.addEventListener("click", onclick, true);
         function onclick(event) {
             console.log("onclick")
+            var raycaster = new THREE.Raycaster();
             var mouse = new THREE.Vector2();
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObjects(scene.children, false); //array
@@ -213,6 +213,7 @@ export default {
         if (wallConfig.right > 0) {
             const geometryRight = new THREE.PlaneGeometry(wallConfig.right, 2600, 10, 10);
             this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
+            this.wallRight.name = "wall-right";
             this.wallRight.position.x = wallConfig.right / 2;
             this.wallRight.position.y = 2600 / 2;
             this.wallRight.castShadow = this.wallRight.receiveShadow = false;
@@ -222,6 +223,7 @@ export default {
         if (wallConfig.back > 0) {
             const geometryBack = new THREE.PlaneGeometry(wallConfig.back, 2600, 10, 10);
             this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
+            this.wallBack.name = "wall-back";
             this.wallBack.rotateY(Math.PI / 2)
             this.wallBack.position.x = 0;
             this.wallBack.position.y = 2600 / 2;
@@ -233,6 +235,7 @@ export default {
         if (wallConfig.left > 0) {
             const geometryLeft = new THREE.PlaneGeometry(wallConfig.left, 2600, 10, 10);
             this.wallLeft = new THREE.Mesh(geometryLeft, wallMaterial);
+            this.wallLeft.name = "wall-left";
             this.wallLeft.position.x = wallConfig.left / 2;
             this.wallLeft.position.y = 2600 / 2;
             this.wallLeft.position.z = wallConfig.back;
@@ -263,10 +266,6 @@ export default {
         }
     },
     allLoaded() {
-        // putain obligé de gratter au fin fond pour mettre les stats dans le container plutot que dans le body !!
-        // ...utiliser react pour ça
-        // this.frame_stats.dom.style.position = "absolute";
-        // document.getElementById('canvas_wrapper').appendChild(this.frame_stats.dom);
         this.frame_stats.begin();
 
         this.render();
@@ -287,4 +286,16 @@ export default {
         // this.render();
         store.dispatch(add(meuble))
     },
+
+    getRaycasterIntersect() {
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        raycaster.setFromCamera(mouse, this.camera);
+        var intersects = raycaster.intersectObjects(this.scene.children, false); //array
+        return intersects;
+        // if (intersects.length > 0) {
+        //     // selectedObject = intersects[0];
+        //     // console.log(selectedObject);
+        // }
+    }
 }
