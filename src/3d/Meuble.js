@@ -6,8 +6,6 @@ import {
 import store from '../api/store';
 import * as THREE from "three";
 import MainScene from './MainScene';
-import { NotificationManager } from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
 
 // Controls
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
@@ -20,12 +18,14 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { loadTextures } from './Texture';
 
 export default class Meuble {
-    static dragged = null;
     constructor (props, object) {
         // console.log('Meuble', props, object)
         this.object = object;// threejs group mesh
+
+        // sku props :
+        this.sku = props.sku;
         this.file = props.file;
-        this.name = props.name;
+        this.ID = props.ID;
         this.wall = props.position.wall;
         this.angle = props.angle;
         if (props.subGroups) {
@@ -38,10 +38,11 @@ export default class Meuble {
         // this.segment = this.getSegment(object)// store width for performance collision
         // this.dragControls = this.
         this.setPosition(props.position);
-        console.log("Loaded module ", this.name, this.width);
+        console.log(`Meuble ${this.ID} of width ${this.width}mm on ${props.position.wall} wall at ${props.position.x}mm`, props, object, this);
 
         /* object dimensions by parsing its name */
 
+        /*         
         const file = this.file.split('_');
         const type = file.shift();
         let dim = {}
@@ -51,11 +52,14 @@ export default class Meuble {
             })
         }
         this.dim = dim;
-        console.log("dim", this.dim)
+        console.log("dim", this.dim) */
 
         /* textures */
 
-        if (props.textures && false) loadTextures(object, props.textures);
+        if (props.textures) loadTextures(object, props.textures).then(response => {
+            console.log(`textures loaded`, response)
+
+        })
 
         /* panneaux lateraux */
 
@@ -86,10 +90,13 @@ export default class Meuble {
                 material_bords.needsUpdate = true;
             }
 
+            /* add dynamic panneaux lateraux 
+
             const geometry = new THREE.BoxBufferGeometry(e, this.dim.H, this.dim.P);
 
             //geometry.computeBoundingSphere();
-            //geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);// THREE.BufferGeometry error => je pense que tu ne peux faire le translate que quand il a été ajouté dans la scene
+            // THREE.BufferGeometry error => je pense que tu ne peux faire le translate que quand il a été ajouté dans la scene
+            //geometry.translate(e / 2, this.dim.H / 2, this.dim.P / 2);
             //geometry.attributes.position = new BufferAttribute( newPos, 2 );
             //geometry.position.set( e / 2, this.dim.H / 2, this.dim.P / 2 );
 
@@ -113,11 +120,23 @@ export default class Meuble {
 
             this.object.add(this.panneauLeft);
             this.object.add(this.panneauRight);
+            */
         }
 
         // this.createGroups();
 
-        // MainScene.render();
+        MainScene.render();
+    }
+
+    select() {
+
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x0000FF,    // red (can also use a CSS color string here)
+            flatShading: true,
+        });
+
+        this.object.material = material
+        this.object.material.emissive.set(0x000000);
     }
 
     /* si l'objet contient des sous groupes, les créer et cacher les meshes d'origine  */
@@ -205,5 +224,36 @@ export default class Meuble {
                 break;
             default:
         }
+    }
+    getFrontPosition() {
+        const d = 3000// distance de recul pour observer le meuble selectionné
+        const center = this.getCenterPoint()
+        switch (this.wall) {
+            case "right":
+                return center.add(new THREE.Vector3(0, 0, d))
+                break;
+            case "back":
+                return center.add(new THREE.Vector3(d, 0, 0))
+                break;
+            case "left":
+                return center.add(new THREE.Vector3(0, 0, -d))
+                break;
+            case "right-back":
+                return center.add(new THREE.Vector3(d, 0, d))
+                break;
+            case "left-back":
+                return center.add(new THREE.Vector3(d, 0, -d))
+                break;
+            default:
+        }
+    }
+    getCenterPoint() {
+        var box = new THREE.Box3().setFromObject(this.object);
+        var middle = new THREE.Vector3();
+        middle.x = (box.max.x + box.min.x) / 2;
+        middle.y = (box.max.y + box.min.y) / 2;
+        middle.z = (box.max.z + box.min.z) / 2;
+        // mesh.localToWorld(middle);
+        return middle;
     }
 }

@@ -1,7 +1,7 @@
 {
 	"walls": {
-		"right": 4000,
-		"back": 5000,
+		"right": 5000,
+		"back": 14000,
 		"left": 2000
 	},
 	"scene_params": {
@@ -13,10 +13,11 @@
 			"near": 10000,
 			"far": 15000
 		},
-		"properties": {
+		"renderer": {
 			"antialias": true,
 			"powerPreference": "low-power",
-			"failIfMajorPerformanceCaveat": false
+			"failIfMajorPerformanceCaveat": false,
+			"preserveDrawingBuffer": true
 		},
 		"shadowMap": {
 			"enabled": false,
@@ -26,30 +27,5 @@
 			"width": 1024,
 			"height": 1024
 		}
-	},
-	"fbx": [
-		{
-			"file": "ANGLE_H238_45",
-			"name": "Module Angle H238",
-			"is_angle": true,
-			"textures": {
-				"hori": {
-					"url": "chene-blanc-hori.jpg",
-					"label": "Chêne blanc",
-					"angle_fil": 0
-				},
-				"vert": {
-					"url": "chene-blanc-vert.jpg",
-					"label": "Chêne blanc",
-					"angle_fil": 90
-				},
-				"fond": {
-					"url": "cuir.jpg",
-					"label": "Chêne blanc",
-					"angle_fil": 0
-				}
-			},
-			"texture": "chene-blanc.jpeg"
-		}
-	]
+	}
 }

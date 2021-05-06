@@ -4,7 +4,6 @@ import {
     from '../api/actions'
 import store from '../api/store';
 
-import { NotificationManager } from 'react-notifications';
 import { LoadingManager } from "three";
 
 export default {
@@ -29,7 +28,6 @@ export default {
                  } */
     },
     loadManagerError(url) {
-        // console.log('There was an error loading ' + url);
-        NotificationManager.warning(`${url}`, "Erreur chargement", 400);
+        console.log('There was an error loading ' + url);
     }
 }

@@ -34,7 +34,7 @@ export default class Draggable extends Meuble {
 
     static switchWallThreshold = 250// mm de drag après un angle pour changer de mur
     static meubleMagnet = 100// magnetisme du meuble (mm)
-    static selectClickBeforeDragDelay = 180// delay (ms) before meuble drag start
+    static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
 
     static WallConfig = {}// from scene walls config or app current settings
     static MeublesOnWall = []// meubles wall arrays sorted 
@@ -80,15 +80,22 @@ export default class Draggable extends Meuble {
         }
         this.dragControls = dragControls;
     }
-    dragStart(event) {
-        if (Draggable.Dragged) {
-            event.target.enabled = false;// deactivation of other Draggable
-            return
-        }
-        Draggable.Dragged = this;
+    /*
+    for click to add new meuble
+    */
+    static getSpaceOnWall(meuble) {
+        Draggable.setWallConfig();
+        Draggable.setupWallConstraints(meuble)
+        // Draggable.Nowtime = Date.now();
+        Draggable.axis = Draggable.getAxisForWall(meuble.wall);
+        Draggable.populateMeublesOnWalls()
+        // Draggable.populateSpacesOnWalls(meuble)
+        const hasSpace = Draggable.getSpacesOnWall(meuble.wall, Draggable.getAxisForWall(meuble.wall), meuble)
+        if (!hasSpace) return false
+        return Draggable.collisionSolver(meuble)
+    }
 
-        MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
-
+    static setWallConfig() {
         const scene = store.getState().currentScene
         const config = store.getState().config
         if (scene) {
@@ -107,15 +114,6 @@ export default class Draggable extends Meuble {
                     }
             })
         }
-
-        Draggable.setupWallConstraints(this)
-        Draggable.Nowtime = Date.now();
-        Draggable.axis = Draggable.getAxisForWall(this.wall);
-        Draggable.populateMeublesOnWalls()
-        Draggable.populateSpacesOnWalls(this)
-
-        store.dispatch(drag(this))
-        store.dispatch(select(this))// selection
     }
     static getAxisForWall(wall) {
         switch (wall) {
@@ -170,7 +168,9 @@ export default class Draggable extends Meuble {
         // console.log(`Spaces.onWall ${wall}`, Space.onWall[wall]);
         if (Space.onWall[wall].length == 0) {
             console.log(`no space on wall ${wall}`)
+            return false;
         }
+        else return true
     }
     /* populate MeublesOnWall list for all walls */
     static populateMeublesOnWalls() {
@@ -212,6 +212,26 @@ export default class Draggable extends Meuble {
         }
     }
 
+
+    dragStart(event) {
+        if (Draggable.Dragged) {
+            event.target.enabled = false;// deactivation of other Draggable
+            return
+        }
+        Draggable.Dragged = this;
+
+        MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
+
+        Draggable.setWallConfig();
+        Draggable.setupWallConstraints(this)
+        Draggable.Nowtime = Date.now();
+        Draggable.axis = Draggable.getAxisForWall(this.wall);
+        Draggable.populateMeublesOnWalls()
+        Draggable.populateSpacesOnWalls(this)
+
+        store.dispatch(drag(this))
+        // store.dispatch(select(this))// selection
+    }
     dragging(event) {
         // drag start delay to let selection click
         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
@@ -280,7 +300,6 @@ export default class Draggable extends Meuble {
 
     dragEnd(event) {
         MainScene.orbitControls.enabled = true;
-        // event.object.material.emissive.set(0x000000);
         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
             store.dispatch(select(this))
         }

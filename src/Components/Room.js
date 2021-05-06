@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import { NotificationManager } from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
+import {
+	add,
+	allLoaded
+}
+	from '../api/actions'
 
 import MainScene from '../3d/MainScene';
 import Loader from '../3d/Loader'
@@ -10,23 +12,24 @@ import Draggable from '../3d/Draggable'
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
-const localhost = window.location.hostname.indexOf('localhost') !== -1;
+// const localhost = window.location.hostname.indexOf('localhost') !== -1;
 
-class App extends Component {
+class Room extends Component {
 	constructor (props) {
 		super(props);
-		this.canvasWrapperRef = React.createRef();
+		this.threejsSceneRef = React.createRef();
 
 		this.state = {
 		};
 	}
 	componentDidMount() {
-		const node = this.canvasWrapperRef.current;
+		const node = this.threejsSceneRef.current;
 		node.appendChild(MainScene.getRendererNodeElement());
 		// if (localhost) node.appendChild(MainScene.getStatNodeElement());
 
-		// MainScene.fbxloadAll()
-		this.fbxloadAll()
+		// this.fbxloadAll()
+		// shortcut to display scene:
+		// this.props.allLoaded()
 	}
 	fbxloadAll() {
 
@@ -41,27 +44,21 @@ class App extends Component {
 
 		if (props.position) {
 			MainScene.add(new Draggable(props, object));
+			this.props.add(meuble)
 		}
 	}
 	render() {
-		// MainScene.updateCamera(this.props)
-		// MainScene.updateLights(this.props.light)
-		MainScene.orbitControls.update();// renders
-		// MainScene.render()
+		MainScene.orbitControls.update();
 
 		return (
-			<div id="canvas-wrapper" className="con"
-				ref={this.canvasWrapperRef}
+			<div ref={this.threejsSceneRef}
 				style={{
-					// backgroundColor: 'white',
-					// position: 'absolute',
 					top: '0',
 					left: '0',
-					// padding: '6px',
 					display: 'block',
-					// zIndex: 99999,
-					width: "100%",
-					height: "100%"
+					width: '100%',
+					height: '100%',
+					// border: '1px solid blue'
 				}}>
 			</div>
 		)
@@ -78,5 +75,7 @@ const mapStateToProps = (state) => {
 	}
 }
 const mapDispatchToProps = {
+	add,
+	allLoaded
 };
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(Room)

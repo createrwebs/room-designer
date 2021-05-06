@@ -1,19 +1,16 @@
-import {
+/* import {
     select,
     add,
     remove
 }
     from '../api/actions'
-import store from '../api/store';
-
-import { NotificationManager } from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
-
+import store from '../api/store'; */
 
 import * as THREE from "three";
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 // import { Scene } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module'
+import { localhost } from '../api/Config';
 
 
 // Controls
@@ -46,13 +43,19 @@ export default {
         scene = this.scene
         scene.background = new THREE.Color(scene_params.backgroundColor);
 
-        if (scene_params.fogEnabled) {
-            scene.fog = new THREE.Fog(scene_params.fog.color, scene_params.fog.near, scene_params.fog.far);
-        }
+        /*         if (scene_params.fogEnabled) {
+                    scene.fog = new THREE.Fog(scene_params.fog.color, scene_params.fog.near, scene_params.fog.far);
+                } */
         // THREE.Object3D.DefaultUp.set(0, 0, 1);
 
-
-        var renderer_args = scene_params.properties
+        // renderer props hard coded :
+        /*         var renderer_args = {
+                    "preserveDrawingBuffer": true,// for picture taking
+                    "antialias": true,
+                    "powerPreference": "low-power",
+                    "failIfMajorPerformanceCaveat": false
+                } */
+        var renderer_args = scene_params.renderer
 
         this.renderer = renderer = new THREE.WebGLRenderer(renderer_args);
 
@@ -119,12 +122,12 @@ export default {
         this.orbitControls = orbitControls = new OrbitControls(camera, renderer.domElement);
         // orbitControls.addEventListener('start', this.render.bind(this)); // use if there is no animation loop
         orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
-        orbitControls.minDistance = 200;
+        orbitControls.minDistance = 200;//20cm
         orbitControls.maxDistance = 10000;//10m
         orbitControls.target.set(2000, 1000, 2000);
         orbitControls.update();
 
-        // const interaction = new Interaction(renderer, scene, camera);
+        // const interaction = new Interaction(renderer , scene, camera);
 
         /*
         const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
@@ -135,71 +138,57 @@ export default {
 
         this.setupLights()
 
-        /* 0,0,0 dot */
-
-        const axesHelper = new THREE.AxesHelper(15000);
-        scene.add(axesHelper);
-
-        /* floor grid */
-
-        const grid = new THREE.GridHelper(10000, 100, 0x000000, 0x9A9A9A);
-        // grid.material.opacity = 0.25;
-        // grid.material.transparent = true;
-        scene.add(grid);
-
         /* ground */
 
-        const groundMaterial = new THREE.MeshStandardMaterial({
-            color: scene_params.groundColor,
-            emissive: 0x2C2C2C,
-        });
-
-        const geometryGround = new THREE.PlaneGeometry(55000, 55000, 12);
-        this.ground = new THREE.Mesh(geometryGround, groundMaterial);
-        this.ground.rotateX(Math.PI / -2);
-        //this.ground.castShadow = true;
-        //this.ground.receiveShadow = true;
-        //if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
-        scene.add(this.ground);
+        /*         const groundMaterial = new THREE.MeshStandardMaterial({
+                    color: scene_params.groundColor,
+                    emissive: 0x2C2C2C,
+                });
+        
+                const geometryGround = new THREE.PlaneGeometry(55000, 55000, 12);
+                this.ground = new THREE.Mesh(geometryGround, groundMaterial);
+                this.ground.rotateX(Math.PI / -2);
+                //this.ground.castShadow = true;
+                //this.ground.receiveShadow = true;
+                //if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
+                scene.add(this.ground); */
 
         /* walls */
 
         this.setupWalls(config.walls)
 
-        // on enterframe obligatoire pour pouvoir jouer des animations, mais je crois qu'il y a un truc nouveau ( renderer.loop() )
-        const animate = function () {
-            requestAnimationFrame(animate);
-
-            /* resize et pixelratio update quand la fenetre change de taille */
-            var container = document.getElementById('canvas_wrapper');
-            if (container) {
-                renderer.setPixelRatio(container.offsetWidth / container.offsetHeight);
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
-                camera.aspect = container.offsetWidth / container.offsetHeight;
-                camera.updateProjectionMatrix();
-            }
-
-            /* animer les choses animables */
-            scene.traverse(function (ob) {
-                if (ob.animable) {
-                    var axe = ob.groupProps.axe;
-                    var from = parseInt(ob.groupProps.from);
-                    var to = parseInt(ob.groupProps.to);
-                    ob.position[`${axe}`] = Math.sin(Date.now() * 0.001) * Math.PI * to;
-                }
-            });
-
-            stats.update();
-            renderer.render(scene, camera);
-        };
-
-        // animate();
-
+    },
+    resize() {
+        const canvasWrapper = document.getElementById("canvas-wrapper")
+        if (!canvasWrapper) return
+        console.log(`canvas-wrapper size is ${canvasWrapper.offsetWidth}x${canvasWrapper.offsetHeight}`)
+        this.renderer.setPixelRatio(canvasWrapper.offsetWidth / canvasWrapper.offsetHeight);
+        this.renderer.setSize(canvasWrapper.offsetWidth, canvasWrapper.offsetHeight);
+        this.camera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
+        this.camera.updateProjectionMatrix();
+        this.render()
     },
     setupLights() {
         setupLights(this.scene, this.scene_params)
     },
-    setupWalls(wallConfig) {
+    setupWalls(wallConfig, visible = true) {
+
+        if (localhost) {
+
+            /* 0,0,0 dot */
+
+            const axesHelper = new THREE.AxesHelper(15000);
+            this.scene.add(axesHelper);
+
+            /* floor grid */
+
+            const grid = new THREE.GridHelper(10000, 100, 0x000000, 0x9A9A9A);
+            // grid.material.opacity = 0.25;
+            // grid.material.transparent = true;
+            this.scene.add(grid);
+        }
+
+
         if (this.wallRight) this.scene.remove(this.wallRight);
         if (this.wallBack) this.scene.remove(this.wallBack);
         if (this.wallLeft) this.scene.remove(this.wallLeft);
@@ -207,7 +196,7 @@ export default {
         const wallMaterial = new THREE.MeshStandardMaterial({
             color: 0x7E838D,
             transparent: true,
-            opacity: .25
+            opacity: visible ? .25 : 0
         });
 
         if (wallConfig.right > 0) {
@@ -284,13 +273,16 @@ export default {
     add(meuble) {
         this.scene.add(meuble.object);
         // this.render();
-        store.dispatch(add(meuble))
+        // store.dispatch(add(meuble))
     },
-
+    remove(meuble) {
+        this.scene.remove(meuble.object);
+        this.render();
+    },
     getRaycasterIntersect() {
         var raycaster = new THREE.Raycaster();
-        var mouse = new THREE.Vector2();
-        raycaster.setFromCamera(mouse, this.camera);
+        var vec = new THREE.Vector2();
+        raycaster.setFromCamera(vec, this.camera);
         var intersects = raycaster.intersectObjects(this.scene.children, false); //array
         return intersects;
         // if (intersects.length > 0) {

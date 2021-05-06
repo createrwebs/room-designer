@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+    BridgeEvent,
     newScene,
     saveScene,
-    saveSceneToFile
+    saveSceneToFile,
+    removeSelectedMeuble
 } from '../../api/actions'
 import Button from './Button';
-import './bars.css';
 import MainScene from '../../3d/MainScene';
-import SceneConfig from '../panels/SceneConfig'
+// import SceneConfig from '../panels/SceneConfig'
+import defaultdressing from '../../../assets/dressings/defaultdressing.json';
+import dressing1 from '../../../assets/dressings/defaultdressing.json';
 
+import './bars.css';
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
 
 const Panels = {
     SCENECONFIG: 'sceneconfig',
@@ -58,11 +66,23 @@ class Toolbar extends Component {
     render() {
 
         return (
-            <div className="toolbar floatingbar">
+            <div className="fab-toolbar fab-floatingbar">
                 <div style={{ paddingRight: '4px' }}>
-                    <Button action={() => { this.props.newScene() }} icon="fa fa-file" text="Nouvelle composition" />
-                    <Button action={() => { this.props.saveScene() }} icon="fa fa-save" text="Enregistrer la composition" />
-                    <Button action={() => { this.disconnect() }} icon="fa fa-image" text="Prendre une photo" />
+                    <Button action={() => {
+                        window.scene_bridge(BridgeEvent.NEW_DRESSING, defaultdressing)
+                    }} icon="fa fa-file" text="Nouvelle composition" />
+                    <Button action={() => {
+                        console.log(window.scene_bridge(BridgeEvent.SAVE_DRESSING))
+                    }} icon="fa fa-save" text="Enregistrer la composition" />
+                    <Button action={() => {
+                        window.scene_bridge(BridgeEvent.LOAD_DRESSING, dressing1)
+                    }} icon="fa fa-upload" text="Charger la composition" />
+                    <Button action={() => {
+                        window.scene_bridge(BridgeEvent.TAKE_PICTURE)
+                    }} icon="fa fa-image" text="Prendre une photo" />
+                    <Button action={() => {
+                        window.scene_bridge(BridgeEvent.GENERATE_ALL_PIX)
+                    }} icon="fa fa-image" text="Vignettes batch" />
                     <Button action={() => { this.disconnect() }} icon="fa fa-print" text="Imprimer la composition" />
                     <Button action={() => { this.props.saveSceneToFile() }} icon="fa fa-download" text="Télecharger la composition" />
                 </div>
@@ -75,17 +95,17 @@ class Toolbar extends Component {
                                 this.setState({ currentPanel: this.state.currentPanel === Panels.SCENECONFIG ? null : Panels.SCENECONFIG })
                             }}
                             icon="fa fa-vector-square" text="Modifier la pièce" />
-                        <Button status="inactive" action={() => { this.disconnect() }} icon="fa fa-mouse-pointer" text="Sélectionner" />
-                        <Button action={() => { this.disconnect() }} icon="fa fa-hammer" text="Editer" />
+                        <Button status="inactive" action={() => window.scene_bridge(BridgeEvent.SELECT_MEUBLE)} icon="fa fa-mouse-pointer" text="Sélectionner" />
+                        <Button action={() => window.scene_bridge(BridgeEvent.EDIT_MEUBLE)} icon="fa fa-hammer" text="Editer" />
                         <Button action={() => { this.disconnect() }} icon="fa fa-palette" text="Choisir une texture" />
                         <Button action={() => { this.disconnect() }} icon="fa fa-paint-brush" text="Peindre" />
                         <Button action={() => { this.disconnect() }} icon="fa fa-ruler-combined" text="Règles" />
-                        <Button action={() => { this.disconnect() }} icon="fa fa-trash" text="Corbeille" />
+                        <Button action={() => window.scene_bridge(BridgeEvent.REMOVE_MEUBLE, true)} icon="fa fa-trash" text="Corbeille" />
                     </div>
                 }
 
                 <div style={{ paddingRight: '4px' }}>
-                    <Button action={() => { this.disconnect() }} icon="fa fa-play-circle" text="Toggle animations" />
+                    <Button action={() => { window.scene_bridge(BridgeEvent.ANIM_SELECTED_MEUBLE) }} icon="fa fa-play-circle" text="Animer le meuble sélectionné" />
                     <Button action={() => { this.disconnect() }} icon="fa fa-lightbulb" text="Toggle lights" />
                     <Button action={() => { this.disconnect() }} icon="fa fa-adjust" text="Toggle shadows" />
                 </div>
@@ -94,13 +114,13 @@ class Toolbar extends Component {
                     <Button status="npr" action={() => { }} icon="fa fa-sliders-h" text="Mes réglages" />
                     <Button status="npl" action={() => { }} icon="fa fa-ellipsis-v" />
                 </div>
-                {this.props.hasCurrentScene
+                {/* {this.props.hasCurrentScene
                     && this.state.currentPanel === Panels.SCENECONFIG
                     &&
-                    <div className="toolpanels floatingbar">
+                    <div className="fab-toolpanels fab-floatingbar">
                         <SceneConfig />
                     </div>
-                }
+                } */}
             </div>
         )
     }
@@ -113,6 +133,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     newScene,
     saveScene,
-    saveSceneToFile
+    saveSceneToFile,
+    removeSelectedMeuble
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar)

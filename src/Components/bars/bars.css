@@ -1,4 +1,4 @@
-.toolbar {
+.fab-toolbar {
     z-index: 5;
     position: absolute;
     left: 50%;
@@ -7,50 +7,28 @@
     margin: 6px;
 }
 
-.toolbar>div {
+.fab-toolbar>div {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0px;
 }
 
-.toolpanels {
+.fab-toolpanels {
     z-index: 6;
     position: absolute;
     top: 40px;
     padding: 12px;
 }
 
-.floatingbar {
+.fab-floatingbar {
     border-radius: 3px;
     box-shadow: 0px 0px 5px #2c2c2c;
     color: white;
     background: #484f61;
 }
 
-
-
-
-
-.headerbar {
-    background: #444444;
-    color: gainsboro;
-    width: 100%;
-    border-bottom: 1px solid gainsboro;
-    height: 26px;
-}
-
-.headerbar>div {
-    display: inline-flex;
-    padding: 0;
-    border-right: 1px solid gainsboro;
-}
-
-.headerbar div>span {
-    font-size: .6em;
-}
-
-.infobar {
+.fab-infobar {
     background-color: #444444;
     color: gainsboro;
     display: flex;
@@ -61,23 +39,23 @@
     /*width: 100%;*/
 }
 
-.infobar>div {
+.fab-infobar>div {
     display: flex;
     padding: 0;
     border-right: 1px solid gainsboro;
 }
 
 
-.infobar>div>i {
+.fab-infobar>div>i {
     padding: .4em .4em 0em .4em;
 }
 
-.infobar>div span {
+.fab-infobar>div span {
     font-size: .6em;
     padding: .6em .4em 0em .4em;
 }
 
-.infobar input {
+.fab-infobar input {
     border: 0;
     margin: .4em .4em 0em .4em;
     height: 2.2em;
@@ -86,10 +64,10 @@
     color: black;
 }
 
-.infobar input[type="text"] {
+.fab-infobar input[type="text"] {
     width: 140px;
 }
 
-.infobar input[type="number"] {
+.fab-infobar input[type="number"] {
     width: 34px;
 }

@@ -1,5 +1,5 @@
 body {
-  font-family: Roboto;
+  /* font-family: Roboto; */
   margin: 0;
 }
 
@@ -46,11 +46,6 @@ body {
   background-color: #3b3f47;
 }
 
-.column-main .con {
-  height: calc(100vh - 56px) !important;
-  overflow: hidden;
-}
-
 .loading {
   position: absolute;
   top: 0;
@@ -64,13 +59,4 @@ body {
   justify-content: center;
   text-transform: uppercase;
   z-index: 98;
-}
-
-#canvas_wrapper {
-  position: relative;
-}
-
-.scene-wrapper {
-  position: relative;
-  /* height: 100vh; */
 }

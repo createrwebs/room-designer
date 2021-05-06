@@ -1,0 +1,46 @@
+{
+    "post_id": 99,
+    "name": "Dressing 2021-04-21 01:24:22pm",
+    "walls": {
+        "right": 5000,
+        "back": 5000,
+        "left": 5000
+    },
+    "meubles": [
+        {
+            "sku": "NYC155H219P0",
+            "position": {
+                "wall": "right",
+                "x": 1350
+            }
+        },
+        {
+            "sku": "NYH219P62FD",
+            "position": {
+                "wall": "right",
+                "x": 350
+            }
+        },
+        {
+            "sku": "NYH238P62L040",
+            "position": {
+                "wall": "back",
+                "x": 800
+            }
+        },
+        {
+            "sku": "NYH238P62P40",
+            "position": {
+                "wall": "back",
+                "x": 1350
+            }
+        },
+        {
+            "sku": "NYH219P62FD",
+            "position": {
+                "wall": "left-back",
+                "x": 350
+            }
+        }
+    ]
+}

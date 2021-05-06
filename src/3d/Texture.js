@@ -2,43 +2,48 @@ import * as THREE from "three";
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
 
 export const loadTextures = (object, textures) => {
-    const textureLoader = new THREE.TextureLoader();
+    console.log('loadTextures', object, textures);
+    var promise = new Promise((resolveTexturesLoaded, rejectTexturesLoaded) => {
 
-    var texturePromises = [], path = 'textures/';
+        const textureLoader = new THREE.TextureLoader();
 
-    for (var key in textures) {
-        texturePromises.push(new Promise((resolve, reject) => {
-            var metas = textures[key];
-            var name = key;
-            var url = path + metas.url;
-            var angle_fil = metas.angle_fil;
-            var label = metas.label;
+        var texturePromises = [], path = 'textures/';
 
-            textureLoader.load(url, texture => {
-                texture.name = label;
-                metas.angle_fil = angle_fil;
-                metas.texture = texture;
+        for (var key in textures) {
+            texturePromises.push(new Promise((resolve, reject) => {
+                var metas = textures[key];
+                var name = key;
+                var url = path + metas.url;
+                var angle_fil = metas.angle_fil;
+                var label = metas.label;
 
-                if (metas.texture instanceof THREE.Texture) resolve({ name: name, metas });
-            },
-                xhr => {
-                    console.log(url + ' ' + (xhr.loaded / xhr.total * 100) + '% loaded');
+                textureLoader.load(url, texture => {
+                    texture.name = label;
+                    metas.angle_fil = angle_fil;
+                    metas.texture = texture;
+
+                    if (metas.texture instanceof THREE.Texture) resolve({ name: name, metas });
                 },
-                xhr => {
-                    reject(new Error(xhr + 'An error occurred loading while loading: ' + metas.url));
-                }
-            );
+                    xhr => {
+                        console.log(url + ' ' + (xhr.loaded / xhr.total * 100) + '% loaded');
+                    },
+                    xhr => {
+                        reject(new Error(xhr + 'An error occurred loading while loading: ' + metas.url));
+                    }
+                );
 
-        }));
-    }
+            }));
+        }
 
-    Promise.all(texturePromises).then(loadedTextures => {
+        Promise.all(texturePromises).then(loadedTextures => {
 
-        // on a chargé et créé les textures, on les colle comme propriété dans le groupe pour pouvoir les retrouver facilement plus tard.
-        object.textures = loadedTextures;
-        texturesLoaded(object, loadedTextures);
-
-    });
+            // on a chargé et créé les textures, on les colle comme propriété dans le groupe pour pouvoir les retrouver facilement plus tard.
+            object.textures = loadedTextures;
+            texturesLoaded(object, loadedTextures);
+            resolveTexturesLoaded(object.textures)
+        });
+    })
+    return promise;
 }
 // export 
 const texturesLoaded = (obj, textures) => {

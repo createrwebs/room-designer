@@ -1,4 +1,4 @@
-.btn-bar {
+.fab-btn-bar {
     cursor: pointer;
     border: none;
     padding: 5px 6px;
@@ -6,22 +6,22 @@
     display: inline-block;
 }
 
-.btn-bar.npl {
+.fab-btn-bar.npl {
     padding-left: 3px;
 }
 
-.btn-bar.npr {
+.fab-btn-bar.npr {
     padding-right: 3px;
 }
 
-.btn-bar:hover,
-.btn-bar:focus {
+.fab-btn-bar:hover,
+.fab-btn-bar:focus {
     text-decoration: none;
     outline: none;
     color: white;
 }
 
-.btn-bar>span {
+.fab-btn-bar>span {
     font-size: 12px;
     display: block;
     color: white;

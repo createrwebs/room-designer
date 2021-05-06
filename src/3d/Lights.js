@@ -18,7 +18,6 @@ export const setupLights = (scene, scene_params) => {
     pointLight.position.set(2500, 3000, 2500);
     pointLight.castShadow = true; // default false
 
-    const PointLightHelper = new THREE.PointLightHelper(pointLight, 100);
 
     pointLight.shadow.mapSize.width = scene_params.lightsShadowMapSize.width; //2048; // default
     pointLight.shadow.mapSize.height = scene_params.lightsShadowMapSize.height; //2048 // default
@@ -26,6 +25,7 @@ export const setupLights = (scene, scene_params) => {
     pointLight.shadow.camera.far = 10000; // default
 
     scene.add(pointLight);
-    scene.add(PointLightHelper);
 
+    const PointLightHelper = new THREE.PointLightHelper(pointLight, 100);
+    // scene.add(PointLightHelper);
 }

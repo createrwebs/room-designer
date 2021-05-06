@@ -1,0 +1,2723 @@
+[
+    {
+        "ID": 249,
+        "title": "NYH238P62P40",
+        "description": "",
+        "sku": "NYH238P62P40",
+        "largeur": 400,
+        "hauteur": 2380,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62P40.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62P40.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 248,
+        "title": "NYH238P62L119",
+        "description": "",
+        "sku": "NYH238P62L119",
+        "largeur": 1190,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": "",
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 246,
+        "title": "NYH238P62L096",
+        "description": "",
+        "sku": "NYH238P62L096",
+        "largeur": 960,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L096.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L096.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 244,
+        "title": "NYH238P62L081",
+        "description": "",
+        "sku": "NYH238P62L081",
+        "largeur": 810,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L081.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L081.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 242,
+        "title": "NYH238P62L059",
+        "description": "",
+        "sku": "NYH238P62L059",
+        "largeur": 590,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L059.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L059.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 239,
+        "title": "NYH238P62L048",
+        "description": "",
+        "sku": "NYH238P62L048",
+        "largeur": 480,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L048.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L048.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 237,
+        "title": "NYH238P62L040",
+        "description": "",
+        "sku": "NYH238P62L040",
+        "largeur": 400,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L040.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P62L040.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 235,
+        "title": "NYH238P40RL057",
+        "description": "",
+        "sku": "NYH238P40RL057",
+        "largeur": 570,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40RL057.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40RL057.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 233,
+        "title": "NYH238P40P62",
+        "description": "",
+        "sku": "NYH238P40P62",
+        "largeur": 400,
+        "hauteur": 2382,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40P62.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40P62.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 231,
+        "title": "NYH238P40L119",
+        "description": "",
+        "sku": "NYH238P40L119",
+        "largeur": 1190,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L119.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L119.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 229,
+        "title": "NYH238P40L096",
+        "description": "",
+        "sku": "NYH238P40L096",
+        "largeur": 960,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L096.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L096.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 227,
+        "title": "NYH238P40L081",
+        "description": "",
+        "sku": "NYH238P40L081",
+        "largeur": 810,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L081.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L081.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 225,
+        "title": "NYH238P40L059",
+        "description": "",
+        "sku": "NYH238P40L059",
+        "largeur": 590,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L059.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L059.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 223,
+        "title": "NYH238P40L048",
+        "description": "",
+        "sku": "NYH238P40L048",
+        "largeur": 480,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L048.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L048.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 220,
+        "title": "NYH238P40L040",
+        "description": "",
+        "sku": "NYH238P40L040",
+        "largeur": 400,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L040.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH238P40L040.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 218,
+        "title": "NYCOIFH238SS",
+        "description": "",
+        "sku": "NYCOIFH238SS",
+        "largeur": 860,
+        "hauteur": 2380,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238SS.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238SS.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 216,
+        "title": "NYCOIFH238SF",
+        "description": "",
+        "sku": "NYCOIFH238SF",
+        "largeur": 860,
+        "hauteur": 2382,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238SF.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238SF.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 213,
+        "title": "NYCOIFH238FS",
+        "description": "",
+        "sku": "NYCOIFH238FS",
+        "largeur": 860,
+        "hauteur": 2380,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238FS.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238FS.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 211,
+        "title": "NYCOIFH238FF",
+        "description": "",
+        "sku": "NYCOIFH238FF",
+        "largeur": 860,
+        "hauteur": 2380,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238FF.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH238FF.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 209,
+        "title": "NYANGH238",
+        "description": "",
+        "sku": "NYANGH238",
+        "largeur": 1063,
+        "hauteur": 2380,
+        "profondeur": 1063,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYANGH238.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYANGH238.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 207,
+        "title": "ANGLE-H238-TRIANGLES-P62_Finition gauche",
+        "description": "",
+        "sku": "ANGLE-H238-TRIANGLES-P62_Finition gauche",
+        "largeur": 0,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P62_Finition-gauche.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P62_Finition-gauche.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 205,
+        "title": "ANGLE-H238-TRIANGLES-P62_Finition droite",
+        "description": "",
+        "sku": "ANGLE-H238-TRIANGLES-P62_Finition droite",
+        "largeur": 0,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P62_Finition-droite.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P62_Finition-droite.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 203,
+        "title": "ANGLE-H238-TRIANGLES-P62",
+        "description": "",
+        "sku": "",
+        "largeur": 0,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P62.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P62.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 201,
+        "title": "",
+        "description": "",
+        "sku": "ANGLE-H238-TRIANGLES-P40_Finition gauche",
+        "largeur": 0,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P40_Finition-gauche.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P40_Finition-gauche.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 199,
+        "title": "ANGLE-H238-TRIANGLES-P40_Finition droite",
+        "description": "",
+        "sku": "ANGLE-H238-TRIANGLES-P40_Finition droite",
+        "largeur": 0,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P40_Finition-droite.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P40_Finition-droite.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 197,
+        "title": "ANGLE-H238-TRIANGLES-P40",
+        "description": "",
+        "sku": "ANGLE-H238-TRIANGLES-P40",
+        "largeur": 0,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P40.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H238-TRIANGLES-P40.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 195,
+        "title": "NYH219P62P40",
+        "description": "",
+        "sku": "NYH219P62P40",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62P40.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62P40.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 193,
+        "title": "NYH219P62L119",
+        "description": "",
+        "sku": "NYH219P62L119",
+        "largeur": 1190,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L119.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L119.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 191,
+        "title": "NYH219P62L096",
+        "description": "",
+        "sku": "NYH219P62L096",
+        "largeur": 960,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L096.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L096.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 188,
+        "title": "NYH219P62L081",
+        "description": "",
+        "sku": "NYH219P62L081",
+        "largeur": 810,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L081.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L081.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 185,
+        "title": "NYH219P62L059",
+        "description": "",
+        "sku": "NYH219P62L059",
+        "largeur": 590,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L059.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L059.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 183,
+        "title": "NYH219P62L048",
+        "description": "",
+        "sku": "NYH219P62L048",
+        "largeur": 480,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L048.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L048.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 180,
+        "title": "NYH219P62L040",
+        "description": "",
+        "sku": "NYH219P62L040",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L040.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P62L040.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 178,
+        "title": "NYH219P40RL057",
+        "description": "",
+        "sku": "NYH219P40RL057",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 570,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40RL057.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40RL057.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 176,
+        "title": "NYH219P40P62",
+        "description": "",
+        "sku": "NYH219P40P62",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40P62.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40P62.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 174,
+        "title": "NYH219P40L119",
+        "description": "",
+        "sku": "NYH219P40L119",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 1190,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L119.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L119.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 172,
+        "title": "NYH219P40L096",
+        "description": "",
+        "sku": "NYH219P40L096",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 960,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L096.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L096.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 168,
+        "title": "NYH219P40L081",
+        "description": "",
+        "sku": "NYH219P40L081",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 810,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L081.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L081.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 166,
+        "title": "NYH219P40L059",
+        "description": "",
+        "sku": "NYH219P40L059",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 590,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L059.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L059.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 164,
+        "title": "NYH219P40L048",
+        "description": "",
+        "sku": "NYH219P40L048",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 480,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L048.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L048.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 160,
+        "title": "NYH219P40L040",
+        "description": "",
+        "sku": "NYH219P40L040",
+        "largeur": 400,
+        "hauteur": 2190,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L040.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYH219P40L040.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 158,
+        "title": "NYCOIFH219SS",
+        "description": "",
+        "sku": "NYCOIFH219SS",
+        "largeur": 860,
+        "hauteur": 2190,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219SS.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219SS.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 156,
+        "title": "NYCOIFH219SF",
+        "description": "",
+        "sku": "NYCOIFH219SF",
+        "largeur": 860,
+        "hauteur": 2190,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219SF.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219SF.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 153,
+        "title": "NYCOIFH219FS",
+        "description": "",
+        "sku": "NYCOIFH219FS",
+        "largeur": 860,
+        "hauteur": 2190,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219FS.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219FS.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 150,
+        "title": "NYCOIFH219FF",
+        "description": "",
+        "sku": "NYCOIFH219FF",
+        "largeur": 860,
+        "hauteur": 2190,
+        "profondeur": 622,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219FF.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYCOIFH219FF.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 147,
+        "title": "NYANGH219",
+        "description": "",
+        "sku": "NYANGH219",
+        "largeur": 1063,
+        "hauteur": 2190,
+        "profondeur": 1063,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYANGH219.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYANGH219.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 146,
+        "title": "ANGLE-H219-TRIANGLES-P62_Finition gauche",
+        "description": "",
+        "sku": "ANGLE-H219-TRIANGLES-P62_Finition gauche",
+        "largeur": 0,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P62_Finition-gauche.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P62_Finition-gauche.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 144,
+        "title": "ANGLE-H219-TRIANGLES-P62_Finition droite",
+        "description": "",
+        "sku": "ANGLE-H219-TRIANGLES-P62_Finition droite",
+        "largeur": 0,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P62_Finition-droite.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P62_Finition-droite.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 142,
+        "title": "ANGLE-H219-TRIANGLES-P62",
+        "description": "",
+        "sku": "ANGLE-H219-TRIANGLES-P62",
+        "largeur": 0,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P62.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P62.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 140,
+        "title": "ANGLE-H219-TRIANGLES-P40_Finition gauche",
+        "description": "",
+        "sku": "ANGLE-H219-TRIANGLES-P40_Finition gauche",
+        "largeur": 0,
+        "hauteur": 2190,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P40_Finition-gauche.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P40_Finition-gauche.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 138,
+        "title": "ANGLE-H219-TRIANGLES-P40_Finition droite",
+        "description": "",
+        "sku": "ANGLE-H219-TRIANGLES-P40_Finition droite",
+        "largeur": 0,
+        "hauteur": 2190,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P40_Finition-droite.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P40_Finition-droite.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 136,
+        "title": "ANGLE-H219-TRIANGLES-P40",
+        "description": "",
+        "sku": "ANGLE-H219-TRIANGLES-P40",
+        "largeur": 0,
+        "hauteur": 2190,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P40.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/ANGLE-H219-TRIANGLES-P40.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 134,
+        "title": "NYC231H238PP",
+        "description": "",
+        "sku": "NYC231H238PP",
+        "largeur": 2310,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H238PP.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H238PP.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 132,
+        "title": "NYC231H238PG",
+        "description": "",
+        "sku": "NYC231H238PG",
+        "largeur": 2310,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H238PG.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H238PG.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 130,
+        "title": "NYC231H238P0",
+        "description": "",
+        "sku": "NYC231H238P0",
+        "largeur": 2310,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H238P0.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H238P0.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 128,
+        "title": "NYC191H238PG",
+        "description": "",
+        "sku": "NYC191H238PG",
+        "largeur": 1910,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H238PG.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H238PG.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 126,
+        "title": "NYC191H238P0",
+        "description": "",
+        "sku": "NYC191H238P0",
+        "largeur": 1910,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H238P0.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H238P0.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 124,
+        "title": "NYC155H238PG",
+        "description": "",
+        "sku": "NYC155H238PG",
+        "largeur": 1550,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H238PG.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H238PG.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 122,
+        "title": "NYC155H238P0",
+        "description": "",
+        "sku": "NYC155H238P0",
+        "largeur": 1550,
+        "hauteur": 2380,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H238P0.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H238P0.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 118,
+        "title": "NYC231H219PP",
+        "description": "",
+        "sku": "NYC231H219PP",
+        "largeur": 2310,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H219PP.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H219PP.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 116,
+        "title": "NYC231H219PG",
+        "description": "",
+        "sku": "NYC231H219PG",
+        "largeur": 2310,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H219PG.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H219PG.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 114,
+        "title": "NYC231H219P0",
+        "description": "",
+        "sku": "NYC231H219P0",
+        "largeur": 2310,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H219P0.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC231H219P0.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 112,
+        "title": "NYC191H219PP",
+        "description": "",
+        "sku": "NYC191H219PP",
+        "largeur": 1910,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H219PP.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H219PP.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 109,
+        "title": "NYC191H219PG",
+        "description": "",
+        "sku": "NYC191H219PG",
+        "largeur": 1910,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H219PG.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H219PG.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 107,
+        "title": "NYC191H219P0",
+        "description": "",
+        "sku": "NYC191H219P0",
+        "largeur": 1910,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H219P0.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H219P0.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 103,
+        "title": "NYC155H219PP",
+        "description": "",
+        "sku": "NYC155H219PP",
+        "largeur": 1550,
+        "hauteur": 2190,
+        "profondeur": 640,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H219PP.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H219PP.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": false
+    },
+    {
+        "ID": 81,
+        "title": "NYC155H219PG",
+        "description": "",
+        "sku": "NYC155H219PG",
+        "largeur": 1550,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYC155H219PG.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYC155H219PG.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 9,
+                "name": "219",
+                "slug": "219",
+                "term_group": 0,
+                "term_taxonomy_id": 9,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 72,
+        "title": "NYC155H219P0",
+        "description": "",
+        "sku": "NYC155H219P0",
+        "largeur": 1550,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYC155H219P0.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYC155H219P0.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/IMG_20201019_131652-225x300.jpg",
+        "textures": {
+            "hori": {
+                "url": "chene-blanc-hori.jpg",
+                "label": "Chêne blanc",
+                "angle_fil": 0
+            },
+            "vert": {
+                "url": "chene-blanc-vert.jpg",
+                "label": "Chêne blanc",
+                "angle_fil": 90
+            },
+            "fond": {
+                "url": "cuir.jpg",
+                "label": "Chêne blanc",
+                "angle_fil": 0
+            },
+            "portes": {
+                "url": "chene-charleston-vert.jpg",
+                "label": "Chêne charleston",
+                "angle_fil": 0
+            }
+        },
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 9,
+                "name": "219",
+                "slug": "219",
+                "term_group": 0,
+                "term_taxonomy_id": 9,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 52,
+        "title": "NYH238P62P40",
+        "description": "",
+        "sku": "NYH238P62P40",
+        "largeur": 400,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62P40.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62P40.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/image_2020_12_01T11_04_04_891Z-150x150.png",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/image_2020_12_01T11_04_04_891Z.png",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 51,
+        "title": "NYH238P62L096",
+        "description": "",
+        "sku": "NYH238P62L096",
+        "largeur": 960,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62L096.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62L096.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/image_2020_12_01T11_04_16_048Z-150x150.png",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/image_2020_12_01T11_04_16_048Z.png",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 50,
+        "title": "NYH238P62L040",
+        "description": "",
+        "sku": "NYH238P62L040",
+        "largeur": 400,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62L040.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62L040.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/image_2020_12_01T11_04_22_887Z-150x150.png",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/image_2020_12_01T11_04_22_887Z.png",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 2,
+                "name": "Modules",
+                "slug": "modules",
+                "term_group": 0,
+                "term_taxonomy_id": 2,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 55,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 45,
+        "title": "NYC191H238PP",
+        "description": "",
+        "sku": "NYC191H238PP",
+        "largeur": 1910,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H238PP.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC191H238PP.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/1280px-Saintes_amphitheatre-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/1280px-Saintes_amphitheatre-300x225.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 42,
+        "title": "NYC155H238P0",
+        "description": "",
+        "sku": "NYC155H238P0",
+        "largeur": 1550,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H238PP.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/05\/NYC155H238PP.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/1280px-Saintes_amphitheatre-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/1280px-Saintes_amphitheatre-300x225.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 10,
+                "name": "Coulissantes",
+                "slug": "coulissantes",
+                "term_group": 0,
+                "term_taxonomy_id": 10,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 18,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 38,
+        "title": "NYH238P62FD",
+        "description": "",
+        "sku": "NYH238P62FD",
+        "largeur": 25,
+        "hauteur": 2380,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62FD.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P62FD.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/20170414_121427-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/20170414_121427-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 8,
+                "name": "S\u00e9parateur",
+                "slug": "separateur",
+                "term_group": 0,
+                "term_taxonomy_id": 8,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 36,
+        "title": "NYH219P62FD",
+        "description": "",
+        "sku": "NYH219P62FD",
+        "largeur": 25,
+        "hauteur": 2190,
+        "profondeur": 620,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH219P62FD.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH219P62FD.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/20170414_121427-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/20170414_121427-225x300.jpg",
+        "textures": {
+            "hori": {
+                "url": "chene-blanc-hori.jpg",
+                "label": "Chêne blanc",
+                "angle_fil": 0
+            },
+            "vert": {
+                "url": "chene-blanc-vert.jpg",
+                "label": "Chêne blanc",
+                "angle_fil": 90
+            },
+            "fond": {
+                "url": "cuir.jpg",
+                "label": "Chêne blanc",
+                "angle_fil": 0
+            },
+            "portes": {
+                "url": "chene-charleston-vert.jpg",
+                "label": "Chêne charleston",
+                "angle_fil": 0
+            }
+        },
+        "type": [
+            {
+                "term_id": 8,
+                "name": "S\u00e9parateur",
+                "slug": "separateur",
+                "term_group": 0,
+                "term_taxonomy_id": 8,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 9,
+                "name": "219",
+                "slug": "219",
+                "term_group": 0,
+                "term_taxonomy_id": 9,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 33,
+        "title": "NYH238P40FD",
+        "description": "",
+        "sku": "NYH238P40FD",
+        "largeur": 25,
+        "hauteur": 2380,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P40FD.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH238P40FD.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/20170414_121427-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/20170414_121427-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 8,
+                "name": "S\u00e9parateur",
+                "slug": "separateur",
+                "term_group": 0,
+                "term_taxonomy_id": 8,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 7,
+                "name": "238",
+                "slug": "238",
+                "term_group": 0,
+                "term_taxonomy_id": 7,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 7,
+                "filter": "raw"
+            }
+        ]
+    },
+    {
+        "ID": 29,
+        "title": "NYH219P40FD",
+        "description": "sfdsdf",
+        "sku": "NYH219P40FD",
+        "largeur": 25,
+        "hauteur": 2190,
+        "profondeur": 400,
+        "fbx": {
+            "file": "\/srv\/data\/web\/vhosts\/preprod.kinoki.fr\/htdocs\/minet3d\/wp-content\/uploads\/2021\/04\/NYH219P40FD.fbx",
+            "url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/04\/NYH219P40FD.fbx",
+            "type": "application\/octet-stream",
+            "error": false
+        },
+        "thumbnail_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/20180622_124928-150x150.jpg",
+        "previewpic_url": "https:\/\/preprod.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/03\/20180622_124928-225x300.jpg",
+        "textures": null,
+        "type": [
+            {
+                "term_id": 8,
+                "name": "S\u00e9parateur",
+                "slug": "separateur",
+                "term_group": 0,
+                "term_taxonomy_id": 8,
+                "taxonomy": "type",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ],
+        "groupetaille": [
+            {
+                "term_id": 9,
+                "name": "219",
+                "slug": "219",
+                "term_group": 0,
+                "term_taxonomy_id": 9,
+                "taxonomy": "groupetaille",
+                "description": "",
+                "parent": 0,
+                "count": 4,
+                "filter": "raw"
+            }
+        ]
+    }
+]
