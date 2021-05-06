@@ -7,13 +7,13 @@ export const loadTextures = (object, textures) => {
 
         const textureLoader = new THREE.TextureLoader();
 
-        var texturePromises = [], path = 'textures/';
+        var texturePromises = [];
 
         for (var key in textures) {
             texturePromises.push(new Promise((resolve, reject) => {
                 var metas = textures[key];
                 var name = key;
-                var url = path + metas.url;
+                var url = metas.url;
                 var angle_fil = metas.angle_fil;
                 var label = metas.label;
 

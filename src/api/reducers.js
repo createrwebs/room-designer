@@ -2,6 +2,7 @@ import {
     CameraEvent,
     MeubleEvent,
     SceneEvent,
+    KinoEvent,
     Tools
 }
     from './actions'
@@ -11,6 +12,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import Loader from '../3d/Loader'
 import MainScene from '../3d/MainScene';
 import Draggable from '../3d/Draggable'
+import Accessoire from '../3d/Accessoire'
 import { getCurrentScene } from '../3d/Dressing';
 import { cameraTo, tweenTo } from '../3d/Animate';
 import { Vector3 } from 'three';
@@ -70,6 +72,12 @@ export const reducer = (state = initialState, action) => {
                 ...state, scenes
             }
         case SceneEvent.NEWSCENE:
+            if (!action.dressing) {
+                console.error("New scene failed : no config object passed")
+                return {
+                    ...state
+                }
+            }
             currentScene = action.dressing
             currentScene.walls.left = currentScene.walls.right// longueur murs latéraux égales
 
@@ -259,9 +267,20 @@ export const reducer = (state = initialState, action) => {
                     MainScene.render()
                     return { ...state, meublesOnScene, selection: null };
 
-                case Tools.ARROW:
                 case Tools.HAMMER:
-
+                    if (action.meuble) {
+                        action.meuble.select()
+                        window.kino_bridge(KinoEvent.SELECT_MEUBLE, action.meuble.sku)
+                        return {
+                            ...state, selection: action.meuble
+                        }
+                    }
+                    else {
+                        return {
+                            ...state
+                        }
+                    }
+                case Tools.ARROW:
                 default:
                     if (action.meuble) action.meuble.select()
                     const front = action.meuble.getFrontPosition()
@@ -297,57 +316,73 @@ export const reducer = (state = initialState, action) => {
         case MeubleEvent.DROP_MEUBLE_TO_SCENE:
         case MeubleEvent.CLICKMEUBLELINE:
             if (!state.currentScene) {
-                console.log("no scene")
+                console.warn("No scene : please add a scene bofore meuble")
                 return { ...state }
             }
 
             const props = state.catalogue.find(f => f.sku === action.sku)
             if (!props) {
-                console.log("no meuble found for sku ", action.sku)
+                console.warn(`No meuble found for sku ${action.sku}`)
                 return { ...state }
             }
-            meublesOnScene = [...state.meublesOnScene];
-            // loader.load(`models/${props.file}.fbx`, object => {
 
-            // https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/image_2020_12_01T11_04_22_887Z-150x150.png
-            loader.load(`${props.fbx.url}`, object => {
+            if (state.selection) {
 
-                // find front wall, best location for new Meuble
-                let wall = Object.keys(state.currentScene.walls)[0] || "right"
-                const intersects = MainScene.getRaycasterIntersect()
-                const intersect = intersects.find(i => i.object.name.includes("wall-"))
-                if (intersect) wall = intersect.object.name.substring("wall-".length)
-                console.log("front wall found", wall)
-
-                props.position = {
-                    wall,
-                    x: 0
-                }
-                selection = new Draggable(props, object)
-
-                // place on front wall ? ..Draggable routines ! //TODO
-                // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
-                const axis = Draggable.getAxisForWall(wall);
-                const x = Draggable.getSpaceOnWall(selection)
-                if (x === false) {
-                    console.log(`no space for ${selection.ID} on wall ${wall}`)
+                if (state.selection.props.accessoirescompatibles.indexOf(action.sku) === -1) {
+                    console.warn(`${action.sku} non compatible avec ${state.selection.props.sku} sélectionné`)
+                    return { ...state };
                 }
                 else {
-                    selection.object.position[axis] = x
-                    console.log(selection.wall, x)
-
-                    MainScene.add(selection);
-                    meublesOnScene.unshift(selection);
-                    MainScene.render()
+                    loader.load(`${props.fbx.url}`, object => {
+                        const accessoire = new Accessoire(props, object)
+                        accessoire.object.position.x = state.selection.object.x;
+                        accessoire.object.position.y = state.selection.props.plandepercage['gauche'][0];
+                        accessoire.object.position.z = state.selection.object.z;
+                        MainScene.add(accessoire);
+                        MainScene.render()
+                    })
+                    return { ...state };
                 }
-            })
+            } else {
+                meublesOnScene = [...state.meublesOnScene];
+                // loader.load(`models/${props.file}.fbx`, object => {
 
-            return { ...state, meublesOnScene, selection };
+                // https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/image_2020_12_01T11_04_22_887Z-150x150.png
+                loader.load(`${props.fbx.url}`, object => {
+
+                    // find front wall, best location for new Meuble
+                    let wall = Object.keys(state.currentScene.walls)[0] || "right"
+                    const intersects = MainScene.getRaycasterIntersect()
+                    const intersect = intersects.find(i => i.object.name.includes("wall-"))
+                    if (intersect) wall = intersect.object.name.substring("wall-".length)
+                    console.log("front wall found", wall)
+
+                    props.position = {
+                        wall,
+                        x: 0
+                    }
+                    selection = new Draggable(props, object)
+
+                    // place on front wall ? ..Draggable routines ! //TODO
+                    // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
+                    const axis = Draggable.getAxisForWall(wall);
+                    const x = Draggable.getSpaceOnWall(selection)
+                    if (x === false) {
+                        console.log(`no space for ${selection.ID} on wall ${wall}`)
+                    }
+                    else {
+                        selection.object.position[axis] = x
+                        console.log(selection.wall, x)
+
+                        MainScene.add(selection);
+                        meublesOnScene.unshift(selection);
+                        MainScene.render()
+                    }
+                })
+                return { ...state, meublesOnScene, selection };
+            }
 
         case MeubleEvent.DRAG_MEUBLE_OVER_SCENE:
-
-
-
             return { ...state };
 
         case MeubleEvent.ANIM:
@@ -379,45 +414,55 @@ export const reducer = (state = initialState, action) => {
         case MeubleEvent.LOAD_ALL_SKU:
 
             if (!state.currentScene) {
-                console.log("no scene")
+                console.error("No scene : Please create a scene")
                 return { ...state }
             }
 
             let lastPos = 0;
             meublesOnScene = [...state.meublesOnScene];
+            let subobjectsNames = []
             state.catalogue.forEach(props => {
 
-                /*                 if (!props) {
-                                    console.log("no meuble found for sku ", action.sku)
-                                    return { ...state }
-                                } */
+                if (!props) {
+                    console.log("no meuble found for sku ", action.sku)
+                    return { ...state }
+                }
 
                 loader.load(`${props.fbx.url}`, object => {
 
-                    // find front wall, best location for new Meuble
-                    let wall = Object.keys(state.currentScene.walls)[0] || "right"
-                    const intersects = MainScene.getRaycasterIntersect()
-                    const intersect = intersects.find(i => i.object.name.includes("wall-"))
-                    if (intersect) wall = intersect.object.name.substring("wall-".length)
-                    console.log("front wall found", wall)
+                    object.traverse(function (child) {
+                        if (subobjectsNames.indexOf(child.name) >= 0) {
+                        }
+                        else {
+                            subobjectsNames.push(child.name)
+                            console.log(child.name)
+                        }
+                        // find front wall, best location for new Meuble
+                        let wall = Object.keys(state.currentScene.walls)[0] || "right"
+                        const intersects = MainScene.getRaycasterIntersect()
+                        const intersect = intersects.find(i => i.object.name.includes("wall-"))
+                        if (intersect) wall = intersect.object.name.substring("wall-".length)
+                        console.log("front wall found", wall)
 
-                    // place on front wall ? ..Draggable routines ! //TODO
-                    props.position = {
-                        wall,
-                        x: lastPos
-                    }
-                    lastPos += parseInt(props.largeur)
-                    selection = new Draggable(props, object)
-                    MainScene.add(selection);
-                    meublesOnScene.unshift(selection);
-                    MainScene.render()
+                        // place on front wall ? ..Draggable routines ! //TODO
+                        props.position = {
+                            wall,
+                            x: lastPos
+                        }
+                        lastPos += parseInt(props.largeur)
+                        selection = new Draggable(props, object)
+                        MainScene.add(selection);
+                        meublesOnScene.unshift(selection);
+                        MainScene.render()
+                    })
+
                 })
             })
             return { ...state, meublesOnScene };
 
-        case SceneEvent.SET_SCENE_TEXTURE:
+        case SceneEvent.SET_SCENE_MATERIAL:
 
-            var textu = {
+            var material = {
                 hori: {
                     url: "chene-blanc-hori.jpg",
                     label: "Chêne blanc",
@@ -441,13 +486,11 @@ export const reducer = (state = initialState, action) => {
             }
             meublesOnScene = [...state.meublesOnScene];
             meublesOnScene.forEach(meuble => {
-
-                loadTextures(meuble.object, textu).then(response => {
+                loadTextures(meuble.object, action.material).then(response => {
                     console.log(`textures loaded`, response)
+                    MainScene.render()
                 })
             })
-            MainScene.render()
-
             return { ...state };
 
         case SceneEvent.GENERATE_ALL_PIX:

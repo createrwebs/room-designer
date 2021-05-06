@@ -23,9 +23,18 @@ export default class Meuble {
         this.object = object;// threejs group mesh
 
         // sku props :
-        this.sku = props.sku;
-        this.file = props.file;
-        this.ID = props.ID;
+        /*         this.ID = props.ID;
+                this.accessoirescompatibles = props.accessoirescompatibles;
+                this.description = props.description;
+                this.plandepercage = props.plandepercage;
+                this.sku = props.sku;
+        
+                this.profondeur = props.profondeur;
+                this.largeur = props.largeur;
+                this.hauteur = props.hauteur; */
+
+        this.props = props;
+
         this.wall = props.position.wall;
         this.angle = props.angle;
         if (props.subGroups) {
@@ -38,21 +47,7 @@ export default class Meuble {
         // this.segment = this.getSegment(object)// store width for performance collision
         // this.dragControls = this.
         this.setPosition(props.position);
-        console.log(`Meuble ${this.ID} of width ${this.width}mm on ${props.position.wall} wall at ${props.position.x}mm`, props, object, this);
-
-        /* object dimensions by parsing its name */
-
-        /*         
-        const file = this.file.split('_');
-        const type = file.shift();
-        let dim = {}
-        if (type === "MOD") {
-            file.forEach(function (item, index, array) {
-                dim[item.charAt(0)] = parseInt(item.substring(1)) * 10;
-            })
-        }
-        this.dim = dim;
-        console.log("dim", this.dim) */
+        console.log(`Meuble ${this.props.ID} of width ${this.width}mm on ${props.position.wall} wall at ${props.position.x}mm`, props.plandepercage, props.accessoirescompatibles, props, object, this);
 
         /* textures */
 

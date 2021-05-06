@@ -1,3 +1,6 @@
+export const KinoEvent = {
+    SELECT_MEUBLE: 'select_meuble',
+}
 export const BridgeEvent = {
     NEW_DRESSING: 'new_dressing',
     SAVE_DRESSING: 'save_dressing',
@@ -12,7 +15,8 @@ export const BridgeEvent = {
     ANIM_SELECTED_MEUBLE: 'anim_selected_meuble',
     REMOVE_MEUBLE: 'remove_meuble',
     GENERATE_ALL_PIX: 'generateallpix',
-    SET_SCENE_TEXTURE: 'set_scene_texture'
+    SET_SCENE_MATERIAL: 'set_scene_material',
+    LOAD_ALL_SKU: 'load_all_sku'
 }
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
@@ -30,7 +34,7 @@ export const SceneEvent = {
     CHANGE_TOOL: 'change_tool',
     TAKEPICTURE: 'takepicture',
     GENERATE_ALL_PIX: 'generateallpix',
-    SET_SCENE_TEXTURE: 'setscenetexture'
+    SET_SCENE_MATERIAL: 'set_scene_material'
 }
 export const CameraEvent = {
     SET: 'set',
@@ -101,9 +105,36 @@ export const loadScene = (dressing) => {
         type: SceneEvent.LOADSCENE, dressing
     }
 }
-export const setSceneTexture = () => {
+/**
+ * click on palette to set material on scene.
+ * window.scene_bridge('set_scene_material',{
+                hori: {
+                    url: "chene-blanc-hori.jpg",
+                    label: "Chêne blanc",
+                    angle_fil: 0
+                },
+                vert: {
+                    url: "chene-blanc-vert.jpg",
+                    label: "Chêne blanc",
+                    angle_fil: 90
+                },
+                fond: {
+                    url: "cuir.jpg",
+                    label: "Chêne blanc",
+                    angle_fil: 0
+                },
+                portes: {
+                    url: "chene-charleston-vert.jpg",
+                    label: "Chêne charleston",
+                    angle_fil: 0
+                }
+            })
+ *
+ * @return {Object} material object
+ */
+export const setSceneMaterial = (material) => {
     return {
-        type: SceneEvent.SET_SCENE_TEXTURE
+        type: SceneEvent.SET_SCENE_MATERIAL, material
     }
 }
 export const takePicture = () => {
@@ -146,7 +177,6 @@ export const setCurrentSceneWallLength = (wall, length) => {
         type: SceneEvent.SETCURRENTSCENEWALLLENGTH, wall, length
     }
 }
-
 
 export const setLight = () => {
     return {
@@ -225,7 +255,9 @@ export const dropMeubleOnScene = (sku) => {
     }
 }
 
-
+/**
+ * parsing de catalogue
+ */
 export const loadAllSku = () => {
     return {
         type: MeubleEvent.LOAD_ALL_SKU

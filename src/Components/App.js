@@ -29,7 +29,7 @@ import {
 	animeSelectedMeuble,
 	changeTool,
 	generateAllPix,
-	setSceneTexture
+	setSceneMaterial,
 }
 	from '../api/actions'
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
@@ -61,14 +61,8 @@ class App extends Component {
 				fetch('https://meublesminet.com/3d/wp-login.php', requestOptions)
 					.then(response => response.json()) */
 
-		/* load_catalogue
-				fetch('https://preprod.kinoki.fr/minet3d/wp-admin/admin-ajax.php', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-					body: new URLSearchParams({
-						'action': 'load_catalogue',
-					})
-				}).then(response => response.json()) */
+		/* load_catalogue*/
+
 
 		/* load_objects_of_type
 				fetch('https://preprod.kinoki.fr/minet3d/wp-admin/admin-ajax.php', {
@@ -92,12 +86,20 @@ class App extends Component {
 
 		const gui = getGui()
 		if (localhost) {
-			this.props.setCatalogue(catalogue)
-			this.props.setConfig(config)// creation scene
-			// this.props.loadScene(dressing2)
-			// this.props.generateAllPix()
-			// this.props.newScene(defaultdressing);
-			// this.props.clickMeubleLine("NYC155H219P0")
+			fetch('https://preprod.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
+				method: 'GET',
+			})
+				.then(response => response.json())
+				.then(catalogue => {
+					this.props.setCatalogue(catalogue)
+
+					// this.props.setCatalogue(catalogue)
+					this.props.setConfig(config)// creation scene
+					// this.props.loadScene(dressing2)
+					// this.props.generateAllPix()
+					this.props.newScene(defaultdressing);
+					this.props.clickMeubleLine("NYH238P62L119")
+				})
 		}
 		else {
 			gui.hide()
@@ -118,7 +120,7 @@ class App extends Component {
 					if (localhost) {
 						// this.props.loadAllSku();
 						if (false) {
-							this.props.clickMeubleLine("NYC155H219P0")
+							this.props.clickMeubleLine("NYH238P62L119")
 							// this.props.clickMeubleLine("NYC191H238PP")
 							// this.props.clickMeubleLine("NYC155H219P0")
 							// this.props.clickMeubleLine("NYC155H219PG")
@@ -169,8 +171,11 @@ class App extends Component {
 			case BridgeEvent.DROP_MEUBLE_TO_SCENE:
 				this.props.dropMeubleOnScene(param1, param2)
 				break;
-			case BridgeEvent.SET_SCENE_TEXTURE:
-				this.props.setSceneTexture(param1)
+			case BridgeEvent.SET_SCENE_MATERIAL:
+				this.props.setSceneMaterial(param1)
+				break;
+			case BridgeEvent.LOAD_ALL_SKU:
+				this.props.loadAllSku()
 				break;
 
 			case BridgeEvent.SELECT_MEUBLE:
@@ -254,6 +259,6 @@ const mapDispatchToProps = {
 	animeSelectedMeuble,
 	changeTool,
 	generateAllPix,
-	setSceneTexture
+	setSceneMaterial
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App)
