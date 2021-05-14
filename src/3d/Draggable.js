@@ -1,6 +1,7 @@
 import {
     select,
-    drag
+    drag,
+    Tools
 }
     from '../api/actions'
 import store from '../api/store';
@@ -97,7 +98,7 @@ export default class Draggable extends Meuble {
 
     static setWallConfig() {
         const scene = store.getState().currentScene
-        const config = store.getState().config
+        const config = store.getState().config 
         if (scene) {
             ['right', 'back', 'left'].map(w => {
                 if (scene.walls[w])
@@ -214,7 +215,7 @@ export default class Draggable extends Meuble {
 
 
     dragStart(event) {
-        if (Draggable.Dragged) {
+        if (Draggable.Dragged) {//|| store.getState().tool != Tools.ARROW
             event.target.enabled = false;// deactivation of other Draggable
             return
         }

@@ -27,25 +27,8 @@ class Room extends Component {
 		node.appendChild(MainScene.getRendererNodeElement());
 		// if (localhost) node.appendChild(MainScene.getStatNodeElement());
 
-		// this.fbxloadAll()
 		// shortcut to display scene:
 		// this.props.allLoaded()
-	}
-	fbxloadAll() {
-
-		// here or on reducers ?
-
-		Loader.setup();
-		const loader = new FBXLoader(Loader.manager);
-		this.props.fbxs.forEach(props => loader.load(`models/${props.file}.fbx`, this.fbxloaded.bind(this, props)))
-	}
-	fbxloaded(props, object) {
-		// this.add(new Draggable(props, object));// meuble to put in the list better than the scene
-
-		if (props.position) {
-			MainScene.add(new Draggable(props, object));
-			this.props.add(meuble)
-		}
 	}
 	render() {
 		MainScene.orbitControls.update();

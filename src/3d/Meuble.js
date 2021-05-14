@@ -6,6 +6,7 @@ import {
 import store from '../api/store';
 import * as THREE from "three";
 import MainScene from './MainScene';
+import Fbx from './Fbx'
 
 // Controls
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
@@ -15,12 +16,16 @@ import MainScene from './MainScene';
 // miroir
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 
-import { loadTextures } from './Texture';
+import { loadTextures, setTransparent } from './Texture';
+import Item from './Item'
+import { create as createRuler } from './Ruler';
+import { localhost } from '../api/Config';
 
-export default class Meuble {
+export default class Meuble extends Fbx {
     constructor (props, object) {
         // console.log('Meuble', props, object)
-        this.object = object;// threejs group mesh
+        super(props, object)
+        this.items = []// accessoires
 
         // sku props :
         /*         this.ID = props.ID;
@@ -33,7 +38,13 @@ export default class Meuble {
                 this.largeur = props.largeur;
                 this.hauteur = props.hauteur; */
 
-        this.props = props;
+        this.ruler = createRuler(this.props.sku, this.props.largeur, this.props.hauteur)
+        this.ruler.position.z = this.props.profondeur + 20
+
+        this.places = {}// clonage des plans de perçage
+        if (props.plandepercage.gauche) this.places.left = props.plandepercage.gauche.slice();
+        if (props.plandepercage.centre) this.places.center = props.plandepercage.centre.slice();
+        if (props.plandepercage.droite) this.places.right = props.plandepercage.droite.slice();
 
         this.wall = props.position.wall;
         this.angle = props.angle;
@@ -118,70 +129,105 @@ export default class Meuble {
             */
         }
 
-        // this.createGroups();
-
+        if (localhost) {
+            switch (this.props.sku) {
+                case "NYH238P62L119":
+                    this.addItemBySku("NYRP1P62L119")
+                    this.addItemBySku("NYETAP62L119")
+                    this.addItemBySku("NYH238P62SE")
+                    this.addItemBySku("NYH238P62FG")
+                    this.addItemBySku("NYH238P62FD")
+                    break;
+                case "NYH238P62L096":
+                    this.addItemBySku("NYRP1P62L096")
+                    this.addItemBySku("NYETLP62L096")
+                    this.addItemBySku("NYETAP62L096")
+                    this.addItemBySku("NYH238P62SE")
+                    this.addItemBySku("NYH238P62FG")
+                    this.addItemBySku("NYH238P62FD")
+                    break;
+                case "NYH219P40L096":
+                    this.addItemBySku("NYETAP40L096")
+                    this.addItemBySku("NYH219P40SE")
+                    this.addItemBySku("NYH219P40FG")
+                    this.addItemBySku("NYH219P40FD")
+                    break;
+                case "NYC231H238PP":
+                    this.addItemBySku("NYETTPCOL074")
+                    this.addItemBySku("NYETAPCOL074")
+                    break;
+                default:
+            }
+        }
         MainScene.render();
     }
 
     select() {
-
-        const material = new THREE.MeshPhongMaterial({
-            color: 0x0000FF,    // red (can also use a CSS color string here)
-            flatShading: true,
-        });
-
-        this.object.material = material
-        this.object.material.emissive.set(0x000000);
+        this.object.add(this.ruler);
+        setTransparent(this, .5, ["porte"])
+        MainScene.render();
+    }
+    deselect() {
+        this.object.remove(this.ruler);
+        setTransparent(this, 1, ["porte"])
+        MainScene.render();
     }
 
-    /* si l'objet contient des sous groupes, les créer et cacher les meshes d'origine  */
-    createGroups() {
-        var obj = this.object;
-        var scene = this.scene;
-
-        if (this.object.subGroups.length) {
-
-            this.object.traverse(function (child) {
-
-                if (child.parent.type === "Scene") {
-                    return false;
-                } else {
-                    for (let i = 0; i < obj.subGroups.length; i++) {
-                        if (child.name === obj.subGroups[i].parent) {
-
-                            for (let j = 0; j < obj.subGroups[i].childs.length; j++) {
-
-                                const group = new THREE.Group();
-                                group.name = obj.subGroups[i].name;
-                                group.animable = obj.subGroups[i].animable;
-                                group.groupProps = obj.subGroups[i];
-
-                                var target = obj.getObjectByName(obj.subGroups[i].childs[j]);
-                                var parent = child.clone();
-                                var subChild = target.clone();
-
-                                group.add(parent);
-                                group.add(subChild);
-
-                                obj.add(group);
-
-                                /*                                 child.visible = false;
-                                                                obj.getObjectByName(obj.subGroups[i].childs[j]).visible = false; */
-
-                                obj.updateMatrix();
-
-                                console.log(group);
-                            }
-                        }
-
-                    }
-
-                }
-
-            });
-
+    //localhost helper (getState() forbidden to use when updating)
+    addItemBySku(sku) {
+        const props = store.getState().catalogue.find(f => f.sku === sku)
+        if (!props) {
+            console.warn(`No accessoire found for sku ${sku}`)
+        }
+        else {
+            this.addItem(props)
         }
     }
+    addItem(props) {
+        if (this.props.accessoirescompatibles.indexOf(props.sku) === -1) {
+            console.warn(`${props.sku} non compatible avec ${this.props.sku} sélectionné`)
+            return false
+        }
+        // MainScene.loader.load(`${props.fbx.url}`, this.itemLoaded.bind(this, props))
+        MainScene.loadFbx(props.fbx.url, this.itemLoaded.bind(this, props))
+
+    }
+    itemLoaded(props, object) {
+        const item = new Item(props, object, this)
+        console.log(item)
+
+        // TODO
+        // this.items
+        // props.from 640
+        // props.to 2000
+        // const places = this.props.plandepercage['gauche'];
+        // [64, 128, 192, 256, 320, 384, 448, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1088, 1152, 1216, 1280]
+        this.items.forEach(i => {
+
+            console.log("ssss ", i.object.position.y, this.places.left)
+        })
+        /*         this.items.filter(i => i !== item).forEach(i => {
+                    segment = getSegment(i.object)
+                    if (segment.min - lastPos >= meuble.width) {
+                        Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
+                    }
+                    lastMeuble = m;
+                    lastPos = m.position;
+                }) */
+        // this.places
+
+        item.object.position.x = 0;
+        // item.object.position.y = state.selection.props.plandepercage['gauche'][0];
+        item.object.position.y = item.props.from
+        item.object.position.z = 0;
+
+
+        this.items.push(item)
+        this.object.add(item.object);
+        MainScene.render()
+    }
+
+    /* real bounding box width, or props.largeur ? */
     getWidth() {
         var box = new THREE.Box3().setFromObject(this.object);
         return Math.round(box.max.x - box.min.x);
@@ -219,36 +265,5 @@ export default class Meuble {
                 break;
             default:
         }
-    }
-    getFrontPosition() {
-        const d = 3000// distance de recul pour observer le meuble selectionné
-        const center = this.getCenterPoint()
-        switch (this.wall) {
-            case "right":
-                return center.add(new THREE.Vector3(0, 0, d))
-                break;
-            case "back":
-                return center.add(new THREE.Vector3(d, 0, 0))
-                break;
-            case "left":
-                return center.add(new THREE.Vector3(0, 0, -d))
-                break;
-            case "right-back":
-                return center.add(new THREE.Vector3(d, 0, d))
-                break;
-            case "left-back":
-                return center.add(new THREE.Vector3(d, 0, -d))
-                break;
-            default:
-        }
-    }
-    getCenterPoint() {
-        var box = new THREE.Box3().setFromObject(this.object);
-        var middle = new THREE.Vector3();
-        middle.x = (box.max.x + box.min.x) / 2;
-        middle.y = (box.max.y + box.min.y) / 2;
-        middle.z = (box.max.z + box.min.z) / 2;
-        // mesh.localToWorld(middle);
-        return middle;
     }
 }

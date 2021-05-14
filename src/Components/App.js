@@ -24,6 +24,7 @@ import {
 	loadAllSku,
 	setCatalogue,
 	clickMeubleLine,
+	select,
 	dragMeubleOverScene,
 	dropMeubleOnScene,
 	animeSelectedMeuble,
@@ -32,6 +33,9 @@ import {
 	setSceneMaterial,
 }
 	from '../api/actions'
+import store from '../api/store';// localhost tests
+import sceneBridge from '../api/Bridge';
+
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 
 import { getCurrentScene } from '../3d/Dressing';
@@ -46,7 +50,7 @@ class App extends Component {
 		this.state = {
 			webgl: WEBGL.isWebGLAvailable() ? "WEBGL is available" : "WEBGL is UNAVAILABLE"
 		};
-		window.scene_bridge = this.bridge.bind(this)
+		window.scene_bridge = sceneBridge.bind(this)
 
 		/* log on meublesminet.com
 				const requestOptions = {
@@ -97,8 +101,28 @@ class App extends Component {
 					this.props.setConfig(config)// creation scene
 					// this.props.loadScene(dressing2)
 					// this.props.generateAllPix()
+					// this.props.loadAllSku();
+
 					this.props.newScene(defaultdressing);
-					this.props.clickMeubleLine("NYH238P62L119")
+					// this.props.clickMeubleLine("NYC191H238PP")
+					// this.props.clickMeubleLine("NYC155H219P0")
+					// this.props.clickMeubleLine("NYC155H219PG")
+					// this.props.clickMeubleLine("NYH219P40FD")
+					// this.props.clickMeubleLine("NYH219P62FD")
+					// this.props.clickMeubleLine("NYH238P62FD")
+					// this.props.clickMeubleLine("NYH238P62L040")
+					// this.props.clickMeubleLine("NYH238P62L096")
+
+					this.props.clickMeubleLine("NYH238P62L119")//ID 248
+					this.props.clickMeubleLine("NYH238P62L096")
+					this.props.clickMeubleLine("NYH219P40L096")
+					this.props.clickMeubleLine("NYC231H238PP")
+					/* 	.then(e => {
+					console.log("meuble loaded", e);
+					}) */
+					this.props.changeTool(Tools.HAMMER)
+					// this.props.select(store.getState().meublesOnScene[0])// undefined => to mapStateToProps ?
+
 				})
 		}
 		else {
@@ -115,85 +139,14 @@ class App extends Component {
 				.then(response => response.json())
 				.then(catalogue => {
 					this.props.setCatalogue(catalogue)
-
 					this.props.newScene(defaultdressing);
-					if (localhost) {
-						// this.props.loadAllSku();
-						if (false) {
-							this.props.clickMeubleLine("NYH238P62L119")
-							// this.props.clickMeubleLine("NYC191H238PP")
-							// this.props.clickMeubleLine("NYC155H219P0")
-							// this.props.clickMeubleLine("NYC155H219PG")
-							// this.props.clickMeubleLine("NYH219P40FD")
-							// this.props.clickMeubleLine("NYH219P62FD")
-							// this.props.clickMeubleLine("NYH238P62FD")
-							// this.props.clickMeubleLine("NYH238P62L040")
-							// this.props.clickMeubleLine("NYH238P62L096")
-							// this.props.clickMeubleLine("NYH238P62P40")
-						}
-						this.props.loadScene(dressing1)
-					}
+					// this.props.loadScene(dressing1)
 				})
 				.catch(e => {
 					console.log("load catalogue error", e);
 				})
 		}
 
-	}
-	bridge(event, param1, param2) {
-		console.log("scene_bridge", event, param1, param2)
-		switch (event) {
-			case BridgeEvent.NEW_DRESSING:
-				this.props.newScene(param1, param2)
-				break;
-			case BridgeEvent.SAVE_DRESSING:
-				return getCurrentScene()
-				break;
-			case BridgeEvent.LOAD_DRESSING:
-				this.props.loadScene(param1, param2)
-				break;
-			case BridgeEvent.DOWNLOAD_DRESSING:
-				// this.props.downloadScene(param1, param2)
-				break;
-			case BridgeEvent.TAKE_PICTURE:
-				this.props.takePicture()
-				break;
-			case BridgeEvent.GENERATE_ALL_PIX:
-				this.props.generateAllPix()
-				break;
-
-			case BridgeEvent.ADD_MEUBLE_TO_SCENE:
-				this.props.clickMeubleLine(param1, param2)
-				break;
-			case BridgeEvent.DRAG_MEUBLE_OVER_SCENE:
-				this.props.dragMeubleOverScene(param1, param2)
-				break;
-			case BridgeEvent.DROP_MEUBLE_TO_SCENE:
-				this.props.dropMeubleOnScene(param1, param2)
-				break;
-			case BridgeEvent.SET_SCENE_MATERIAL:
-				this.props.setSceneMaterial(param1)
-				break;
-			case BridgeEvent.LOAD_ALL_SKU:
-				this.props.loadAllSku()
-				break;
-
-			case BridgeEvent.SELECT_MEUBLE:
-				this.props.changeTool(Tools.ARROW)
-				break;
-			case BridgeEvent.EDIT_MEUBLE:
-				this.props.changeTool(Tools.HAMMER)
-				break;
-			case BridgeEvent.REMOVE_MEUBLE:
-				this.props.changeTool(param1 ? Tools.TRASH : null)
-				break;
-			case BridgeEvent.ANIM_SELECTED_MEUBLE:
-				this.props.animeSelectedMeuble()
-				break;
-			default:
-				console.log("no case found for event ", event)
-				break;
-		}
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.onWindowResize.bind(this));
@@ -254,6 +207,7 @@ const mapDispatchToProps = {
 	loadAllSku,
 	setCatalogue,
 	clickMeubleLine,
+	select,
 	dragMeubleOverScene,
 	dropMeubleOnScene,
 	animeSelectedMeuble,

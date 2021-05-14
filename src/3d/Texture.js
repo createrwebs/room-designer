@@ -1,6 +1,15 @@
 import * as THREE from "three";
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
 
+
+export const setTransparent = (meuble, opacity, parts) => {
+    meuble.object.children//c.type === "Mesh"
+        .filter(c => c.material && (parts ? parts.some(element => c.name.includes(element)) : true))
+        .forEach(c => {
+            c.material.transparent = true;
+            c.material.opacity = opacity;
+        });
+}
 export const loadTextures = (object, textures) => {
     console.log('loadTextures', object, textures);
     var promise = new Promise((resolveTexturesLoaded, rejectTexturesLoaded) => {

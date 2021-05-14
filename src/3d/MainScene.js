@@ -8,7 +8,9 @@ import store from '../api/store'; */
 
 import * as THREE from "three";
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-// import { Scene } from 'three';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import Loader from './Loader'
+
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { localhost } from '../api/Config';
 
@@ -20,8 +22,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import Draggable from './Draggable'
 import { setupLights } from './Lights'
+// import helvetiker_regular from 'three/examples/fonts/helvetiker_regular.typeface.json'
 
 export default {
+    loader: new FBXLoader(Loader.manager),
     getRendererNodeElement() {
         return this.renderer.domElement
     },
@@ -30,6 +34,9 @@ export default {
     },
     setup(config) {
         window.ts = this// f12 helper
+
+        // this.font = new THREE.Font(helvetiker_regular);
+        // console.log(this.font)
 
         const scene_params = this.scene_params = config.scene_params;
         let camera, scene, renderer, orbitControls, stats, manager;
@@ -157,6 +164,9 @@ export default {
 
         this.setupWalls(config.walls)
 
+    },
+    loadFbx(fbx, callback) {
+        this.loader.load(fbx, callback)
     },
     resize() {
         const canvasWrapper = document.getElementById("canvas-wrapper")

@@ -7,6 +7,11 @@
   <meta name="description" content="NY Minet3d" />
   <title><%= htmlWebpackPlugin.options.title %></title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <script>
+    kino_bridge = function (type, arg) {
+      console.log("kino_bridge", type, arg)
+    }
+  </script>
 </head>
 
 <body style="margin: 0;height: 100vh;">

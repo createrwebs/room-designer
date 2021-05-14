@@ -2,7 +2,7 @@
     "name": "Nouveau dressing",
     "walls": {
         "right": 5000,
-        "back": 4000
+        "back": 12000
     },
     "meubles": []
 }

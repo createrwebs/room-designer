@@ -12,14 +12,12 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import Loader from '../3d/Loader'
 import MainScene from '../3d/MainScene';
 import Draggable from '../3d/Draggable'
-import Accessoire from '../3d/Accessoire'
 import { getCurrentScene } from '../3d/Dressing';
 import { cameraTo, tweenTo } from '../3d/Animate';
 import { Vector3 } from 'three';
 import { takePix } from '../3d/Capture';
 import { loadTextures } from '../3d/Texture';
 
-const loader = new FBXLoader(Loader.manager);
 const initialState = {
     config: null,
     scenes: [],
@@ -40,7 +38,7 @@ const initialState = {
         composerShowed: false,
         texturerShowed: false,
     },
-    tool: null
+    tool: Tools.ARROW
 }
 let currentScene, localScenes, scenes, meublesOnScene, selection;
 export const reducer = (state = initialState, action) => {
@@ -107,7 +105,7 @@ export const reducer = (state = initialState, action) => {
                 //meuble props are catalogue props + dressing props
                 props.position = m.position;
 
-                loader.load(`${props.fbx.url}`, object => {
+                MainScene.loadFbx(props.fbx.url, object => {
                     if (m.position) {
                         const meuble = new Draggable(props, object)
                         MainScene.add(meuble);
@@ -115,6 +113,7 @@ export const reducer = (state = initialState, action) => {
                     }
                     MainScene.render()
                 })
+
             })
             MainScene.render()
             return {
@@ -182,26 +181,6 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state
             }
-        case SceneEvent.LOADSCENE_OLD:
-            currentScene = state.scenes.find(s => s.name == action.name)
-            meublesOnScene = [];
-            if (currentScene) {
-
-                MainScene.scene.clear();
-                MainScene.setupLights();
-                MainScene.setupWalls(currentScene.walls)
-                currentScene.meubles.forEach(props => loader.load(`models/${props.file}.fbx`, object => {
-                    if (props.position) {
-                        const meuble = new Draggable(props, object)
-                        MainScene.add(meuble);
-                        meublesOnScene.unshift(meuble);
-                    }
-                }))
-                MainScene.render()
-            }
-            return {
-                ...state, currentScene, meublesOnScene
-            }
         case SceneEvent.SETCURRENTSCENEPROP:
             return {
                 ...state, currentScene: Object.assign(state.currentScene, action.prop)
@@ -257,6 +236,35 @@ export const reducer = (state = initialState, action) => {
             }
         case MeubleEvent.SELECT:
             switch (state.tool) {
+                case Tools.ARROW:
+                    console.warn(`Scene tool click`)
+                    if (action.meuble) console.warn(`Use hammer tool to edit ${action.meuble.props.sku}`)
+                    if (state.selection) state.selection.deselect();
+                    return {
+                        ...state, selection: null
+                    }
+                case Tools.HAMMER:
+                    if (action.meuble) {
+                        if (state.selection) state.selection.deselect();
+                        action.meuble.select()
+                        const front = action.meuble.getFrontPosition()
+                        const center = action.meuble.getCenterPoint()
+                        // MainScene.camera.position.set(front.x, front.y, front.z)
+                        // MainScene.orbitControls.target = action.meuble.getCenterPoint()
+                        // MainScene.orbitControls.update();
+                        // MainScene.render()
+                        cameraTo(front, center, 800)
+                        if (window.kino_bridge)
+                            window.kino_bridge(KinoEvent.SELECT_MEUBLE, action.meuble.props.sku)
+                        return {
+                            ...state, selection: action.meuble
+                        }
+                    }
+                    else {
+                        return {
+                            ...state
+                        }
+                    }
                 case Tools.TRASH:
 
                     meublesOnScene = [...state.meublesOnScene];
@@ -267,31 +275,10 @@ export const reducer = (state = initialState, action) => {
                     MainScene.render()
                     return { ...state, meublesOnScene, selection: null };
 
-                case Tools.HAMMER:
-                    if (action.meuble) {
-                        action.meuble.select()
-                        window.kino_bridge(KinoEvent.SELECT_MEUBLE, action.meuble.sku)
-                        return {
-                            ...state, selection: action.meuble
-                        }
-                    }
-                    else {
-                        return {
-                            ...state
-                        }
-                    }
-                case Tools.ARROW:
                 default:
-                    if (action.meuble) action.meuble.select()
-                    const front = action.meuble.getFrontPosition()
-                    const center = action.meuble.getCenterPoint()
-                    // MainScene.camera.position.set(front.x, front.y, front.z)
-                    // MainScene.orbitControls.target = action.meuble.getCenterPoint()
-                    // MainScene.orbitControls.update();
-                    // MainScene.render()
-                    cameraTo(front, center, 800)
+                    console.warn(`No tool selected`)
                     return {
-                        ...state, selection: action.meuble
+                        ...state
                     }
             }
         case MeubleEvent.ADD:
@@ -311,7 +298,14 @@ export const reducer = (state = initialState, action) => {
             return { ...state, meublesOnScene, selection: null };
 
         case SceneEvent.CHANGE_TOOL:
-            return { ...state, tool: action.tool };
+            switch (action.tool) {
+                case Tools.ARROW:// deselection => camera to room center ?
+                    if (state.selection) state.selection.deselect();
+                case Tools.HAMMER:
+                case Tools.TRASH:
+                default:
+            }
+            return { ...state, tool: action.tool, selection: null };
 
         case MeubleEvent.DROP_MEUBLE_TO_SCENE:
         case MeubleEvent.CLICKMEUBLELINE:
@@ -333,22 +327,13 @@ export const reducer = (state = initialState, action) => {
                     return { ...state };
                 }
                 else {
-                    loader.load(`${props.fbx.url}`, object => {
-                        const accessoire = new Accessoire(props, object)
-                        accessoire.object.position.x = state.selection.object.x;
-                        accessoire.object.position.y = state.selection.props.plandepercage['gauche'][0];
-                        accessoire.object.position.z = state.selection.object.z;
-                        MainScene.add(accessoire);
-                        MainScene.render()
-                    })
+                    state.selection.addItem(props);
                     return { ...state };
                 }
             } else {
                 meublesOnScene = [...state.meublesOnScene];
-                // loader.load(`models/${props.file}.fbx`, object => {
 
-                // https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/image_2020_12_01T11_04_22_887Z-150x150.png
-                loader.load(`${props.fbx.url}`, object => {
+                MainScene.loadFbx(props.fbx.url, object => {
 
                     // find front wall, best location for new Meuble
                     let wall = Object.keys(state.currentScene.walls)[0] || "right"
@@ -428,7 +413,7 @@ export const reducer = (state = initialState, action) => {
                     return { ...state }
                 }
 
-                loader.load(`${props.fbx.url}`, object => {
+                MainScene.loadFbx(props.fbx.url, object => {
 
                     object.traverse(function (child) {
                         if (subobjectsNames.indexOf(child.name) >= 0) {
@@ -510,7 +495,7 @@ export const reducer = (state = initialState, action) => {
 
             state.catalogue.forEach(props => {
                 if (props.sku && props.sku != "" && props.fbx.url && props.fbx.url != "") {
-                    loader.load(`${props.fbx.url}`, object => {
+                    MainScene.loadFbx(props.fbx.url, object => {
                         props.position = {
                             wall: "back",
                             x: centerMeubleForPix - props.largeur / 2
