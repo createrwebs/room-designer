@@ -8,7 +8,7 @@ import { LoadingManager } from "three";
 
 export default {
     manager: new LoadingManager(),
-    setup(config) {
+    setup() {
         this.manager.onStart = this.loadManagerStart.bind(this);
         this.manager.onLoad = this.loadManagerLoad.bind(this);
         this.manager.onProgress = this.loadManagerProgress.bind(this);

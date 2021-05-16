@@ -35,3 +35,17 @@ NYC231H238PP
 
 [0] => NYETTPCOL074
     [1] => NYETAPCOL074
+
+
+    les panneaux latéraux sont des meubles comme les autres
+
+ils ont une référence
+
+à priori ils seront dans la liste des accessoires compatibles
+
+le seul truc avec eux :
+
+- ils auront un attribut qui permettra de les emboiter dans la rainure (bounding box etc)
+- ils s'ajoutent automatiquement quand on pose un module sur la scène
+- quand le module est pas collé à un autre, il a des cotés, quand il touche un autre module, il a des séparateurs
+pour trouver les bons à l'heure actuelle ... faut regarder les tailles et largeur, mais je vais t'en mettre en accessoires compatibles sur le module ID = 248

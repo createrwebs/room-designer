@@ -16,7 +16,7 @@ import { getCurrentScene } from '../3d/Dressing';
 import { cameraTo, tweenTo } from '../3d/Animate';
 import { Vector3 } from 'three';
 import { takePix } from '../3d/Capture';
-import { loadTextures } from '../3d/Texture';
+import { load as loadMaterial, apply as applyMaterial } from '../3d/Material'
 
 const initialState = {
     config: null,
@@ -396,6 +396,18 @@ export const reducer = (state = initialState, action) => {
             })
 
             return { ...state };
+
+        case SceneEvent.SET_SCENE_MATERIAL:
+            meublesOnScene = [...state.meublesOnScene];
+            loadMaterial(action.material).then(material => {
+                console.log(`material loaded`, material)
+                meublesOnScene.forEach(meuble => {
+                    applyMaterial(material, meuble)
+                })
+                MainScene.render()
+            })
+            return { ...state };
+
         case MeubleEvent.LOAD_ALL_SKU:
 
             if (!state.currentScene) {
@@ -445,38 +457,7 @@ export const reducer = (state = initialState, action) => {
             })
             return { ...state, meublesOnScene };
 
-        case SceneEvent.SET_SCENE_MATERIAL:
 
-            var material = {
-                hori: {
-                    url: "chene-blanc-hori.jpg",
-                    label: "Chêne blanc",
-                    angle_fil: 0
-                },
-                vert: {
-                    url: "chene-blanc-vert.jpg",
-                    label: "Chêne blanc",
-                    angle_fil: 90
-                },
-                fond: {
-                    url: "cuir.jpg",
-                    label: "Chêne blanc",
-                    angle_fil: 0
-                },
-                portes: {
-                    url: "chene-charleston-vert.jpg",
-                    label: "Chêne charleston",
-                    angle_fil: 0
-                }
-            }
-            meublesOnScene = [...state.meublesOnScene];
-            meublesOnScene.forEach(meuble => {
-                loadTextures(meuble.object, action.material).then(response => {
-                    console.log(`textures loaded`, response)
-                    MainScene.render()
-                })
-            })
-            return { ...state };
 
         case SceneEvent.GENERATE_ALL_PIX:
 

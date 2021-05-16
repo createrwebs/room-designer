@@ -12,6 +12,7 @@ import MainScene from '../../3d/MainScene';
 // import SceneConfig from '../panels/SceneConfig'
 import defaultdressing from '../../../assets/dressings/defaultdressing.json';
 import dressing1 from '../../../assets/dressings/defaultdressing.json';
+import material1 from '../../../assets/material-chene-blanc.json';
 
 import './bars.css';
 import '@fortawesome/fontawesome-free/js/fontawesome'
@@ -97,7 +98,9 @@ class Toolbar extends Component {
                             icon="fa fa-vector-square" text="Modifier la pièce" />
                         <Button status="inactive" action={() => window.scene_bridge(BridgeEvent.SELECT_MEUBLE)} icon="fa fa-mouse-pointer" text="Sélectionner" />
                         <Button action={() => window.scene_bridge(BridgeEvent.EDIT_MEUBLE)} icon="fa fa-hammer" text="Editer" />
-                        <Button action={() => { this.disconnect() }} icon="fa fa-palette" text="Choisir une texture" />
+                        <Button
+                            action={() => window.scene_bridge(BridgeEvent.SET_SCENE_MATERIAL, material1)}
+                            icon="fa fa-palette" text="Choisir une texture" />
                         <Button action={() => { this.disconnect() }} icon="fa fa-paint-brush" text="Peindre" />
                         <Button action={() => { this.disconnect() }} icon="fa fa-ruler-combined" text="Règles" />
                         <Button action={() => window.scene_bridge(BridgeEvent.REMOVE_MEUBLE, true)} icon="fa fa-trash" text="Corbeille" />

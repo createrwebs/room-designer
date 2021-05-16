@@ -11,12 +11,11 @@ import Fbx from './Fbx'
 // Controls
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
-// import { TextureLoader } from 'src/loaders/TextureLoader.js';
 
 // miroir
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 
-import { loadTextures, setTransparent } from './Texture';
+import { setTransparent } from './Material';
 import Item from './Item'
 import { create as createRuler } from './Ruler';
 import { localhost } from '../api/Config';
@@ -62,10 +61,10 @@ export default class Meuble extends Fbx {
 
         /* textures */
 
-        if (props.textures) loadTextures(object, props.textures).then(response => {
-            console.log(`textures loaded`, response)
-
-        })
+        /*         if (props.textures) loadTextures(object, props.textures).then(response => {
+                    console.log(`textures loaded`, response)
+        
+                }) */
 
         /* panneaux lateraux */
 
@@ -188,9 +187,7 @@ export default class Meuble extends Fbx {
             console.warn(`${props.sku} non compatible avec ${this.props.sku} sélectionné`)
             return false
         }
-        // MainScene.loader.load(`${props.fbx.url}`, this.itemLoaded.bind(this, props))
         MainScene.loadFbx(props.fbx.url, this.itemLoaded.bind(this, props))
-
     }
     itemLoaded(props, object) {
         const item = new Item(props, object, this)

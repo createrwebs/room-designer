@@ -188,10 +188,6 @@ const mapStateToProps = (state) => {
 	return {
 		configLoaded: state.config != null,
 		allAssetsLoaded: state.allAssetsLoaded,
-		meubleListShowed: state.layout.meubleListShowed,
-		composerShowed: state.layout.composerShowed,
-		texturerShowed: state.layout.texturerShowed,
-		meubleInfoShowed: state.selection != null,
 	}
 }
 const mapDispatchToProps = {

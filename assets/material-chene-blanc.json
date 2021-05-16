@@ -1,0 +1,22 @@
+{
+    "hori": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/chene-blanc-vert.jpg",
+        "label": "Chêne blanc",
+        "angle_fil": 0
+    },
+    "vert": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/chene-blanc-vert.jpg",
+        "label": "Chêne blanc",
+        "angle_fil": 90
+    },
+    "fond": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/chene-blanc-vert.jpg",
+        "label": "Chêne blanc",
+        "angle_fil": 0
+    },
+    "portes": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/03/chene-blanc-vert.jpg",
+        "label": "Chêne charleston",
+        "angle_fil": 0
+    }
+}

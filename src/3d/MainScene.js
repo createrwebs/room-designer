@@ -191,13 +191,15 @@ export default {
             this.scene.add(axesHelper);
 
             /* floor grid */
-
+            // TODO because cannot be rectangle, make its own !
             const grid = new THREE.GridHelper(10000, 100, 0x000000, 0x9A9A9A);
-            // grid.material.opacity = 0.25;
-            // grid.material.transparent = true;
+            grid.material.opacity = 0.25;
+            grid.material.transparent = true;
+            grid.position.x = 10000 / 2
+            grid.position.z = 10000 / 2
             this.scene.add(grid);
+            // console.log(grid)
         }
-
 
         if (this.wallRight) this.scene.remove(this.wallRight);
         if (this.wallBack) this.scene.remove(this.wallBack);
