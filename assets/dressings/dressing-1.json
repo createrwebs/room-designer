@@ -1,11 +1,8 @@
 {
     "post_id": 99,
     "name": "Dressing 2021-04-21 01:24:22pm",
-    "walls": {
-        "right": 5000,
-        "back": 5000,
-        "left": 5000
-    },
+    "xmax":5000,
+    "zmax":5000,
     "meubles": [
         {
             "sku": "NYH238P62P40",

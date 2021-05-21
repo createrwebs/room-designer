@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-	add,
 	allLoaded
 }
 	from '../api/actions'
 
 import MainScene from '../3d/MainScene';
-import Loader from '../3d/Loader'
 import Draggable from '../3d/Draggable'
-
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 // const localhost = window.location.hostname.indexOf('localhost') !== -1;
 
 class Room extends Component {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.threejsSceneRef = React.createRef();
 
@@ -58,7 +54,6 @@ const mapStateToProps = (state) => {
 	}
 }
 const mapDispatchToProps = {
-	add,
 	allLoaded
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Room)

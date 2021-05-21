@@ -1,12 +1,15 @@
 import {
     select,
-    drag
+    drag,
+    Tools
 }
     from '../api/actions'
 import store from '../api/store';
-import * as THREE from "three";
+import * as THREE from "three";//TODO
 import MainScene from './MainScene';
 import Fbx from './Fbx'
+import { getWidth } from './Utils'
+import { loadFbx } from './Loader'
 
 // Controls
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
@@ -17,11 +20,11 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 
 import { setTransparent } from './Material';
 import Item from './Item'
-import { create as createRuler } from './Ruler';
+import { create as createRuler } from './helpers/Ruler';
 import { localhost } from '../api/Config';
 
 export default class Meuble extends Fbx {
-    constructor (props, object) {
+    constructor(props, object) {
         // console.log('Meuble', props, object)
         super(props, object)
         this.items = []// accessoires
@@ -53,11 +56,14 @@ export default class Meuble extends Fbx {
             this.object.subGroups = [];
         }
 
-        this.width = this.getWidth()// store width for performance collision
+        this.width = getWidth(this.object, "x")// store width for performance collision
         // this.segment = this.getSegment(object)// store width for performance collision
         // this.dragControls = this.
         this.setPosition(props.position);
         console.log(`Meuble ${this.props.ID} of width ${this.width}mm on ${props.position.wall} wall at ${props.position.x}mm`, props.plandepercage, props.accessoirescompatibles, props, object, this);
+
+
+        this.object.addEventListener('click', this.click.bind(this))
 
         /* textures */
 
@@ -71,29 +77,6 @@ export default class Meuble extends Fbx {
         if (this.dim != {} && false) {
 
             var e = 25;
-            //texture.repeat.set(1, 1);
-
-            if (object.textures && object.textures.length > 1) {
-
-                var text = object.textures[1].metas.texture.clone();
-                text.needsUpdate = true;
-                text.wrapS = text.wrapT = THREE.RepeatWrapping; //ClampToEdgeWrapping
-                text.repeat.set(.5, 1);
-                text.offset.set(0.5, 1);
-
-                var material_bords_args = {
-                    //color:0x0DC400,
-                    emissive: 0x0D0D0D,
-                    roughness: 0.45,
-                    map: text,
-                    bumpMap: text,
-                    bumpScale: 1,
-                    fog: false
-                };
-                var material_bords = new THREE.MeshStandardMaterial(material_bords_args);
-                //material_bords.map.repeat.set(1, 1);
-                material_bords.needsUpdate = true;
-            }
 
             /* add dynamic panneaux lateraux 
 
@@ -160,7 +143,12 @@ export default class Meuble extends Fbx {
         }
         MainScene.render();
     }
-
+    click() {
+        select(this)
+    }
+    info() {
+        return `${this.props.sku} (L ${this.props.largeur / 10}cm H ${this.props.hauteur / 10}cm P ${this.props.profondeur / 10}cm)`
+    }
     select() {
         this.object.add(this.ruler);
         setTransparent(this, .5, ["porte"])
@@ -170,6 +158,7 @@ export default class Meuble extends Fbx {
         this.object.remove(this.ruler);
         setTransparent(this, 1, ["porte"])
         MainScene.render();
+        console.warn(`deselect Meuble ${this.info()}`)
     }
 
     //localhost helper (getState() forbidden to use when updating)
@@ -187,7 +176,7 @@ export default class Meuble extends Fbx {
             console.warn(`${props.sku} non compatible avec ${this.props.sku} sélectionné`)
             return false
         }
-        MainScene.loadFbx(props.fbx.url, this.itemLoaded.bind(this, props))
+        loadFbx(props.fbx.url, this.itemLoaded.bind(this, props))
     }
     itemLoaded(props, object) {
         const item = new Item(props, object, this)
@@ -201,7 +190,7 @@ export default class Meuble extends Fbx {
         // [64, 128, 192, 256, 320, 384, 448, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1088, 1152, 1216, 1280]
         this.items.forEach(i => {
 
-            console.log("ssss ", i.object.position.y, this.places.left)
+            // console.log("ssss ", i.object.position.y, this.places.left)
         })
         /*         this.items.filter(i => i !== item).forEach(i => {
                     segment = getSegment(i.object)
@@ -224,30 +213,36 @@ export default class Meuble extends Fbx {
         MainScene.render()
     }
 
-    /* real bounding box width, or props.largeur ? */
-    getWidth() {
-        var box = new THREE.Box3().setFromObject(this.object);
-        return Math.round(box.max.x - box.min.x);
-    }
+
     setPosition(position) {
-        const wallConfig = store.getState().config.walls;
+        const wallConfig = store.getState().config;
         switch (position.wall) {
             case "right":
+                this.object.rotation.y = 0;// natural wall for fbx
                 this.object.position.x = position.x;
                 this.object.position.y = 0;
                 this.object.position.z = 0;
                 break;
-            case "back":
-                this.object.rotateY(Math.PI / 2);
+            case "front":
+                this.object.rotation.y = Math.PI / 2;
+                // this.object.rotateY(Math.PI / 2);
                 this.object.position.x = 0;
                 this.object.position.y = 0;
                 this.object.position.z = position.x + this.width;
                 break;
             case "left":
-                this.object.rotateY(Math.PI);
+                this.object.rotation.y = -Math.PI;
+                // this.object.rotateY(Math.PI);
                 this.object.position.x = position.x;
                 this.object.position.y = 0;
-                this.object.position.z = wallConfig.back;
+                this.object.position.z = wallConfig.zmax;
+                break;
+            case "back":
+                this.object.rotation.y = -Math.PI / 2;
+                // this.object.rotateY(Math.PI);
+                this.object.position.x = wallConfig.xmax;
+                this.object.position.y = 0;
+                this.object.position.z = position.x;
                 break;
             case "right-back":
                 this.object.position.x = 0;
@@ -255,10 +250,10 @@ export default class Meuble extends Fbx {
                 this.object.position.z = 0;
                 break;
             case "left-back":
-                this.object.rotateY(Math.PI / 2);
+                // this.object.rotateY(Math.PI / 2);
                 this.object.position.x = 0;
                 this.object.position.y = 0;
-                this.object.position.z = wallConfig.back;
+                this.object.position.z = wallConfig.zmax;
                 break;
             default:
         }

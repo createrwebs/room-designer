@@ -24,3 +24,6 @@ export const getParticipantId = (participant) => {
     if (participant.USER_ID) return participant.USER_ID;
     return -1;
 }
+export const getFileNameFromUrl = (url) => {
+    return url.match(/\/([^\/]+)\/?$/)[1];
+}

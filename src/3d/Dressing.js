@@ -8,9 +8,8 @@ export const getCurrentScene = (stat) => {
     /*     let currentScene = {
             post_id: store.getState().currentScene.post_id
         } */
-    const meublesOnScene = store.getState().meublesOnScene
     let meubles = [];
-    store.getState().meublesOnScene.forEach(m => {
+    MainScene.meubles.forEach(m => {
         let meuble = {
             sku: m.sku,
             position: {

@@ -16,10 +16,7 @@ import {
 	setConfig,
 	resizeScene,
 	newScene,
-	saveScene,
 	loadScene,
-	takePicture,
-	downloadScene,
 	setScenes,
 	loadAllSku,
 	setCatalogue,
@@ -37,15 +34,14 @@ import store from '../api/store';// localhost tests
 import sceneBridge from '../api/Bridge';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-
-import { getCurrentScene } from '../3d/Dressing';
-
-import Toolbar from './bars/Toolbar';
 import Room from './Room';
+import Toolbar from './bars/Toolbar';
+import Loading from './Loading';
+import Dragging from './Dragging';
 import { getGui } from './DataGui';
 
 class App extends Component {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			webgl: WEBGL.isWebGLAvailable() ? "WEBGL is available" : "WEBGL is UNAVAILABLE"
@@ -88,7 +84,7 @@ class App extends Component {
 						if (setScenesAction.scenes.length > 0 && loadFirstScene) this.props.loadScene(setScenesAction.scenes[0].name)
 					}) */
 
-		const gui = getGui()
+		let gui
 		if (localhost) {
 			fetch('https://preprod.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
 				method: 'GET',
@@ -104,29 +100,28 @@ class App extends Component {
 					// this.props.loadAllSku();
 
 					this.props.newScene(defaultdressing);
-					// this.props.clickMeubleLine("NYC191H238PP")
-					// this.props.clickMeubleLine("NYC155H219P0")
-					// this.props.clickMeubleLine("NYC155H219PG")
-					// this.props.clickMeubleLine("NYH219P40FD")
-					// this.props.clickMeubleLine("NYH219P62FD")
-					// this.props.clickMeubleLine("NYH238P62FD")
-					// this.props.clickMeubleLine("NYH238P62L040")
-					// this.props.clickMeubleLine("NYH238P62L096")
+					// clickMeubleLine("NYC231H238PP")
+					// clickMeubleLine("NYC155H219P0")
+					// clickMeubleLine("NYC155H219PG")
+					// clickMeubleLine("NYH219P40FD")
+					// clickMeubleLine("NYH219P62FD")
+					// clickMeubleLine("NYH238P62FD")
+					// clickMeubleLine("NYH238P62L040")
+					// clickMeubleLine("NYH238P62L096")
 
-					this.props.clickMeubleLine("NYH238P62L119")//ID 248
-					this.props.clickMeubleLine("NYH238P62L096")
-					this.props.clickMeubleLine("NYH219P40L096")
-					this.props.clickMeubleLine("NYC231H238PP")
+					// clickMeubleLine("NYH238P62L119")//ID 248
+					// clickMeubleLine("NYH238P62L096")
+					clickMeubleLine("NYH219P40L096")
+					// clickMeubleLine("NYC231H238PP")
 					/* 	.then(e => {
 					console.log("meuble loaded", e);
 					}) */
 					this.props.changeTool(Tools.HAMMER)
-					// this.props.select(store.getState().meublesOnScene[0])// undefined => to mapStateToProps ?
-
+					// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
+					gui = getGui()
 				})
 		}
 		else {
-			gui.hide()
 			getJson("config")
 				.then(c => this.props.setConfig(c))// creation scene
 				.catch(e => {
@@ -141,6 +136,9 @@ class App extends Component {
 					this.props.setCatalogue(catalogue)
 					this.props.newScene(defaultdressing);
 					// this.props.loadScene(dressing1)
+
+					gui = getGui()
+					gui.hide()
 				})
 				.catch(e => {
 					console.log("load catalogue error", e);
@@ -155,7 +153,7 @@ class App extends Component {
 		window.removeEventListener('resize', this.onWindowResize.bind(this));
 	}
 	onWindowResize() {
-		this.props.resizeScene()
+		resizeScene()
 	}
 	render() {
 		return (
@@ -177,6 +175,8 @@ class App extends Component {
 						{localhost &&
 							<Toolbar />
 						}
+						<Loading />
+						<Dragging />
 						<Room />
 					</div>
 				}
@@ -193,12 +193,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
 	BridgeEvent,
 	setConfig,
-	resizeScene,
 	newScene,
-	saveScene,
 	loadScene,
-	takePicture,
-	downloadScene,
 	setScenes,
 	loadAllSku,
 	setCatalogue,

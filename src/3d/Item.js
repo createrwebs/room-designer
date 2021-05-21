@@ -13,7 +13,7 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 
 class Space {
     static onWall = []// right,back,left
-    constructor (min, max, prev, next) {
+    constructor(min, max, prev, next) {
         this.min = min;
         this.max = max;
         this.prev = prev;
@@ -57,7 +57,7 @@ export default class Item extends Fbx {
                     break;
             }
         }   */
-    constructor (props, object, parent) {
+    constructor(props, object, parent) {
         super(props, object)
 
         this.parent = parent;// parent meuble
@@ -129,6 +129,6 @@ export default class Item extends Fbx {
         store.dispatch(drag(null))
         Item.Dragged = null
 
-        store.getState().meublesOnScene.forEach(m => m.dragControls.enabled = true)// reactivation of others
+        // MainScene.meubles.forEach(m => m.dragControls.enabled = true)// reactivation of others
     }
 }

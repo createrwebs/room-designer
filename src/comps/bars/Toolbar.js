@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import {
     BridgeEvent,
     newScene,
-    saveScene,
+    saveSceneToLocalStorage,
     saveSceneToFile,
-    removeSelectedMeuble
 } from '../../api/actions'
 import Button from './Button';
 import MainScene from '../../3d/MainScene';
@@ -25,7 +24,7 @@ const Panels = {
 }
 
 class Toolbar extends Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = { currentPanel: null };
     }
@@ -85,7 +84,8 @@ class Toolbar extends Component {
                         window.scene_bridge(BridgeEvent.GENERATE_ALL_PIX)
                     }} icon="fa fa-image" text="Vignettes batch" />
                     <Button action={() => { this.disconnect() }} icon="fa fa-print" text="Imprimer la composition" />
-                    <Button action={() => { this.props.saveSceneToFile() }} icon="fa fa-download" text="Télecharger la composition" />
+                    <Button action={() => { saveSceneToLocalStorage() }} icon="fa fa-download" text="Enregistrer la composition dans ce navigateur" />
+                    <Button action={() => { saveSceneToFile() }} icon="fa fa-download" text="Télecharger la composition" />
                 </div>
 
                 {this.props.hasCurrentScene &&
@@ -135,8 +135,5 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = {
     newScene,
-    saveScene,
-    saveSceneToFile,
-    removeSelectedMeuble
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar)

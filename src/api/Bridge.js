@@ -2,9 +2,7 @@ import {
     BridgeEvent,
     Tools,
     setConfig,
-    resizeScene,
     newScene,
-    saveScene,
     loadScene,
     takePicture,
     downloadScene,
@@ -38,31 +36,28 @@ export default function (event, param1, param2) {
             store.dispatch(loadScene(param1, param2))
             break;
         case BridgeEvent.DOWNLOAD_DRESSING:
-            store.dispatch(downloadScene(param1, param2))
+            downloadScene(param1, param2)
             break;
         case BridgeEvent.TAKE_PICTURE:
-            store.dispatch(takePicture())
+            takePicture()
             break;
         case BridgeEvent.GENERATE_ALL_PIX:
             store.dispatch(generateAllPix())
             break;
-
         case BridgeEvent.ADD_MEUBLE_TO_SCENE:
-            store.dispatch(clickMeubleLine(param1, param2))
+            clickMeubleLine(param1, param2)
             break;
         case BridgeEvent.DRAG_MEUBLE_OVER_SCENE:
-            store.dispatch(dragMeubleOverScene(param1, param2))
+            dragMeubleOverScene(param1, param2)
             break;
         case BridgeEvent.DROP_MEUBLE_TO_SCENE:
             store.dispatch(dropMeubleOnScene(param1, param2))
             break;
         case BridgeEvent.SET_SCENE_MATERIAL:
-            store.dispatch(setSceneMaterial(param1))
+            setSceneMaterial(param1)
             break;
         case BridgeEvent.LOAD_ALL_SKU:
             store.dispatch(generateAllPix(param1))
-
-
         case BridgeEvent.SELECT_MEUBLE:
             store.dispatch(changeTool(Tools.ARROW))
             break;

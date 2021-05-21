@@ -1,8 +1,6 @@
 {
     "name": "Nouveau dressing",
-    "walls": {
-        "right": 5000,
-        "back": 12000
-    },
+    "xmax":6000,
+    "zmax":8000,    
     "meubles": []
 }

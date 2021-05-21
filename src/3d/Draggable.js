@@ -10,211 +10,55 @@ import MainScene from './MainScene';
 import Meuble from './Meuble'
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-
-class Space {
-    static onWall = []// right,back,left
-    constructor (min, max, prev, next) {
-        this.min = min;
-        this.max = max;
-        this.prev = prev;// Draggable
-        this.next = next;// Draggable
-    }
-    include(segment) {
-        return segment.max <= this.max && segment.min >= this.min
-    }
-    static getClosest(wall, segment) {
-        if (!Space.onWall[wall]) return null;
-        if (Space.onWall[wall] && Space.onWall[wall].length == 0) return null;
-        Space.onWall[wall].sort((s1, s2) =>
-            Math.min(segment.max - s2.min, s2.max - segment.min) - Math.min(segment.max - s1.min, s1.max - segment.min))
-        return Space.onWall[wall][0]
-    }
-}
+import { create as createCross } from './helpers/Cross';
+import { Space, Room } from './Drag';
 
 export default class Draggable extends Meuble {
 
     static switchWallThreshold = 250// mm de drag après un angle pour changer de mur
     static meubleMagnet = 100// magnetisme du meuble (mm)
-    static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
+    // static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
 
-    static WallConfig = {}// from scene walls config or app current settings
+    // from scene walls config or app current settings
+    static WallConfig = Room;
+
     static MeublesOnWall = []// meubles wall arrays sorted 
     static Dragged// current target dragged
     static axis;// axis for current wall whare Draggable is dragged
-    static Nowtime;// timer for selection click
+    // static Nowtime;// timer for selection click
 
+    static Cross = createCross(50)
     get position() {
-        return this.object.position[Draggable.getAxisForWall(this.wall)];
+        return this.object.position[Room.getAxisForWall(this.wall)];
     }
-    /*     set position(p) {
-            switch (this.wall) {
-                case "right":
-                    this.object.position[Draggable.axis]=
-                    break;
-                case "left":
-                    this.object.position[Draggable.axis]=
-                    break;
-                case "back":
-                    this.object.position[Draggable.axis]=
-                    break;
-            }
-        }   */
-    constructor (props, object) {
+
+    constructor(props, object) {
         super(props, object)
 
         const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
         dragControls.transformGroup = true;
-        if (!object.angle) {
-            dragControls.addEventListener('drag', this.dragging.bind(this))
-            dragControls.addEventListener('dragstart', this.dragStart.bind(this))
-            dragControls.addEventListener('dragend', this.dragEnd.bind(this))
-            // dragControls.addEventListener('hoveron', hoveron)
-            // dragControls.addEventListener('hoveroff', hoveroff)
-        }
-        else {
-            dragControls.addEventListener('drag', this.dragging.bind(this))
-            dragControls.addEventListener('dragstart', this.dragStart.bind(this))
-            dragControls.addEventListener('dragend', this.dragEnd.bind(this))
-            // dragControls.addEventListener('drag', dragAngle)
-            // dragControls.addEventListener('dragstart', dragAngleStart)
-            // dragControls.addEventListener('dragend', dragAngleEnd)
-        }
+        dragControls.addEventListener('drag', this.dragging.bind(this))
+        dragControls.addEventListener('dragstart', this.dragStart.bind(this))
+        dragControls.addEventListener('dragend', this.dragEnd.bind(this))
+        // dragControls.addEventListener('hoveron', this.dragEnd.bind(this))
+        // dragControls.addEventListener('hoveroff', this.dragEnd.bind(this))
         this.dragControls = dragControls;
-    }
-    /*
-    for click to add new meuble
-    */
-    static getSpaceOnWall(meuble) {
-        Draggable.setWallConfig();
-        Draggable.setupWallConstraints(meuble)
-        // Draggable.Nowtime = Date.now();
-        Draggable.axis = Draggable.getAxisForWall(meuble.wall);
-        Draggable.populateMeublesOnWalls()
-        // Draggable.populateSpacesOnWalls(meuble)
-        const hasSpace = Draggable.getSpacesOnWall(meuble.wall, Draggable.getAxisForWall(meuble.wall), meuble)
-        if (!hasSpace) return false
-        return Draggable.collisionSolver(meuble)
-    }
 
-    static setWallConfig() {
-        const scene = store.getState().currentScene
-        const config = store.getState().config 
-        if (scene) {
-            ['right', 'back', 'left'].map(w => {
-                if (scene.walls[w])
-                    Draggable.WallConfig[w] = {
-                        length: scene.walls[w]
-                    }
-            })
-        }
-        else {
-            ['right', 'back', 'left'].map(w => {
-                if (config.walls[w])
-                    Draggable.WallConfig[w] = {
-                        length: config.walls[w]
-                    }
-            })
-        }
-    }
-    static getAxisForWall(wall) {
-        switch (wall) {
-            case "right":
-            case "left":
-                return "x";
-            case "back":
-                return "z";
-        }
-    }
-    /* right wall has right hand direction, not others */
-    static toRightDirection(wall) {
-        return wall === "right"
-    }
-    static setupWallConstraints(meuble) {
-        if (Draggable.WallConfig.right) {
-            Draggable.WallConfig.right.min = 0
-            Draggable.WallConfig.right.max = Draggable.WallConfig.right.length - meuble.width
-        }
-        if (Draggable.WallConfig.back) {
-            Draggable.WallConfig.back.min = meuble.width
-            Draggable.WallConfig.back.max = Draggable.WallConfig.back.length
-        }
-        if (Draggable.WallConfig.left) {
-            Draggable.WallConfig.left.min = meuble.width
-            Draggable.WallConfig.left.max = Draggable.WallConfig.left.length
+        const tool = store.getState().tool;
+        if (tool === Tools.HAMMER || tool === Tools.TRASH) {
+            MainScene.interactionManager.add(this.object)
+            this.dragControls.deactivate()
+        } else if (tool === Tools.ARROW) {
+            MainScene.interactionManager.remove(this.object)
+            this.dragControls.activate()
         }
     }
 
-    /* populate Space.onWall list of spaces for meuble on all walls */
-    static populateSpacesOnWalls(meuble) {
-        Object.keys(Draggable.WallConfig).forEach(w => {// right,back,left if exists
-            Draggable.getSpacesOnWall(w, Draggable.getAxisForWall(w), meuble)
-        });
+    destroy() {
+        this.dragControls.dispose()
     }
-    /* get spaces on a wall for meuble */
-    static getSpacesOnWall(wall, axis, meuble) {
-        let lastMeuble = null;
-        let lastPos = 0, segment;
-        Space.onWall[wall] = []
-        Draggable.MeublesOnWall[wall].filter(m => m !== meuble).forEach(m => {
-            segment = getSegment(m.object, axis)
-            if (segment.min - lastPos >= meuble.width) {
-                Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
-            }
-            lastMeuble = m;
-            lastPos = m.position;
-        })
-        if (Draggable.WallConfig[wall].length - (segment ? segment.max : 0) >= meuble.width) {
-            Space.onWall[wall].push(new Space((segment ? segment.max : 0), Draggable.WallConfig[wall].length, lastMeuble, null))
-        }
-        // console.log(`Spaces.onWall ${wall}`, Space.onWall[wall]);
-        if (Space.onWall[wall].length == 0) {
-            console.log(`no space on wall ${wall}`)
-            return false;
-        }
-        else return true
-    }
-    /* populate MeublesOnWall list for all walls */
-    static populateMeublesOnWalls() {
-        Object.keys(Draggable.WallConfig).forEach(w => {// right,back,left
-            Draggable.MeublesOnWall[w] = Draggable.getMeublesOnWall(w, Draggable.getAxisForWall(w))
-        });
-        window.zaa = Draggable.MeublesOnWall
-    }
-    /* get all other meubles on a wall */
-    static getMeublesOnWall(wall, axis) {
-        return store.getState().meublesOnScene
-            .filter(m => m.wall === wall)
-            .sort((m1, m2) => m1.object.position[axis] - m2.object.position[axis])
-    }
-    /* given Space.onWall[meuble.wall], detect closestSpace for meuble */
-    static collisionSolver(meuble) {
-        const axis = Draggable.axis
-        const segment = getSegment(meuble.object, axis)
-
-        if (Space.onWall[meuble.wall] && Space.onWall[meuble.wall].length == 0)//TODO
-            return meuble.position
-
-        const toRight = Draggable.toRightDirection(meuble.wall);
-
-        const closestSpace = Space.getClosest(meuble.wall, segment);
-        if (closestSpace.include(segment)) {
-            if (closestSpace.max - segment.max <= Draggable.meubleMagnet) {
-                return closestSpace.max + (toRight ? -meuble.width : 0)
-            } else if (segment.min - closestSpace.min <= Draggable.meubleMagnet) {
-                return closestSpace.min + (!toRight ? meuble.width : 0)
-            } else return meuble.position
-        } else if (closestSpace.min >= segment.min) {
-            return closestSpace.min + (!toRight ? meuble.width : 0)
-        } else if (closestSpace.max <= segment.max) {
-            return closestSpace.max - (toRight ? meuble.width : 0)
-        } else {
-            console.log("wtf", closestSpace, segment)
-            return meuble.position
-        }
-    }
-
-
     dragStart(event) {
+        console.log("dragStart", this)
         if (Draggable.Dragged) {//|| store.getState().tool != Tools.ARROW
             event.target.enabled = false;// deactivation of other Draggable
             return
@@ -223,123 +67,124 @@ export default class Draggable extends Meuble {
 
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
-        Draggable.setWallConfig();
-        Draggable.setupWallConstraints(this)
-        Draggable.Nowtime = Date.now();
-        Draggable.axis = Draggable.getAxisForWall(this.wall);
-        Draggable.populateMeublesOnWalls()
-        Draggable.populateSpacesOnWalls(this)
+        Room.setWallsLength(store.getState().currentScene, store.getState().config)
+        Room.setupWallConstraints(this)
+
+        // Draggable.Nowtime = Date.now();
+        Room.axis = Room.getAxisForWall(this.wall);
+        Room.populateMeublesOnWalls(MainScene.meubles)
+        Room.populateSpacesOnWalls(this)
 
         store.dispatch(drag(this))
         // store.dispatch(select(this))// selection
+
+        if (Draggable.Cross && !Draggable.Cross.parent) MainScene.scene.add(Draggable.Cross)
     }
-    dragging(event) {
-        // drag start delay to let selection click
-        if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
-            return
-        }
-        let wallLength = Draggable.WallConfig[this.wall].length;
-        let axis;
-        Draggable.axis = Draggable.getAxisForWall(this.wall);
-        switch (this.wall) {
-            case "right":
-                axis = "x";
-                event.object.position.y = 0;
-                event.object.position.z = 0;
-                if (Draggable.WallConfig.back
-                    && event.object.position.x < - Draggable.switchWallThreshold//corner turn
-                    && Space.onWall["back"].length > 0) {
-                    this.wall = "back"
-                    this.object.rotateY(Math.PI / 2);
-                    return;
+    getWallChange(x, z, wall, thresh) {
+        switch (wall) {
+            case "front":
+                if (z < - thresh && Space.onWall["right"].length > 0) {
+                    return "right"
+                }
+                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
+                    return "left"
                 }
                 break;
             case "back":
-                axis = "z";
-                event.object.position.y = 0;
-                event.object.position.x = 0;
-                if (Draggable.WallConfig.right
-                    && event.object.position.z < - Draggable.switchWallThreshold //corner turn
-                    && Space.onWall["right"].length > 0) {
-                    this.wall = "right"
-                    this.object.rotateY(-Math.PI / 2);
-                    // this.object.position.x = 0;
-                    return;
+                if (z < - thresh && Space.onWall["right"].length > 0) {
+                    return "right"
                 }
-                if (Draggable.WallConfig.left
-                    && event.object.position.z > Draggable.switchWallThreshold + wallLength
-                    && Space.onWall["left"].length > 0) {
-                    this.wall = "left"
-                    this.object.rotateY(Math.PI / 2);
-                    return;
+                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
+                    return "left"
+                }
+                break;
+            case "right":
+                if (x < - thresh && Space.onWall["front"].length > 0) {
+                    return "front"
+                }
+                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
+                    return "back"
                 }
                 break;
             case "left":
-                axis = "x";
-                event.object.position.y = 0;
-                event.object.position.z = Draggable.WallConfig.back.length;
-                if (Draggable.WallConfig.back
-                    && event.object.position.x < - Draggable.switchWallThreshold//corner turn
-                    && Space.onWall["back"].length > 0) {
-                    this.wall = "back"
-                    this.object.rotateY(-Math.PI / 2);
-                    return;
+                if (x < - thresh && Space.onWall["front"].length > 0) {
+                    return "front"
+                }
+                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
+                    return "back"
                 }
                 break;
             default:
         }
+        return null
+    }
+    dragging(event) {
+        // drag start delay to let selection click
+        /*         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
+                    return
+                } */
+        // const wallLength = Room[this.wall].length;
+        const wallLength =
+            (this.wall === "left" || this.wall === "right") ? Room.xmax : Room.zmax
+        // console.log(this.wall);
+        // console.log(event.object.position.x, event.object.position.z)
+        Draggable.Cross.position.x = event.object.position.x
+        Draggable.Cross.position.z = event.object.position.z
+        const thresh = Draggable.switchWallThreshold
+        // let axis;
+        Room.axis = Room.getAxisForWall(this.wall);
 
+        //looking for change of destination
+        const newWall =
+            this.getWallChange(event.object.position.x, event.object.position.z, this.wall, thresh)
+        if (newWall) {
+            console.warn(`change wall from ${this.wall} to ${newWall}`)// Date.getTime() and forbid flicker change wall !??
+            this.wall = newWall
+        }
+        event.object.position.y = 0;
+
+        switch (this.wall) {
+            case "right":
+                event.object.position.z = 0;
+                event.object.rotation.y = 0;
+                break;
+            case "left":
+                event.object.position.z = Room.zmax;
+                event.object.rotation.y = Math.PI;
+                break;
+            case "front":
+                event.object.position.x = 0;
+                event.object.rotation.y = Math.PI / 2;
+                break;
+            case "back":
+                event.object.position.x = Room.xmax;
+                event.object.rotation.y = -Math.PI / 2;
+                break;
+            default:
+                console.error("no wall for draggable")
+        }
+        Room.axis = Room.getAxisForWall(this.wall);
+        const axis = Room.axis
         event.object.position[axis] = 10 * (Math.round(event.object.position[axis] / 10))//grid magnet 1cm
         event.object.position[axis] =
-            Math.max(Draggable.WallConfig[this.wall].min, Math.min(Draggable.WallConfig[this.wall].max, event.object.position[axis]))
-        event.object.position[axis] = Draggable.collisionSolver(this);
+            Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
+        event.object.position[axis] = Room.collisionSolver(this);
 
-        // console.log("drag", Draggable.WallConfig[this.wall])
+        // console.log("drag", Room[this.wall])
         // console.log("drag", event, event.object.position.x)
         MainScene.render();
     }
 
     dragEnd(event) {
+        console.log("dragEnd", this)
         MainScene.orbitControls.enabled = true;
-        if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
-            store.dispatch(select(this))
-        }
+        /*         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
+                    select(this)
+                } */
         store.dispatch(drag(null))
         Draggable.Dragged = null
+        if (Draggable.Cross && Draggable.Cross.parent) MainScene.scene.remove(Draggable.Cross)
 
-        store.getState().meublesOnScene.forEach(m => m.dragControls.enabled = true)// reactivation of others
+        MainScene.meubles.forEach(m => m.dragControls.enabled = true)// reactivation of others
     }
 }
-/*
-angle
-*/
-/* dragAngle(event) {
-}
-dragAngleStart(event) {
-}
-dragAngleEnd(event) {
-} */
-
-const getSegment = (object, axis) => {
-    const box = new THREE.Box3().setFromObject(object);
-    // const box = new THREE.Box3().setFromObject(object);
-    // const v = new THREE.Vector3();
-    // box.getSize(v)
-    // console.log(box.min, box.max, box.getSize());
-    return { min: Math.round(box.min[axis]), max: Math.round(box.max[axis]) };
-}
-
-const getHeight = (object) => {
-    var box = new THREE.Box3().setFromObject(object);
-    const v = new THREE.Vector3();
-    box.getSize(v)
-    return Math.ceil(v.y);
-}
-const getDepth = (object) => {
-    var box = new THREE.Box3().setFromObject(object);
-    const v = new THREE.Vector3();
-    box.getSize(v)
-    return Math.ceil(v.z);
-}
-
-

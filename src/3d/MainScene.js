@@ -1,16 +1,13 @@
-/* import {
+import {
+    loadManagerStart,
     select,
-    add,
-    remove
 }
     from '../api/actions'
-import store from '../api/store'; */
+import store from '../api/store';
+
 
 import * as THREE from "three";
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-import Loader from './Loader'
-
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { localhost } from '../api/Config';
 
@@ -19,13 +16,35 @@ import { localhost } from '../api/Config';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 // import { Interaction } from 'three.interaction';
+import { InteractionManager } from "three.interactive";
 
 import Draggable from './Draggable'
-import { setupLights } from './Lights'
+import { setupLights } from './helpers/Lights'
 // import helvetiker_regular from 'three/examples/fonts/helvetiker_regular.typeface.json'
+import { create as createSolGrid } from './helpers/Sol';
+
+
+import { getFileNameFromUrl } from '../api/Utils';
+
+const wallHeight = 2380;
 
 export default {
-    loader: new FBXLoader(Loader.manager),
+    meubles: [],
+    selection: null,
+
+    /*  clickOnScene(event) {// do not work
+         // console.log("clickOnScene", event)
+         var raycaster = new THREE.Raycaster();
+         var mouse = new THREE.Vector2();
+         raycaster.setFromCamera(mouse, this.camera);
+         const selectedMeuble = this.meubles.find(m => {
+             const box = new THREE.Box3().setFromObject(m.object);
+             if (raycaster.ray.intersectsBox(box) === true) {
+             }
+         })
+         if (selectedMeuble) select(selectedMeuble)
+     }, */
+
     getRendererNodeElement() {
         return this.renderer.domElement
     },
@@ -35,18 +54,15 @@ export default {
     setup(config) {
         window.ts = this// f12 helper
 
-        // this.font = new THREE.Font(helvetiker_regular);
-        // console.log(this.font)
+        this.xmax = 4000
+        this.zmax = 2000
+        this.setupSize(config)
 
         const scene_params = this.scene_params = config.scene_params;
         let camera, scene, renderer, orbitControls, stats, manager;
 
-        if (this.scene) {
-            this.scene.clear()
-        }
-        else {
-            this.scene = new THREE.Scene();
-        }
+        this.clear()
+        this.scene = new THREE.Scene();
         scene = this.scene
         scene.background = new THREE.Color(scene_params.backgroundColor);
 
@@ -104,25 +120,13 @@ export default {
 
         /* raycaster */
 
-        var selectedObject;
-        // /* renderer.domElement.addEventListener("click", onclick, true);
-        function onclick(event) {
-            console.log("onclick")
-            var raycaster = new THREE.Raycaster();
-            var mouse = new THREE.Vector2();
-            raycaster.setFromCamera(mouse, camera);
-            var intersects = raycaster.intersectObjects(scene.children, false); //array
-            if (intersects.length > 0) {
-                selectedObject = intersects[0];
-                // console.log(selectedObject);
-            }
-        }
+        // renderer.domElement.addEventListener("click", this.clickOnScene.bind(this), true);
 
         /* camera */
 
         // +Z is up in Blender, whereas + Y is up in three.js
-        this.camera = camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 15000);
-        camera.position.set(5038, 2000, 1987)
+        this.camera = camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 100, 15000);
+        camera.position.set(this.xmax / 2, 1700, this.zmax / 2)
 
         /* controls */
 
@@ -134,14 +138,18 @@ export default {
         orbitControls.target.set(2000, 1000, 2000);
         orbitControls.update();
 
-        // const interaction = new Interaction(renderer , scene, camera);
+        // https://github.com/markuslerner/THREE.Interactive
+        this.interactionManager = new InteractionManager(
+            renderer,
+            camera,
+            renderer.domElement
+        );
 
-        /*
         const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
         mesh.rotation.x = - Math.PI / 2;
         mesh.receiveShadow = true;
         scene.add(mesh);
-        */
+
 
         this.setupLights()
 
@@ -161,27 +169,23 @@ export default {
                 scene.add(this.ground); */
 
         /* walls */
-
-        this.setupWalls(config.walls)
+        this.setupWalls(config)
+        this.resize()
+        console.log("MainScene setup", this)
 
     },
-    loadFbx(fbx, callback) {
-        this.loader.load(fbx, callback)
-    },
-    resize() {
-        const canvasWrapper = document.getElementById("canvas-wrapper")
-        if (!canvasWrapper) return
-        console.log(`canvas-wrapper size is ${canvasWrapper.offsetWidth}x${canvasWrapper.offsetHeight}`)
-        this.renderer.setPixelRatio(canvasWrapper.offsetWidth / canvasWrapper.offsetHeight);
-        this.renderer.setSize(canvasWrapper.offsetWidth, canvasWrapper.offsetHeight);
-        this.camera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
-        this.camera.updateProjectionMatrix();
-        this.render()
+    setupSize(config) {
+        if (config) {
+            this.xmax = config.xmax > 0 ? config.xmax :
+                (config.defaultdressing && config.defaultdressing.xmax ? config.defaultdressing.xmax : this.xmax)
+            this.zmax = config.zmax > 0 ? config.zmax :
+                (config.defaultdressing && config.defaultdressing.zmax ? config.defaultdressing.zmax : this.zmax)
+        }
     },
     setupLights() {
         setupLights(this.scene, this.scene_params)
     },
-    setupWalls(wallConfig, visible = true) {
+    setupWalls(config, visible = true) {
 
         if (localhost) {
 
@@ -197,52 +201,66 @@ export default {
             grid.material.transparent = true;
             grid.position.x = 10000 / 2
             grid.position.z = 10000 / 2
-            this.scene.add(grid);
+            // this.scene.add(grid);
             // console.log(grid)
         }
 
         if (this.wallRight) this.scene.remove(this.wallRight);
-        if (this.wallBack) this.scene.remove(this.wallBack);
+        if (this.wallFront) this.scene.remove(this.wallFront);
         if (this.wallLeft) this.scene.remove(this.wallLeft);
+        if (this.wallBack) this.scene.remove(this.wallBack);
 
         const wallMaterial = new THREE.MeshStandardMaterial({
             color: 0x7E838D,
             transparent: true,
-            opacity: visible ? .25 : 0
+            opacity: visible ? .20 : 0,
+            side: THREE.DoubleSide
         });
 
-        if (wallConfig.right > 0) {
-            const geometryRight = new THREE.PlaneGeometry(wallConfig.right, 2600, 10, 10);
+        if (config.xmax > 0) {
+            const geometryRight = new THREE.PlaneGeometry(config.xmax, wallHeight, 10, 10);
             this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
             this.wallRight.name = "wall-right";
-            this.wallRight.position.x = wallConfig.right / 2;
-            this.wallRight.position.y = 2600 / 2;
+            this.wallRight.position.x = config.xmax / 2;
+            this.wallRight.position.y = wallHeight / 2;
             this.wallRight.castShadow = this.wallRight.receiveShadow = false;
             this.scene.add(this.wallRight);
+
+            this.wallLeft = new THREE.Mesh(geometryRight, wallMaterial);
+            this.wallLeft.name = "wall-left";
+            this.wallLeft.position.x = config.xmax / 2;
+            this.wallLeft.position.y = wallHeight / 2;
+            this.wallLeft.position.z = config.zmax;
+            this.wallLeft.rotateY(Math.PI);
+            this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
+            this.scene.add(this.wallLeft);
         }
 
-        if (wallConfig.back > 0) {
-            const geometryBack = new THREE.PlaneGeometry(wallConfig.back, 2600, 10, 10);
+        if (config.zmax > 0) {
+            const geometryBack = new THREE.PlaneGeometry(config.zmax, wallHeight, 10, 10);
+            this.wallFront = new THREE.Mesh(geometryBack, wallMaterial);
+            this.wallFront.name = "wall-front";
+            this.wallFront.rotateY(Math.PI / 2)
+            this.wallFront.position.x = 0;
+            this.wallFront.position.y = wallHeight / 2;
+            this.wallFront.position.z = config.zmax / 2;
+            this.wallFront.castShadow = this.wallFront.receiveShadow = false;
+            this.scene.add(this.wallFront);
+
             this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
             this.wallBack.name = "wall-back";
             this.wallBack.rotateY(Math.PI / 2)
-            this.wallBack.position.x = 0;
-            this.wallBack.position.y = 2600 / 2;
-            this.wallBack.position.z = wallConfig.back / 2;
+            this.wallBack.position.x = config.xmax;
+            this.wallBack.position.y = wallHeight / 2;
+            this.wallBack.position.z = config.zmax / 2;
             this.wallBack.castShadow = this.wallBack.receiveShadow = false;
             this.scene.add(this.wallBack);
         }
 
-        if (wallConfig.left > 0) {
-            const geometryLeft = new THREE.PlaneGeometry(wallConfig.left, 2600, 10, 10);
-            this.wallLeft = new THREE.Mesh(geometryLeft, wallMaterial);
-            this.wallLeft.name = "wall-left";
-            this.wallLeft.position.x = wallConfig.left / 2;
-            this.wallLeft.position.y = 2600 / 2;
-            this.wallLeft.position.z = wallConfig.back;
-            this.wallLeft.rotateY(Math.PI);
-            this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
-            this.scene.add(this.wallLeft);
+        if (visible && false) {
+            if (this.sol && this.sol.parent == this.scene) this.scene.remove(this.sol);
+            this.sol = createSolGrid(config.xmax, config.zmax)
+            this.scene.add(this.sol);
         }
     },
     updateCamera(props) {
@@ -268,28 +286,61 @@ export default {
     },
     allLoaded() {
         this.frame_stats.begin();
-
         this.render();
     },
-    render() {
-        // console.log(`render ${this}`);
-        /* if (store.getState().cameraLog) {
-            console.log(`camera.position.set(${Math.round(this.camera.position.x)},${Math.round(this.camera.position.y)},${Math.round(this.camera.position.z)})`);
-            console.log(`orbitControls.target.set(${Math.round(this.orbitControls.target.x)},${Math.round(this.orbitControls.target.y)},${Math.round(this.orbitControls.target.z)})`);
-        } */
+    clear() {
+        if (this.scene) this.scene.clear();
+        this.meubles = [];
 
-        this.frame_stats.update();
+        //TODO clean all...search for threejs clean scene
+    },
+    update(config, wallVisible = true) {
+        this.clear();
+        this.setupLights();
+        this.setupWalls(config, wallVisible)
+    },
+    resize() {
+        const canvasWrapper = document.getElementById("canvas-wrapper")
+        if (!canvasWrapper) return
+        // console.log(`canvas-wrapper size is ${canvasWrapper.offsetWidth}x${canvasWrapper.offsetHeight}`)
+        this.renderer.setPixelRatio(canvasWrapper.offsetWidth / canvasWrapper.offsetHeight);
+        this.renderer.setSize(canvasWrapper.offsetWidth, canvasWrapper.offsetHeight);
+        this.camera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
+        this.camera.updateProjectionMatrix();
+        this.render()
+    },
+    render() {
+        if (this.interactionManager) this.interactionManager.update();
+        // this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
     },
-
     add(meuble) {
         this.scene.add(meuble.object);
-        // this.render();
-        // store.dispatch(add(meuble))
+        this.meubles.unshift(meuble);
     },
     remove(meuble) {
         this.scene.remove(meuble.object);
-        this.render();
+        this.meubles = this.meubles.filter(item => item !== meuble)
+    },
+    deselect() {
+        if (this.selection && this.selection.deselect) this.selection.deselect()
+        this.selection = null
+    },
+    enableMeubleDragging(enabled) {
+        // this.meubles.forEach(m => m.dragControls.enabled = enabled)
+        this.meubles.forEach(m => enabled ? m.dragControls.activate() : m.dragControls.deactivate())
+    },
+    enableMeubleClicking(enabled) {
+        console.log("enableMeubleClicking", enabled)
+        this.meubles.forEach(m => {
+            if (enabled) {
+                this.interactionManager.add(m.object)
+                // m.object.addEventListener('click', select.bind(this, m))
+            } else {
+                this.interactionManager.remove(m.object)
+                // m.object.removeEventListener('click', select.bind(this, m))
+            }
+        })
     },
     getRaycasterIntersect() {
         var raycaster = new THREE.Raycaster();

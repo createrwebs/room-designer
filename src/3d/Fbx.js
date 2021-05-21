@@ -1,8 +1,8 @@
 import { Vector3, Box3 } from "three";
 
 export default class Fbx {
-    constructor (props, object) {
-        console.log('Fbx', props, object)
+    constructor(props, object) {
+        // console.log('Fbx', props, object)
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
 

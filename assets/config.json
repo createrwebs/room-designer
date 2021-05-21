@@ -4,6 +4,10 @@
 		"back": 14000,
 		"left": 2000
 	},
+	"defaultdressing":{
+		"xmax":6000,
+		"zmax":8000
+	},
 	"scene_params": {
 		"backgroundColor": "#D2D2D2",
 		"groundColor": "#cecece",

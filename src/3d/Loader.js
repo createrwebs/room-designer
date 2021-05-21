@@ -1,33 +1,39 @@
 import {
-    allLoaded
+    loadManagerStart,
+    // loadManagerLoad,
+    loadManagerProgress,
+    loadManagerError
 }
     from '../api/actions'
 import store from '../api/store';
 
-import { LoadingManager } from "three";
+import { LoadingManager, TextureLoader } from "three";
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
-export default {
-    manager: new LoadingManager(),
-    setup() {
-        this.manager.onStart = this.loadManagerStart.bind(this);
-        this.manager.onLoad = this.loadManagerLoad.bind(this);
-        this.manager.onProgress = this.loadManagerProgress.bind(this);
-        this.manager.onError = this.loadManagerError.bind(this);
-    },
-    loadManagerStart(url, itemsLoaded, itemsTotal) {
-        console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-    },
-    loadManagerLoad() {
-        store.dispatch(allLoaded())
-    },
-    loadManagerProgress(url, itemsLoaded, itemsTotal) {
-        console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-        /*          if( itemsLoaded == itemsTotal ){
-                    console.log('y nous zont tout loadé', document);
-                    document.getElementById('loading_splash').style.display = "none";
-                 } */
-    },
-    loadManagerError(url) {
-        console.log('There was an error loading ' + url);
-    }
+import { getFileNameFromUrl } from '../api/Utils';
+
+const manager = new LoadingManager()
+manager.onStart = (url, itemsLoaded, itemsTotal) => {
+}
+manager.onLoad = () => {
+    // store.dispatch(loadManagerLoad())
+};
+manager.onProgress = (url, itemsLoaded, itemsTotal) => {
+    store.dispatch(loadManagerProgress(getFileNameFromUrl(url)))
+}
+manager.onError = (url) => {
+    // console.log('There was an error loading ' + url);
+    store.dispatch(loadManagerError(getFileNameFromUrl(url)))
+}
+
+const fbxLoader = new FBXLoader(manager)
+const textureLoader = new TextureLoader(manager)
+
+export const loadFbx = (url, callback) => {
+    store.dispatch(loadManagerStart(getFileNameFromUrl(url)))
+    fbxLoader.load(url, callback)
+}
+export const loadTexture = (url, callback) => {
+    store.dispatch(loadManagerStart(getFileNameFromUrl(url)))
+    textureLoader.load(url, callback)
 }

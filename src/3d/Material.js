@@ -1,8 +1,6 @@
-import * as THREE from "three";
+import * as THREE from "three";//TODO
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
-import { LoadingManager } from "three";
-
-const manager = new LoadingManager()
+import { loadTexture } from './Loader'
 
 export const setTransparent = (meuble, opacity, parts) => {
     meuble.object.children//c.type === "Mesh"
@@ -14,17 +12,15 @@ export const setTransparent = (meuble, opacity, parts) => {
 }
 export const load = (materials) => {
     // console.log('load material', materials);
-    const textureLoader = new THREE.TextureLoader(manager);
     let texturePromises = [];
     return new Promise((resolveTexturesLoaded, rejectTexturesLoaded) => {
         Object.entries(materials).forEach(
             ([part, material]) => {
                 texturePromises.push(new Promise((resolve, reject) => {
-                    textureLoader.load(material.url, texture => {
+                    loadTexture(material.url, texture => {
                         if (texture instanceof THREE.Texture) resolve({
                             label: material.label,
                             part: part,
-                            angle_fil: material.angle_fil,
                             texture: texture
                         });
                     },
@@ -45,12 +41,34 @@ export const load = (materials) => {
 }
 export const apply = (materials, meuble) => {
     // console.log('apply', materials, 'on', meuble)
-    let texture
+    let texture, material_args, material, mtl
     meuble.object.traverse(function (child) {
 
         if (child.geometry) {//?
             child.geometry.computeBoundingSphere();
         }
+
+        /*
+        dynamic texture apply
+        */
+        const materialMatch = child.name.match(/-mtl-(.*)/)
+        if (materialMatch && materialMatch.length > 0) {
+            mtl = materials.find(m => m.part.includes(materialMatch[1]))
+            if (mtl && mtl.texture) {
+                material = new THREE.MeshStandardMaterial(mtl.texture);
+                // material.bumpMap.repeat.set(0.005, 0.005);
+                child.material = material;
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+            else {
+                console.warn(`No texture found "${materialMatch[1]}" for subobject "${child.name}" of ${meuble.props.sku}`)
+            }
+            return
+        }
+
+
+        // TODO reste à virer :
 
         if (child.name.indexOf("Body") > -1) {
 
@@ -59,7 +77,7 @@ export const apply = (materials, meuble) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(0.005, 0.005);
 
-            var material_args = {
+            material_args = {
                 emissive: 0x0D0D0D,
                 roughness: 0.35,
                 map: texture,
@@ -67,7 +85,7 @@ export const apply = (materials, meuble) => {
                 bumpScale: 5,
                 fog: false
             };
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             material.bumpMap.repeat.set(0.005, 0.005);
 
             child.material = material;
@@ -80,7 +98,7 @@ export const apply = (materials, meuble) => {
             texture.repeat.set(0.01, 0.005);
             texture.offset.set(0.5, 0.5);
 
-            var material_args = {
+            material_args = {
                 roughness: 0.45,
                 emissive: 0x0D0D0D,
                 map: texture,
@@ -89,7 +107,7 @@ export const apply = (materials, meuble) => {
                 fog: false
             };
 
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             child.material = material;
 
         } else if (child.name.indexOf("panneau") > -1) {
@@ -99,7 +117,7 @@ export const apply = (materials, meuble) => {
             texture.repeat.set(1, 1);
             texture.offset.set(0.5, 0.5);
 
-            var material_args = {
+            material_args = {
                 roughness: 0.45,
                 emissive: 0x0D0D0D,
                 map: texture,
@@ -108,7 +126,7 @@ export const apply = (materials, meuble) => {
                 fog: false
             };
 
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             material.bumpMap.repeat.set(0.01, 0.005);
             child.material = material;
 
@@ -119,7 +137,7 @@ export const apply = (materials, meuble) => {
             texture.repeat.set(0.015, 0.010);
             texture.offset.set(0.5, 0.5);
 
-            var material_args = {
+            material_args = {
                 roughness: 0.45,
                 emissive: 0x0D0D0D,
                 map: texture,
@@ -128,7 +146,7 @@ export const apply = (materials, meuble) => {
                 fog: false
             };
 
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             material.bumpMap.repeat.set(0.015, 0.010);
             child.material = material;
 
@@ -139,7 +157,7 @@ export const apply = (materials, meuble) => {
             texture.repeat.set(0.015, 0.010);
             texture.offset.set(0.5, 0.5);
 
-            var material_args = {
+            material_args = {
                 roughness: 0.45,
                 emissive: 0x0D0D0D,
                 map: texture,
@@ -148,7 +166,7 @@ export const apply = (materials, meuble) => {
                 fog: false
             };
 
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             material.bumpMap.repeat.set(0.015, 0.010);
             child.material = material;
 
@@ -159,7 +177,7 @@ export const apply = (materials, meuble) => {
             texture.repeat.set(0.03, 0.03);
             texture.offset.set(0.5, 0.5);
 
-            var material_args = {
+            material_args = {
                 roughness: 0.48,
                 emissive: 0x030303,
                 bumpMap: texture,
@@ -168,7 +186,7 @@ export const apply = (materials, meuble) => {
                 fog: false,
 
             };
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             material.bumpMap.repeat.set(0.03, 0.03);
             child.material = material;
 
@@ -178,7 +196,7 @@ export const apply = (materials, meuble) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(0.03, 0.03);
             texture.offset.set(0.5, 0.5);
-            var material_args = {
+            material_args = {
                 roughness: 0.35,
                 emissive: 0x0D0D0D,
                 map: texture,
@@ -186,17 +204,17 @@ export const apply = (materials, meuble) => {
                 bumpScale: 5,
                 fog: false
             };
-            var material = new THREE.MeshStandardMaterial(material_args);
+            material = new THREE.MeshStandardMaterial(material_args);
             material.bumpMap.repeat.set(0.03, 0.03);
             child.material = material;
 
         } else if (child.name.indexOf("metal") > -1 || child.name.indexOf("poignee") > -1) {
-            var material_args = {
+            material_args = {
                 specular: 0xffffff,
                 emissive: 0x0D0D0D,
                 fog: false
             };
-            var material = new THREE.MeshPhongMaterial(material_args);
+            material = new THREE.MeshPhongMaterial(material_args);
             child.material = material;
 
         } else if (child.name.indexOf("miroir") > -1) {
@@ -231,13 +249,13 @@ export const apply = (materials, meuble) => {
             //const rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
             //obj.add( rectLightHelper );
 
-            var material_args = {
+            material_args = {
                 color: 0xFFF196,
                 emissiveIntensity: 5,
                 emissive: 0x7D7C6F,
                 fog: false
             };
-            var material = new THREE.MeshLambertMaterial(material_args);
+            material = new THREE.MeshLambertMaterial(material_args);
             child.material = material;
 
         } else {
