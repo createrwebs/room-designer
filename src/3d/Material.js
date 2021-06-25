@@ -40,7 +40,7 @@ export const load = (materials) => {
     })
 }
 export const apply = (materials, meuble) => {
-    // console.log('apply', materials, 'on', meuble)
+    console.log('apply', materials, 'on', meuble)
     let texture, material_args, material, mtl
     meuble.object.traverse(function (child) {
 
@@ -55,7 +55,18 @@ export const apply = (materials, meuble) => {
         if (materialMatch && materialMatch.length > 0) {
             mtl = materials.find(m => m.part.includes(materialMatch[1]))
             if (mtl && mtl.texture) {
-                material = new THREE.MeshStandardMaterial(mtl.texture);
+                // console.log(`texture : `, mtl.texture)
+
+                material_args = {
+                    roughness: 0.45,
+                    emissive: 0x0D0D0D,
+                    map: mtl.texture,
+                    bumpMap: mtl.texture,
+                    bumpScale: 2,
+                    fog: false
+                };
+
+                material = new THREE.MeshStandardMaterial(material_args);
                 // material.bumpMap.repeat.set(0.005, 0.005);
                 child.material = material;
                 child.castShadow = true;
