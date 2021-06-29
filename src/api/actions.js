@@ -5,7 +5,6 @@ import Draggable from '../3d/Draggable'
 import { Room } from '../3d/Drag'
 import { getCurrentScene } from '../3d/Dressing';
 import { cameraTo, tweenTo } from '../3d/Animate';
-import { Vector3 } from 'three';
 import { takePix } from '../3d/Capture';
 import { loadFbx } from '../3d/Loader'
 
@@ -384,7 +383,7 @@ export const animeSelectedMeuble = () => {
     // var center = new Vector3(0, 0, 0);
     var distanceToMove = 200;
 
-    selectedMeuble.object.traverse(function (child) {
+    selectedMeuble.object.traverse(function (child) {// bug : traverse drops first object !!?
         console.log(child, child.name, child.position)
 
 

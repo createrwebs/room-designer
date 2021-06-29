@@ -4,7 +4,7 @@ import {
 }
     from '../api/actions'
 import store from '../api/store';
-import * as THREE from "three";
+import { LineBasicMaterial, Vector3, LineSegments, BufferGeometry } from "three";
 import MainScene from './MainScene';
 import Meuble from './Meuble'
 import Fbx from './Fbx'
@@ -13,7 +13,7 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 
 class Space {
     static onWall = []// right,back,left
-    constructor(min, max, prev, next) {
+    constructor (min, max, prev, next) {
         this.min = min;
         this.max = max;
         this.prev = prev;
@@ -57,7 +57,7 @@ export default class Item extends Fbx {
                     break;
             }
         }   */
-    constructor(props, object, parent) {
+    constructor (props, object, parent) {
         super(props, object)
 
         this.parent = parent;// parent meuble

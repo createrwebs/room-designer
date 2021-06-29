@@ -61,6 +61,6 @@ module.exports = {
             title: 'NY Minet',
             template: './src/index.html'
         }),
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ],
 };

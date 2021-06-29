@@ -4,26 +4,44 @@ import {
 }
     from '../api/actions'
 import store from '../api/store';
-
-
-import * as THREE from "three";
+import {
+    Scene,
+    Color,
+    Fog,
+    Object3d,
+    Raycaster,
+    Vector2,
+    Box3,
+    WebGLRenderer,
+    BasicShadowMap,
+    PCFShadowMap,
+    PCFSoftShadowMap,
+    VSMShadowMap,
+    PerspectiveCamera,
+    Mesh,
+    PlaneGeometry,
+    MeshPhongMaterial,
+    MeshStandardMaterial,
+    AxesHelper,
+    GridHelper,
+    DoubleSide,
+} from "three";
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { localhost } from '../api/Config';
 
-
 // Controls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-// import { Interaction } from 'three.interaction';
-import { InteractionManager } from "three.interactive";
+
+/* 3d mouse interaction */
+// import { Interaction } from 'three.interaction';// fails to use
+// import { InteractionManager } from "three.interactive";// ok but 500kB re-imports all three !
+import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
 
 import Draggable from './Draggable'
 import { setupLights } from './helpers/Lights'
-// import helvetiker_regular from 'three/examples/fonts/helvetiker_regular.typeface.json'
 import { create as createSolGrid } from './helpers/Sol';
-
-
 import { getFileNameFromUrl } from '../api/Utils';
 
 const wallHeight = 2380;
@@ -34,11 +52,11 @@ export default {
 
     /*  clickOnScene(event) {// do not work
          // console.log("clickOnScene", event)
-         var raycaster = new THREE.Raycaster();
-         var mouse = new THREE.Vector2();
+         var raycaster = new Raycaster();
+         var mouse = new Vector2();
          raycaster.setFromCamera(mouse, this.camera);
          const selectedMeuble = this.meubles.find(m => {
-             const box = new THREE.Box3().setFromObject(m.object);
+             const box = new Box3().setFromObject(m.object);
              if (raycaster.ray.intersectsBox(box) === true) {
              }
          })
@@ -62,14 +80,14 @@ export default {
         let camera, scene, renderer, orbitControls, stats, manager;
 
         this.clear()
-        this.scene = new THREE.Scene();
+        this.scene = new Scene();
         scene = this.scene
-        scene.background = new THREE.Color(scene_params.backgroundColor);
+        scene.background = new Color(scene_params.backgroundColor);
 
         /*         if (scene_params.fogEnabled) {
-                    scene.fog = new THREE.Fog(scene_params.fog.color, scene_params.fog.near, scene_params.fog.far);
+                    scene.fog = new Fog(scene_params.fog.color, scene_params.fog.near, scene_params.fog.far);
                 } */
-        // THREE.Object3D.DefaultUp.set(0, 0, 1);
+        // Object3D.DefaultUp.set(0, 0, 1);
 
         // renderer props hard coded :
         /*         var renderer_args = {
@@ -80,27 +98,27 @@ export default {
                 } */
         var renderer_args = scene_params.renderer
 
-        this.renderer = renderer = new THREE.WebGLRenderer(renderer_args);
+        this.renderer = renderer = new WebGLRenderer(renderer_args);
 
         renderer.shadowMap.enabled = scene_params.shadowMap.enabled;
 
         /*
         Shadow maps possibles =>
-        THREE.BasicShadowMap
-        THREE.PCFShadowMap
-        THREE.PCFSoftShadowMap
-        THREE.VSMShadowMap
+        BasicShadowMap
+        PCFShadowMap
+        PCFSoftShadowMap
+        VSMShadowMap
         */
         if (scene_params.shadowMap.type === "BasicShadowMap") {
-            renderer.shadowMap.type = THREE.BasicShadowMap;
+            renderer.shadowMap.type = BasicShadowMap;
         } else if (scene_params.shadowMap.type === "PCFShadowMap") {
-            renderer.shadowMap.type = THREE.PCFShadowMap;
+            renderer.shadowMap.type = PCFShadowMap;
         } else if (scene_params.shadowMap.type === "PCFSoftShadowMap") {
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.shadowMap.type = PCFSoftShadowMap;
         } else if (scene_params.shadowMap.type === "VSMShadowMap") {
-            renderer.shadowMap.type = THREE.VSMShadowMap;
+            renderer.shadowMap.type = VSMShadowMap;
         } else {
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.shadowMap.type = PCFSoftShadowMap;
         }
 
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -125,7 +143,7 @@ export default {
         /* camera */
 
         // +Z is up in Blender, whereas + Y is up in three.js
-        this.camera = camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 100, 15000);
+        this.camera = camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 100, 15000);
         camera.position.set(this.xmax / 2, 1700, this.zmax / 2)
 
         /* controls */
@@ -145,7 +163,7 @@ export default {
             renderer.domElement
         );
 
-        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+        const mesh = new Mesh(new PlaneGeometry(2000, 2000), new MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
         mesh.rotation.x = - Math.PI / 2;
         mesh.receiveShadow = true;
         scene.add(mesh);
@@ -155,13 +173,13 @@ export default {
 
         /* ground */
 
-        /*         const groundMaterial = new THREE.MeshStandardMaterial({
+        /*         const groundMaterial = new MeshStandardMaterial({
                     color: scene_params.groundColor,
                     emissive: 0x2C2C2C,
                 });
         
-                const geometryGround = new THREE.PlaneGeometry(55000, 55000, 12);
-                this.ground = new THREE.Mesh(geometryGround, groundMaterial);
+                const geometryGround = new PlaneGeometry(55000, 55000, 12);
+                this.ground = new Mesh(geometryGround, groundMaterial);
                 this.ground.rotateX(Math.PI / -2);
                 //this.ground.castShadow = true;
                 //this.ground.receiveShadow = true;
@@ -191,12 +209,12 @@ export default {
 
             /* 0,0,0 dot */
 
-            const axesHelper = new THREE.AxesHelper(15000);
+            const axesHelper = new AxesHelper(15000);
             this.scene.add(axesHelper);
 
             /* floor grid */
             // TODO because cannot be rectangle, make its own !
-            const grid = new THREE.GridHelper(10000, 100, 0x000000, 0x9A9A9A);
+            const grid = new GridHelper(10000, 100, 0x000000, 0x9A9A9A);
             grid.material.opacity = 0.25;
             grid.material.transparent = true;
             grid.position.x = 10000 / 2
@@ -210,23 +228,23 @@ export default {
         if (this.wallLeft) this.scene.remove(this.wallLeft);
         if (this.wallBack) this.scene.remove(this.wallBack);
 
-        const wallMaterial = new THREE.MeshStandardMaterial({
+        const wallMaterial = new MeshStandardMaterial({
             color: 0x7E838D,
             transparent: true,
             opacity: visible ? .20 : 0,
-            side: THREE.DoubleSide
+            side: DoubleSide
         });
 
         if (config.xmax > 0) {
-            const geometryRight = new THREE.PlaneGeometry(config.xmax, wallHeight, 10, 10);
-            this.wallRight = new THREE.Mesh(geometryRight, wallMaterial);
+            const geometryRight = new PlaneGeometry(config.xmax, wallHeight, 10, 10);
+            this.wallRight = new Mesh(geometryRight, wallMaterial);
             this.wallRight.name = "wall-right";
             this.wallRight.position.x = config.xmax / 2;
             this.wallRight.position.y = wallHeight / 2;
             this.wallRight.castShadow = this.wallRight.receiveShadow = false;
             this.scene.add(this.wallRight);
 
-            this.wallLeft = new THREE.Mesh(geometryRight, wallMaterial);
+            this.wallLeft = new Mesh(geometryRight, wallMaterial);
             this.wallLeft.name = "wall-left";
             this.wallLeft.position.x = config.xmax / 2;
             this.wallLeft.position.y = wallHeight / 2;
@@ -237,8 +255,8 @@ export default {
         }
 
         if (config.zmax > 0) {
-            const geometryBack = new THREE.PlaneGeometry(config.zmax, wallHeight, 10, 10);
-            this.wallFront = new THREE.Mesh(geometryBack, wallMaterial);
+            const geometryBack = new PlaneGeometry(config.zmax, wallHeight, 10, 10);
+            this.wallFront = new Mesh(geometryBack, wallMaterial);
             this.wallFront.name = "wall-front";
             this.wallFront.rotateY(Math.PI / 2)
             this.wallFront.position.x = 0;
@@ -247,7 +265,7 @@ export default {
             this.wallFront.castShadow = this.wallFront.receiveShadow = false;
             this.scene.add(this.wallFront);
 
-            this.wallBack = new THREE.Mesh(geometryBack, wallMaterial);
+            this.wallBack = new Mesh(geometryBack, wallMaterial);
             this.wallBack.name = "wall-back";
             this.wallBack.rotateY(Math.PI / 2)
             this.wallBack.position.x = config.xmax;
@@ -343,8 +361,8 @@ export default {
         })
     },
     getRaycasterIntersect() {
-        var raycaster = new THREE.Raycaster();
-        var vec = new THREE.Vector2();
+        var raycaster = new Raycaster();
+        var vec = new Vector2();
         raycaster.setFromCamera(vec, this.camera);
         var intersects = raycaster.intersectObjects(this.scene.children, false); //array
         return intersects;

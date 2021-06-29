@@ -5,7 +5,7 @@ import {
 }
     from '../api/actions'
 import store from '../api/store';
-import * as THREE from "three";
+
 import MainScene from './MainScene';
 import Meuble from './Meuble'
 
@@ -32,7 +32,7 @@ export default class Draggable extends Meuble {
         return this.object.position[Room.getAxisForWall(this.wall)];
     }
 
-    constructor(props, object) {
+    constructor (props, object) {
         super(props, object)
 
         const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);

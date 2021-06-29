@@ -1,27 +1,72 @@
 {
-    "fond": {
-        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/fond.jpg",
-        "label": "fond",
-        "angle_fil": 0
-    },
-    "cuir": {
-        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/fond-2.jpg",
-        "label": "cuir",
-        "angle_fil": 0
-    },
-    "miroir": {
-        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/miroir.jpg",
-        "label": "miroir",
-        "angle_fil": 0
+    "hori": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/hori-17.jpg",
+        "material_args": {
+            "roughness": 0.45,
+            "emissive": "#0D0D0D",
+            "bumpScale": 2,
+            "fog": false
+        },
+        "texture_args": {
+            "repeatX": 0.005,
+            "repeatY": 0.005,
+            "offsetX": 0.5,
+            "offsetY": 0.5
+        }
     },
     "vert": {
-        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/vert-1.jpg",
-        "label": "vert",
-        "angle_fil": 0
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/vert-4.jpg",
+        "material_args": {
+            "roughness": 0.45,
+            "emissive": "#0D0D0D",
+            "bumpScale": 2,
+            "fog": false
+        },
+        "texture_args": {
+            "repeatX": 0.005,
+            "repeatY": 0.005
+        }
     },
-    "hori": {
-        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/hori-4.jpg",
-        "label": "hori",
-        "angle_fil": 0
+    "fond": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/fond-3.jpg",
+        "material_args": {
+            "roughness": 0.45,
+            "emissive": "#0D0D0D",
+            "bumpScale": 2,
+            "fog": false
+        },
+        "texture_args": {
+            "repeatX": 0.03,
+            "repeatY": 0.03,
+            "offsetX": 0.5,
+            "offsetY": 0.5
+        }
+    },
+    "cuir": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/05/cuir.jpg",
+        "material_args": {
+            "roughness": 0.45,
+            "emissive": "#0D0D0D",
+            "bumpScale": 2,
+            "fog": false
+        },
+        "texture_args": {
+            "repeatX": 0.03,
+            "repeatY": 0.03,
+            "offsetX": 0.5,
+            "offsetY": 0.5
+        }
+    },
+    "metal": {
+        "url": "https://preprod.kinoki.fr/minet3d/wp-content/uploads/2021/06/miroir.jpg",
+        "material_args": {
+            "specular": "#FFFFFF",
+            "emissive": "#0D0D0D",
+            "fog": false
+        },
+        "texture_args": {
+            "repeatX": 0.0001,
+            "repeatY": 0.0001
+        }
     }
 }

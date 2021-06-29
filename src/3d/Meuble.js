@@ -5,7 +5,6 @@ import {
 }
     from '../api/actions'
 import store from '../api/store';
-import * as THREE from "three";//TODO
 import MainScene from './MainScene';
 import Fbx from './Fbx'
 import { getWidth } from './Utils'
@@ -24,7 +23,7 @@ import { create as createRuler } from './helpers/Ruler';
 import { localhost } from '../api/Config';
 
 export default class Meuble extends Fbx {
-    constructor(props, object) {
+    constructor (props, object) {
         // console.log('Meuble', props, object)
         super(props, object)
         this.items = []// accessoires

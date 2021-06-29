@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const args = process.argv.slice(2);
 
@@ -10,7 +11,6 @@ module.exports = {
     mode: 'production',
     target: 'web',
     context: __dirname,
-    devtool: 'eval',
     entry: './src/index.js',
     output: {
         filename: '[name].bundle.js',
@@ -53,10 +53,26 @@ module.exports = {
             title: 'NY Minet',
             template: './src/index.html'
         }),
-        new CopyPlugin({
-            patterns: [
-                { from: "./assets", to: "./" },
-            ],
-        }),
+        new BundleAnalyzerPlugin({
+            generateStatsFile: false,
+            analyzerMode: 'static',
+            openAnalyzer: true
+        })
+        /*         new CopyPlugin({
+                    patterns: [
+                        { from: "./assets", to: "./" },
+                    ],
+                }), */
     ],
+    optimization: {
+        nodeEnv: 'production',
+        sideEffects: true,
+        usedExports: true,
+        concatenateModules: true,
+        emitOnErrors: true,
+        minimize: true,
+        removeAvailableModules: true,
+        removeEmptyChunks: true,
+        mergeDuplicateChunks: true,
+    }
 };

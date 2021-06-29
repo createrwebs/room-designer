@@ -18,7 +18,7 @@ function configure(preloadedState) {
     const store = createStore(
         reducer,
         preloadedState,
-        applyMiddleware(logger)
+        // applyMiddleware(logger)
     );
     // if (module.hot) {
     // 	// Enable Webpack hot module replacement for reducers

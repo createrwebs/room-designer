@@ -5,7 +5,7 @@ import config from '../../assets/config.json';
 import defaultdressing from '../../assets/dressings/defaultdressing.json';
 import dressing1 from '../../assets/dressings/dressing-1.json';
 import dressing2 from '../../assets/dressings/dressing-2.json';
-import catalogue from '../../assets/catalogue.json';
+// import catalogue from '../../assets/catalogue.json';
 // import catalogueitem from '../../assets/dressings/catalogueitem.json';
 
 import { getJson } from '../api/request';
@@ -35,13 +35,15 @@ import sceneBridge from '../api/Bridge';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 import Room from './Room';
-import Toolbar from './bars/Toolbar';
 import Loading from './Loading';
 import Dragging from './Dragging';
 import { getGui } from './DataGui';
 
+import Toolbar from './bars/Toolbar';
+// import Toolbar from './bars/ToolbarProduction';// test main.bundle.js size
+
 class App extends Component {
-	constructor(props) {
+	constructor (props) {
 		super(props);
 		this.state = {
 			webgl: WEBGL.isWebGLAvailable() ? "WEBGL is available" : "WEBGL is UNAVAILABLE"
@@ -111,7 +113,8 @@ class App extends Component {
 
 					// clickMeubleLine("NYH238P62L119")//ID 248
 					// clickMeubleLine("NYH238P62L096")
-					clickMeubleLine("NYH219P40L096")
+					// clickMeubleLine("NYH219P40L096")
+					clickMeubleLine("NYCOIFH238SF")
 					// clickMeubleLine("NYC231H238PP")
 					/* 	.then(e => {
 					console.log("meuble loaded", e);

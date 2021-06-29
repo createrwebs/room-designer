@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { localhost } from '../api/Config';
 import MainScene from '../3d/MainScene';
 

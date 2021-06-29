@@ -1,5 +1,4 @@
 import store from '../api/store';
-import * as THREE from "three";
 import MainScene from './MainScene';
 
 export const getCurrentScene = (stat) => {

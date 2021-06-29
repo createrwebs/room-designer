@@ -1,6 +1,16 @@
-import * as THREE from "three";//TODO
+import {
+    Texture,
+    RepeatWrapping,
+    Box3,
+    BoxBufferGeometry,
+    Color,
+    MeshStandardMaterial,
+    MeshPhongMaterial,
+    MeshLambertMaterial
+} from "three";
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
 import { loadTexture } from './Loader'
+import { getCenterPoint } from './Utils'
 
 export const setTransparent = (meuble, opacity, parts) => {
     meuble.object.children//c.type === "Mesh"
@@ -18,11 +28,22 @@ export const load = (materials) => {
             ([part, material]) => {
                 texturePromises.push(new Promise((resolve, reject) => {
                     loadTexture(material.url, texture => {
-                        if (texture instanceof THREE.Texture) resolve({
-                            label: material.label,
-                            part: part,
-                            texture: texture
-                        });
+                        if (texture instanceof Texture) {
+
+                            texture.needsUpdate = true;
+                            texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                            if (material.texture_args && material.texture_args.repeatX && material.texture_args.repeatY)
+                                texture.repeat.set(material.texture_args.repeatX, material.texture_args.repeatY)
+                            if (material.texture_args && material.texture_args.offsetX && material.texture_args.offsetY)
+                                texture.offset.set(material.texture_args.offsetX, material.texture_args.offsetY)
+
+                            resolve({
+                                part: part,
+                                texture: texture,
+                                material_args: material.material_args
+                            });
+                        }
                     },
                         xhr => {
                             console.log(url + ' ' + (xhr.loaded / xhr.total * 100) + '% loaded');
@@ -40,34 +61,30 @@ export const load = (materials) => {
     })
 }
 export const apply = (materials, meuble) => {
-    console.log('apply', materials, 'on', meuble)
-    let texture, material_args, material, mtl
-    meuble.object.traverse(function (child) {
+    console.log('Material : apply', materials, 'on', meuble)
+    let material_args, material, mtl
 
-        if (child.geometry) {//?
-            child.geometry.computeBoundingSphere();
-        }
+    /*
+    dynamic texture apply
+    */
 
-        /*
-        dynamic texture apply
-        */
+    meuble.object.children.forEach(child => {
         const materialMatch = child.name.match(/-mtl-(.*)/)
-        if (materialMatch && materialMatch.length > 0) {
+        if (materialMatch && materialMatch.length > 0) {// child object name contains -mtl-
             mtl = materials.find(m => m.part.includes(materialMatch[1]))
-            if (mtl && mtl.texture) {
-                // console.log(`texture : `, mtl.texture)
+            if (mtl && mtl.texture && mtl.material_args) {
 
-                material_args = {
-                    roughness: 0.45,
-                    emissive: 0x0D0D0D,
+                material_args = Object.assign({}, mtl.material_args, {
                     map: mtl.texture,
                     bumpMap: mtl.texture,
-                    bumpScale: 2,
-                    fog: false
-                };
+                });
 
-                material = new THREE.MeshStandardMaterial(material_args);
-                // material.bumpMap.repeat.set(0.005, 0.005);
+                if (mtl.part === "metal") {
+                    material = new MeshPhongMaterial(material_args);
+                }
+                else {
+                    material = new MeshStandardMaterial(material_args);
+                }
                 child.material = material;
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -75,204 +92,57 @@ export const apply = (materials, meuble) => {
             else {
                 console.warn(`No texture found "${materialMatch[1]}" for subobject "${child.name}" of ${meuble.props.sku}`)
             }
-            return
         }
+    })
 
+    // special cases outside because add/remove child dirties loop
 
-        // TODO reste à virer :
+    /* mirror */
 
-        if (child.name.indexOf("Body") > -1) {
+    const mirrorMesh = meuble.object.children.find(child => child.name.indexOf("miroir") > -1)// array of several mirrors?
+    if (mirrorMesh && mirrorMesh.parent.getObjectByName("mirror") == undefined) {// remplacement of mirror only once
+        // mirrorMesh.geometry.computeBoundingBox();
+        var box = new Box3().copy(mirrorMesh.geometry.boundingBox);
+        box.applyMatrix4(mirrorMesh.matrix); // apply child scale & transforms to box
+        const m_width = box.max.x - box.min.x
+        const m_height = box.max.y - box.min.y
+        const m_depth = box.max.z - box.min.z
 
-            texture = materials.find(m => m.part.includes('hori')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.005, 0.005);
+        var mirrorBox = new BoxBufferGeometry(m_width, m_height, m_depth);
+        var mirror = new Reflector(mirrorBox, {
+            color: new Color(0x7F7F7F),
+            textureWidth: window.innerWidth * window.devicePixelRatio,
+            textureHeight: window.innerHeight * window.devicePixelRatio,
+        });
+        mirror.name = "mirror"
+        mirror.position.set(box.min.x + m_width / 2, box.min.y + m_height / 2, box.min.z + m_depth / 2);
+        mirrorMesh.parent.add(mirror);
+        mirrorMesh.parent.remove(mirrorMesh);
+        console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, mirrorMesh.name)
+    }
 
-            material_args = {
-                emissive: 0x0D0D0D,
-                roughness: 0.35,
-                map: texture,
-                bumpMap: texture,
-                bumpScale: 5,
-                fog: false
-            };
-            material = new THREE.MeshStandardMaterial(material_args);
-            material.bumpMap.repeat.set(0.005, 0.005);
+    /* light */
 
-            child.material = material;
+    const lightMesh = meuble.object.children.find(child => child.name.indexOf("led") > -1)// array of several lights?
+    if (lightMesh) {
 
-        }
-        else if (child.name.indexOf("porte") > -1) {
-            texture = materials.find(m => m.part.includes('porte')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.01, 0.005);
-            texture.offset.set(0.5, 0.5);
+        // lumière de la led
+        // const rectLight = new THREE.RectAreaLight(0xFFFDEB, 70, 700, 10);
+        // rectLight.name = "LedLight"
+        // rectLight.position.set(400, 1780, 415);
+        // rectLight.rotation.set(-Math.PI / 1.8, 0, 0);
+        //obj.add( rectLight ) // <-- il faudrait plutot attacher la lumière au child
+        //const rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
+        //obj.add( rectLightHelper );
 
-            material_args = {
-                roughness: 0.45,
-                emissive: 0x0D0D0D,
-                map: texture,
-                bumpMap: texture,
-                bumpScale: 2,
-                fog: false
-            };
-
-            material = new THREE.MeshStandardMaterial(material_args);
-            child.material = material;
-
-        } else if (child.name.indexOf("panneau") > -1) {
-            texture = materials.find(m => m.part.includes('vert')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(1, 1);
-            texture.offset.set(0.5, 0.5);
-
-            material_args = {
-                roughness: 0.45,
-                emissive: 0x0D0D0D,
-                map: texture,
-                bumpMap: texture,
-                bumpScale: 1,
-                fog: false
-            };
-
-            material = new THREE.MeshStandardMaterial(material_args);
-            material.bumpMap.repeat.set(0.01, 0.005);
-            child.material = material;
-
-        } else if (child.name.indexOf("top") > -1 || child.name.indexOf("bottom") > -1) {
-            texture = materials.find(m => m.part.includes('hori')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.015, 0.010);
-            texture.offset.set(0.5, 0.5);
-
-            material_args = {
-                roughness: 0.45,
-                emissive: 0x0D0D0D,
-                map: texture,
-                bumpMap: texture,
-                bumpScale: 1,
-                fog: false
-            };
-
-            material = new THREE.MeshStandardMaterial(material_args);
-            material.bumpMap.repeat.set(0.015, 0.010);
-            child.material = material;
-
-        } else if (child.name.indexOf("facade") > -1) {
-            texture = materials.find(m => m.part.includes('hori')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.015, 0.010);
-            texture.offset.set(0.5, 0.5);
-
-            material_args = {
-                roughness: 0.45,
-                emissive: 0x0D0D0D,
-                map: texture,
-                bumpMap: texture,
-                bumpScale: 2.5,
-                fog: false
-            };
-
-            material = new THREE.MeshStandardMaterial(material_args);
-            material.bumpMap.repeat.set(0.015, 0.010);
-            child.material = material;
-
-        } else if (child.name.indexOf("cuir") > -1) {
-            texture = materials.find(m => m.part.includes('fond')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.03, 0.03);
-            texture.offset.set(0.5, 0.5);
-
-            material_args = {
-                roughness: 0.48,
-                emissive: 0x030303,
-                bumpMap: texture,
-                bumpScale: 7.5,
-                map: texture,
-                fog: false,
-
-            };
-            material = new THREE.MeshStandardMaterial(material_args);
-            material.bumpMap.repeat.set(0.03, 0.03);
-            child.material = material;
-
-        } else if (child.name.indexOf("etagere") > -1) {
-            texture = materials.find(m => m.part.includes('fond')).texture
-            texture.needsUpdate = true;
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.03, 0.03);
-            texture.offset.set(0.5, 0.5);
-            material_args = {
-                roughness: 0.35,
-                emissive: 0x0D0D0D,
-                map: texture,
-                bumpMap: texture,
-                bumpScale: 5,
-                fog: false
-            };
-            material = new THREE.MeshStandardMaterial(material_args);
-            material.bumpMap.repeat.set(0.03, 0.03);
-            child.material = material;
-
-        } else if (child.name.indexOf("metal") > -1 || child.name.indexOf("poignee") > -1) {
-            material_args = {
-                specular: 0xffffff,
-                emissive: 0x0D0D0D,
-                fog: false
-            };
-            material = new THREE.MeshPhongMaterial(material_args);
-            child.material = material;
-
-        } else if (child.name.indexOf("miroir") > -1) {
-
-            // poser un vrai miroir devant le modele
-            var mirrorBox = new THREE.BoxBufferGeometry(72, 81, 1);
-            mirrorBox.computeBoundingSphere();
-            mirrorBox.matrixWorldNeedsUpdate = true;
-
-            child.geometry.computeBoundingSphere();
-            child.geometry.matrixWorldNeedsUpdate = true;
-
-            var mirror = new Reflector(mirrorBox, {
-                color: new THREE.Color(0x7F7F7F),
-                textureWidth: window.innerWidth,
-                textureHeight: window.innerHeight,
-            });
-            mirror.position.set(40, 136.5, 2.5);
-            mirror.matrixWorldNeedsUpdate = true;
-            mirror.geometry.computeBoundingSphere();
-
-            child.add(mirror);
-
-        } else if (child.name.indexOf("led") > -1) {
-
-            // lumière de la led
-            const rectLight = new THREE.RectAreaLight(0xFFFDEB, 70, 700, 10);
-            rectLight.name = "LedLight"
-            rectLight.position.set(400, 1780, 415);
-            rectLight.rotation.set(-Math.PI / 1.8, 0, 0);
-            //obj.add( rectLight ) // <-- il faudrait plutot attacher la lumière au child
-            //const rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
-            //obj.add( rectLightHelper );
-
-            material_args = {
-                color: 0xFFF196,
-                emissiveIntensity: 5,
-                emissive: 0x7D7C6F,
-                fog: false
-            };
-            material = new THREE.MeshLambertMaterial(material_args);
-            child.material = material;
-
-        } else {
-
-        }
-        child.castShadow = true;
-        child.receiveShadow = true;
-    });
+        material_args = {
+            color: 0xFFF196,
+            emissiveIntensity: 5,
+            emissive: 0x7D7C6F,
+            fog: false
+        };
+        material = new MeshLambertMaterial(material_args);
+        lightMesh.material = material;
+        console.warn(`Led light found in meuble ${meuble.props.sku}`, lightMesh.name)
+    }
 }
