@@ -2,15 +2,21 @@
 
 const Client = require('ssh2-sftp-client');
 
-const config = {
+/* const config = {
     host: 'sftp.sd5.gpaas.net',
     username: '4334150',
     password: 'KN8F2UYemKudSiU'
+}; */
+const config = {
+    host: '54.37.227.177',
+    username: 'www-kinoki-kinotools',
+    password: 'Jv0s5Jjfmsvv'
 };
 
 const sftp = new Client('example-client');
 let localFile = "./dist/main.bundle.js";
-let remoteFile = '/lamp0/web/vhosts/preprod.kinoki.fr/htdocs/minet3d/wp-content/themes/minet3d_2021/main.bundle.js';
+// let remoteFile = '/lamp0/web/vhosts/preprod.kinoki.fr/htdocs/minet3d/wp-content/themes/minet3d_2021/main.bundle.js';
+let remoteFile = '/var/www/kinoki/kinotools/prod/htdocs/minet3d/wp-content/themes/minet3d_2021/main.bundle.js';
 
 sftp.connect(config)
     .then(() => {
