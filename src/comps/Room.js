@@ -11,7 +11,7 @@ import Draggable from '../3d/Draggable'
 // const localhost = window.location.hostname.indexOf('localhost') !== -1;
 
 class Room extends Component {
-	constructor(props) {
+	constructor (props) {
 		super(props);
 		this.threejsSceneRef = React.createRef();
 
@@ -46,8 +46,6 @@ class Room extends Component {
 const mapStateToProps = (state) => {
 
 	return {
-		fbxs: state.config.fbx,
-		fov: state.camera.fov,
 		zoom: state.camera.zoom,
 		focus: state.camera.focus,
 		light: state.light,

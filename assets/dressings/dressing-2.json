@@ -1,43 +1,102 @@
 {
-    "post_id": 99,
-    "name": "Dressing 2021-04-21 01:24:22pm",
-    "xmax":4000,
-    "zmax":7000,
+    "name": "Nouveau dressing du 2021-07-15 12:46:39pm",
+    "xmax": 6000,
+    "zmax": 8000,
     "meubles": [
         {
-            "sku": "NYC155H219P0",
+            "sku": "NYANGH219W",
+            "laqueOnMeshes": [
+                {
+                    "mesh": "tirroirface-mtl-cuir",
+                    "laque": 1234
+                }
+            ],
             "position": {
                 "wall": "right",
-                "x": 1350
-            }
+                "x": 0
+            },
+            "items": []
         },
         {
-            "sku": "NYH219P62FD",
+            "sku": "NYANGH219W",
+            "laqueOnMeshes": [
+                {
+                    "mesh": "tirroirface-mtl-cuir",
+                    "laque": 1236
+                }
+            ],
             "position": {
                 "wall": "right",
-                "x": 350
-            }
+                "x": 1503
+            },
+            "items": []
         },
         {
-            "sku": "NYH238P62L040",
+            "sku": "NYH238P62L119",
+            "laqueOnMeshes": [],
             "position": {
-                "wall": "back",
-                "x": 800
-            }
+                "wall": "right",
+                "x": 2503
+            },
+            "items": [
+                {
+                    "sku": "NYETAP62L119",
+                    "position": {
+                        "place": "gauche",
+                        "x": 1623
+                    }
+                },
+                {
+                    "sku": "NYETAP62L119",
+                    "position": {
+                        "place": "gauche",
+                        "x": 1751
+                    }
+                },
+                {
+                    "sku": "NYETAP62L119",
+                    "position": {
+                        "place": "gauche",
+                        "x": 1879
+                    }
+                },
+                {
+                    "sku": "NYETAP62L119",
+                    "position": {
+                        "place": "gauche",
+                        "x": 2000
+                    }
+                }
+            ]
         },
         {
-            "sku": "NYH238P62P40",
+            "sku": "NYH219P40L081",
+            "laqueOnMeshes": [],
             "position": {
-                "wall": "back",
-                "x": 1350
-            }
+                "wall": "right",
+                "x": 3105
+            },
+            "items": []
         },
         {
-            "sku": "NYH219P62FD",
+            "sku": "NYH219P62P40",
+            "laqueOnMeshes": [],
             "position": {
-                "wall": "left-back",
-                "x": 350
-            }
+                "wall": "right",
+                "x": 2696
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P62L081",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 4367
+            },
+            "items": []
         }
-    ]
+    ],
+    "materialId": 517,
+    "id": 1292
 }

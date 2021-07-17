@@ -1,6 +1,7 @@
 import {
     loadManagerStart,
     select,
+    Tools
 }
     from '../api/actions'
 import store from '../api/store';
@@ -40,6 +41,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
 
 import Draggable from './Draggable'
+import Angle from './Angle'
 import { setupLights } from './helpers/Lights'
 import { create as createSolGrid } from './helpers/Sol';
 import { getFileNameFromUrl } from '../api/Utils';
@@ -48,6 +50,8 @@ const wallHeight = 2380;
 
 export default {
     meubles: [],
+    laque: null,
+    laqueId: null,
     selection: null,
 
     /*  clickOnScene(event) {// do not work
@@ -72,6 +76,9 @@ export default {
     setup(config) {
         window.ts = this// f12 helper
 
+        this.tool = Tools.ARROW
+
+        this.config = config
         this.xmax = 4000
         this.zmax = 2000
         this.setupSize(config)
@@ -190,6 +197,9 @@ export default {
         this.setupWalls(config)
         this.resize()
         console.log("MainScene setup", this)
+
+        /* material */
+        this.materialId = null
 
     },
     setupSize(config) {
@@ -316,6 +326,9 @@ export default {
         this.clear();
         this.setupLights();
         this.setupWalls(config, wallVisible)
+        if (config && config.materialId) {
+            this.materialId = config.materialId
+        }
     },
     resize() {
         const canvasWrapper = document.getElementById("canvas-wrapper")
@@ -345,7 +358,6 @@ export default {
         this.selection = null
     },
     enableMeubleDragging(enabled) {
-        // this.meubles.forEach(m => m.dragControls.enabled = enabled)
         this.meubles.forEach(m => enabled ? m.dragControls.activate() : m.dragControls.deactivate())
     },
     enableMeubleClicking(enabled) {
@@ -353,11 +365,28 @@ export default {
         this.meubles.forEach(m => {
             if (enabled) {
                 this.interactionManager.add(m.object)
-                // m.object.addEventListener('click', select.bind(this, m))
+                m.object.addEventListener('click', m.click.bind(m))
             } else {
                 this.interactionManager.remove(m.object)
-                // m.object.removeEventListener('click', select.bind(this, m))
+                m.object.removeEventListener('click', m.click.bind(m))
             }
+        })
+    },
+    enableMeublePainting(enabled) {
+        this.meubles.forEach(m => {
+            m.object.children.filter(c => m.props.laquables.includes(c.name)).forEach(c => {
+                if (enabled) {
+                    this.interactionManager.add(c)
+                    c.addEventListener('click', m.clickLaquable.bind(m))
+
+                    console.log("interactionManager", c.hasEventListener('click'), this.interactionManager)
+
+
+                } else {
+                    this.interactionManager.remove(c)
+                    c.removeEventListener('click', m.clickLaquable.bind(m))
+                }
+            })
         })
     },
     getRaycasterIntersect() {
@@ -370,5 +399,25 @@ export default {
         //     // selectedObject = intersects[0];
         //     // console.log(selectedObject);
         // }
+    },
+    getMeubleList() {
+        let meubleList = []
+        this.meubles.forEach(m => meubleList.push(m.props.sku))
+        return meubleList
+    },
+    /*
+        props from catalogue (infos)
+        object from fbx (3d)
+        state from saved dressing (user modifications)
+    */
+    createMeuble(props, object, state) {
+
+        if (props.angle) {
+
+            return new Angle(props, object, state)
+        } else {
+            return new Draggable(props, object, state)
+
+        }
     }
 }

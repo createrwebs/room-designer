@@ -57,13 +57,14 @@ export default class Item extends Fbx {
                     break;
             }
         }   */
-    constructor (props, object, parent) {
+    constructor (props, object, state, parent) {
         super(props, object)
 
         this.parent = parent;// parent meuble
+        this.place = "gauche"
 
         const trous = this.parent.props.plandepercage
-        if (!trous || (trous && trous.gauche && trous.gauche.length === 0)) {
+        if (!trous || (trous && trous[this.place] && trous[this.place].length === 0)) {
             console.warn(`Accessoire ${this.props.sku} says : No plandepercage for Meuble ${this.parent.props.sku}`)
         }
         else {
@@ -108,7 +109,7 @@ export default class Item extends Fbx {
         event.object.position.z = 0;
 
         const position = event.object.position.y
-        const places = this.parent.props.plandepercage['gauche'];
+        const places = this.parent.props.plandepercage[this.place];
         let closest = this.getClosest(position, places)
 
         // from & to ne remplacent pas l'emcombrement !!
@@ -118,17 +119,28 @@ export default class Item extends Fbx {
         event.object.position.y = closest
 
         console.log(event.object.position.y)
+        MainScene.render();
 
     }
 
     dragEnd(event) {
         MainScene.orbitControls.enabled = true;
         if (Item.Dragged === this && Date.now() - Item.Nowtime < Item.selectClickBeforeDragDelay) {
-            store.dispatch(select(this))
+            select(this)
         }
         store.dispatch(drag(null))
         Item.Dragged = null
 
         // MainScene.meubles.forEach(m => m.dragControls.enabled = true)// reactivation of others
+    }
+
+    getJSON() {
+        return {
+            sku: this.props.sku,
+            position: {
+                place: this.place,
+                x: this.object.position.y
+            },
+        }
     }
 }

@@ -3,21 +3,15 @@ import MainScene from './MainScene';
 
 export const getCurrentScene = (stat) => {
     let state = stat ? stat : store.getState()
-    let currentScene = state.currentScene
+    let currentScene = state.currentScene// || defaultdressing
     /*     let currentScene = {
-            post_id: store.getState().currentScene.post_id
-        } */
-    let meubles = [];
+        post_id: store.getState().currentScene.post_id
+    } */
+    const meubles = [];
     MainScene.meubles.forEach(m => {
-        let meuble = {
-            sku: m.sku,
-            position: {
-                wall: m.wall,
-                x: m.position
-            }
-        }
-        meubles.push(meuble)
+        meubles.push(m.getJSON())
     })
     currentScene.meubles = meubles
+    currentScene.materialId = MainScene.materialId
     return currentScene
 }

@@ -1,15 +1,60 @@
 {
-    "post_id": 99,
-    "name": "Dressing 2021-04-21 01:24:22pm",
-    "xmax":5000,
-    "zmax":5000,
+    "xmax": 5000,
+    "zmax": 5000,
     "meubles": [
         {
             "sku": "NYH238P62P40",
             "position": {
-                "wall": "back",
-                "x": 1350
+                "wall": "front",
+                "x": 2312
             }
+        },
+        {
+            "sku": "NYH238P40RL057",
+            "position": {
+                "wall": "front",
+                "x": 1907
+            }
+        },
+        {
+            "sku": "NYH238P40P62",
+            "position": {
+                "wall": "front",
+                "x": 1332
+            }
+        },
+        {
+            "sku": "NYH238P62P40",
+            "position": {
+                "wall": "front",
+                "x": 927
+            }
+        },
+        {
+            "sku": "NYH238P62L119",
+            "position": {
+                "wall": "front",
+                "x": 3500
+            },
+            "items": [
+                {
+                    "sku": "NYETAP62L119",
+                    "position": {
+                        "place": "gauche",
+                        "x": "1111"
+                    }
+                },
+                {
+                    "sku": "NYETAP62L119",
+                    "position": {
+                        "place": "gauche",
+                        "x": "640"
+                    }
+                }
+            ]
         }
-    ]
+    ],
+    "materialId": 1281,
+    "name": " du 2021-07-14 03:11:51pm",
+    "id": 1291
 }

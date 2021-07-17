@@ -1,5 +1,5 @@
 import store from './store';
-import { load as loadMaterial, apply as applyMaterial } from '../3d/Material'
+import { loadOne as loadOneMaterial, load as loadMaterial, apply as applyMaterial, getMaterialById, getLaqueById } from '../3d/Material'
 import MainScene from '../3d/MainScene';
 import Draggable from '../3d/Draggable'
 import { Room } from '../3d/Drag'
@@ -10,6 +10,7 @@ import { loadFbx } from '../3d/Loader'
 
 export const KinoEvent = {
     SELECT_MEUBLE: 'select_meuble',
+    SCENE_CHANGE: 'scene_change',
 }
 export const BridgeEvent = {
     NEW_DRESSING: 'new_dressing',
@@ -24,6 +25,7 @@ export const BridgeEvent = {
     EDIT_MEUBLE: 'edit_meuble',
     ANIM_SELECTED_MEUBLE: 'anim_selected_meuble',
     REMOVE_MEUBLE: 'remove_meuble',
+    BRUSH_MODE: 'brush_mode',
     GENERATE_ALL_PIX: 'generateallpix',
     SET_SCENE_MATERIAL: 'set_scene_material',
     LOAD_ALL_SKU: 'load_all_sku'
@@ -35,7 +37,6 @@ export const SceneEvent = {
     SETSCENES: 'setscenes',
     NEWSCENE: 'newscene',
     LOADSCENE: 'loadscene',
-    SETLIGHT: 'setlight',
     SETCURRENTSCENEPROP: 'setcurrentsceneprop',
     SETCURRENTSCENEWALL: 'setcurrentscenewall',
     SETCURRENTSCENEWALLLENGTH: 'setcurrentscenewalllength',
@@ -60,12 +61,14 @@ export const LoadingEvent = {
     START: 'start',
     LOAD: 'load',
     PROGRESS: 'progress',
+    QUEUE_FINISHED: 'queue_finished',
     ERROR: 'error',
 }
 export const Tools = {
     ARROW: 'arrow',
     HAMMER: 'hammer',
     TRASH: 'trash',
+    BRUSH: 'brush',
 }
 
 
@@ -80,9 +83,14 @@ export const loadManagerLoad = () => {
         type: LoadingEvent.LOAD
     }
 }
-export const loadManagerProgress = (url) => {
+export const loadManagerProgress = (url, itemsLoaded, itemsTotal) => {
     return {
-        type: LoadingEvent.PROGRESS, url
+        type: LoadingEvent.PROGRESS, url, itemsLoaded, itemsTotal
+    }
+}
+export const loadManagerQueueFinished = () => {
+    return {
+        type: LoadingEvent.QUEUE_FINISHED
     }
 }
 export const loadManagerError = (url) => {
@@ -100,7 +108,7 @@ export const setCamera = (prop) => {
 export const setConfig = (config) => {
     MainScene.setup(config)
     return {
-        type: SceneEvent.SETCONFIG, config
+        type: SceneEvent.SETCONFIG
     }
 }
 export const resizeScene = () => {
@@ -168,66 +176,76 @@ export const saveSceneToFile = () => {
 }
 
 export const loadScene = (dressing) => {
+    console.log("loadScene ", dressing)
     MainScene.update(dressing)
-    dressing.meubles.forEach(m => {
 
-        const props = store.getState().catalogue.find(f => f.sku === m.sku)
-        if (!props) {
-            console.log("no meuble found for sku ", m.sku)
-            return null
-        }
+    /*
+        1/ load scene material
+        2/ load fbx
+    */
 
-        //meuble props are catalogue props + dressing props
-        props.position = m.position;
-
-        loadFbx(props.fbx.url, object => {
-            if (m.position) {
-                const meuble = new Draggable(props, object)
-                MainScene.add(meuble);
-            }
-            MainScene.render()
+    const material = getMaterialById(MainScene.materialId)
+    if (material) {
+        loadMaterial(material.textures).then(mtl => {
+            createScene(dressing)
         })
-    })
+    }
+    else {
+        createScene(dressing)
+    }
+
+    // material put at meuble construction
+
     //TODO ....renvoyer action juste pour current dressing !!???
     return {
         type: SceneEvent.LOADSCENE, dressing
     }
 }
+
+const createScene = (dressing) => {
+    dressing.meubles.forEach(state => {
+
+        const props = store.getState().catalogue.find(f => f.sku === state.sku)
+        if (!props) {
+            console.log("no meuble found for sku ", state.sku)
+            return null
+        }
+
+        //meuble props are catalogue props + dressing props
+        props.position = state.position;
+
+        loadFbx(props.fbx.url, object => {
+            if (state.position) {
+                const meuble = MainScene.createMeuble(props, object, state)
+                MainScene.add(meuble);
+            }
+            MainScene.render()
+        })
+    })
+}
 /**
  * click on palette to set material on scene.
- * window.scene_bridge('set_scene_material',{
-                hori: {
-                    url: "chene-blanc-hori.jpg",
-                    label: "Chêne blanc",
-                    angle_fil: 0
-                },
-                vert: {
-                    url: "chene-blanc-vert.jpg",
-                    label: "Chêne blanc",
-                    angle_fil: 90
-                },
-                fond: {
-                    url: "cuir.jpg",
-                    label: "Chêne blanc",
-                    angle_fil: 0
-                },
-                portes: {
-                    url: "chene-charleston-vert.jpg",
-                    label: "Chêne charleston",
-                    angle_fil: 0
-                }
-            })
- *
+ * window.scene_bridge('set_scene_material',materialId) *
  * @return {Object} material object
  */
-export const setSceneMaterial = (material) => {
-    loadMaterial(material).then(material => {
-        console.log(`material loaded`, material)
-        MainScene.meubles.forEach(meuble => {
-            applyMaterial(material, meuble)
-        })
-        MainScene.render()
-    })
+export const setSceneMaterial = (materialId) => {
+    if (materialId) {
+        const material = getMaterialById(materialId)
+        if (material) {
+            MainScene.materialId = materialId
+            loadMaterial(material.textures).then(m => {
+                MainScene.meubles.forEach(meuble => {
+                    applyMaterial(m, meuble)
+                })
+                MainScene.render()
+            })
+        }
+        else {
+            console.warn(`No material found with id ${materialId}`)
+        }
+    } else {
+        console.warn(`No material id ${materialId}`)
+    }
 }
 export const takePicture = () => {
     takePix("minet3d-scene-snapshopt")
@@ -254,7 +272,7 @@ export const generateAllPix = () => {
                     wall: "back",
                     x: centerMeubleForPix - props.largeur / 2
                 }
-                var meuble = new Draggable(props, object)
+                const meuble = MainScene.createMeuble(props, object)
 
                 //test textures
                 /* var textu = {
@@ -302,30 +320,49 @@ export const downloadScene = () => {
     console.warn(`what to do here ? downloadScene`)
 
 }
-export const changeTool = (tool) => {
+export const changeTool = (tool, arg) => {
     MainScene.deselect()// deselection => camera to room center ?
     switch (tool) {
         case Tools.ARROW:
             MainScene.enableMeubleDragging(true)
             MainScene.enableMeubleClicking(false)
+            MainScene.enableMeublePainting(false)
+            break;
+        case Tools.BRUSH:
+            const laqueId = arg
+            if (laqueId) {
+                const material = getLaqueById(laqueId)
+                if (material) {
+                    loadOneMaterial(material).then(m => {
+                        MainScene.laque = m
+                        MainScene.laqueId = laqueId
+                        MainScene.enableMeubleDragging(false)
+                        MainScene.enableMeubleClicking(false)
+                        MainScene.enableMeublePainting(true)
+                    });
+                }
+                else {
+                    console.warn(`No laque material found with id ${laqueId}`)
+                }
+            } else {
+                console.warn(`No laque material id`)
+            }
+
             break;
         case Tools.HAMMER:
         case Tools.TRASH:
         default:
             MainScene.enableMeubleDragging(false)
             MainScene.enableMeubleClicking(true)
+            MainScene.enableMeublePainting(false)
             break;
     }
-    return {
-        type: SceneEvent.CHANGE_TOOL, tool
-    }
+    MainScene.tool = tool;
+    /*     return {
+            type: SceneEvent.CHANGE_TOOL, tool
+        } */
 }
 
-export const setLight = () => {
-    return {
-        type: SceneEvent.SETLIGHT
-    }
-}
 export const allLoaded = () => {
     MainScene.allLoaded();
     return {
@@ -338,10 +375,9 @@ export const drag = (meuble) => {
     }
 }
 
-export const select = (meuble) => {
-    const state = store.getState()
-    console.warn(`Scene click with tool ${state.tool}`)
-    switch (state.tool) {
+export const select = (meuble, arg) => {
+    console.warn(`Scene click with tool ${MainScene.tool}`)
+    switch (MainScene.tool) {
         case Tools.ARROW:
             if (meuble) console.warn(`Use hammer tool to edit ${meuble.props.sku}`)
             MainScene.deselect()
@@ -361,10 +397,20 @@ export const select = (meuble) => {
                 if (window.kino_bridge)
                     window.kino_bridge(KinoEvent.SELECT_MEUBLE, meuble.props.sku)
                 MainScene.selection = meuble
+
+                if (window.kino_bridge)
+                    window.kino_bridge(KinoEvent.SCENE_CHANGE, MainScene.getMeubleList())
             }
             else {
 
             }
+            break;
+        case Tools.BRUSH:
+            const interactiveEvent = arg;
+            console.warn(`Brush on`, interactiveEvent)
+
+
+
             break;
         case Tools.TRASH:
             MainScene.deselect()
@@ -376,7 +422,6 @@ export const select = (meuble) => {
     }
 }
 export const animeSelectedMeuble = () => {
-    const state = store.getState()
     const selectedMeuble = MainScene.selection
     if (!selectedMeuble) return
     const center = selectedMeuble.getCenterPoint()
@@ -416,7 +461,7 @@ export const clickMeubleLine = (sku) => {
 
     const state = store.getState()
     if (!state.currentScene) {
-        console.warn("No scene : please add a scene bofore meuble")
+        console.warn("No scene : please add a scene before meuble")
     }
 
     const props = state.catalogue.find(f => f.sku === sku)
@@ -447,7 +492,8 @@ export const clickMeubleLine = (sku) => {
                 wall,
                 x: 0
             }
-            const selection = new Draggable(props, object)
+            const selection = MainScene.createMeuble(props, object)
+
 
             // place on front wall ? ..Draggable routines ! //TODO
             // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :

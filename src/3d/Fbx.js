@@ -1,21 +1,10 @@
 import { Vector3, Box3 } from "three";
 
 export default class Fbx {
-    constructor(props, object) {
+    constructor (props, object) {
         // console.log('Fbx', props, object)
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
-
-        // sku props :
-        /*         this.ID = props.ID;
-                this.accessoirescompatibles = props.accessoirescompatibles;
-                this.description = props.description;
-                this.plandepercage = props.plandepercage;
-                this.sku = props.sku;
-        
-                this.profondeur = props.profondeur;
-                this.largeur = props.largeur;
-                this.hauteur = props.hauteur; */
     }
     getFrontPosition() {
         const d = 3000// distance de recul pour observer le meuble selectionné

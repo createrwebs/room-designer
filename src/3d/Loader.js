@@ -2,6 +2,7 @@ import {
     loadManagerStart,
     // loadManagerLoad,
     loadManagerProgress,
+    loadManagerQueueFinished,
     loadManagerError
 }
     from '../api/actions'
@@ -19,7 +20,10 @@ manager.onLoad = () => {
     // store.dispatch(loadManagerLoad())
 };
 manager.onProgress = (url, itemsLoaded, itemsTotal) => {
-    store.dispatch(loadManagerProgress(getFileNameFromUrl(url)))
+    store.dispatch(loadManagerProgress(getFileNameFromUrl(url), itemsLoaded, itemsTotal))
+    if (itemsLoaded === itemsTotal) {
+        store.dispatch(loadManagerQueueFinished())
+    }
 }
 manager.onError = (url) => {
     // console.log('There was an error loading ' + url);

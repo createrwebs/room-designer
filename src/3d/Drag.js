@@ -1,5 +1,7 @@
 import { getSegment } from './Utils'
 
+/* dragging help routines & objects */
+
 /*
     a one-dim segment with a minimum and a maximum
 */
@@ -12,7 +14,7 @@ export class Space {
             Math.min(segment.max - s2.min, s2.max - segment.min) - Math.min(segment.max - s1.min, s1.max - segment.min))
         return Space.onWall[wall][0]
     }
-    constructor(min, max, prev, next) {
+    constructor (min, max, prev, next) {
         this.min = min;
         this.max = max;
         this.prev = prev;// Draggable object (Meuble...) located at the minimum of the segment

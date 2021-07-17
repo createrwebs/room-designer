@@ -2,21 +2,307 @@
 <html lang="fr">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="NY Minet3d" />
-  <title><%= htmlWebpackPlugin.options.title %></title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-  <script>
-    kino_bridge = function (type, arg) {
-      console.log("kino_bridge", type, arg)
-    }
-  </script>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="NY Minet3d" />
+	<title><%= htmlWebpackPlugin.options.title %></title>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+	<script>
+		// uncomment to load dressing at start :
+
+		var composition = {
+			"name": "Nouveau dressing du 2021-07-15 12:46:39pm",
+			"xmax": 6000,
+			"zmax": 8000,
+			"meubles": [
+				{
+					"sku": "NYANGH219W",
+					"laqueOnMeshes": [
+						{
+							"mesh": "tirroirface-mtl-cuir",
+							"laque": 1236
+						}
+					],
+					"position": {
+						"wall": "right",
+						"x": 0
+					},
+					"items": []
+				}
+			],
+			"materialId": null,
+			"id": 1292
+		}
+		var laques = [
+			{
+				"label": "laque 2",
+				"name": "laque-2",
+				"id": 1236,
+				"url": "https:\/\/kinotools.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/07\/Capture-de\u0301cran-2017-12-05-a\u0300-18.26.31-1024x572-1.png",
+				"texture_args": {
+					"repeatX": 0.005,
+					"repeatY": 0.005,
+					"offsetX": 0.5,
+					"offsetY": 0.5
+				}
+			},
+			{
+				"label": "laque test",
+				"name": "laque-test",
+				"id": 1234,
+				"url": "https:\/\/kinotools.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/07\/portrait_Raoult.png",
+				"texture_args": {
+					"repeatX": 0.005,
+					"repeatY": 0.005,
+					"offsetX": 0.5,
+					"offsetY": 0.5
+				}
+			}
+		]
+
+		var materials = [
+			{
+				"label": "Material de test",
+				"name": "material-de-test",
+				"id": 1281,
+				"textures": {
+					"vert": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/pcb_top_.png",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.005,
+							"repeatY": 0.005,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					},
+					"hori": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/pcb_bottom_.png",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.005,
+							"repeatY": 0.005,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					},
+					"cuir": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/167159.jpeg",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.005,
+							"repeatY": 0.005,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					},
+					"fond": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/167159-1.jpeg",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.005,
+							"repeatY": 0.005,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					}
+				}
+			},
+			{
+				"label": "Chêne Halifax blanc",
+				"name": "chene-halifax-blanc",
+				"id": 517,
+				"textures": {
+					"hori": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/hori-17.jpg",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.005,
+							"repeatY": 0.005,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					},
+					"vert": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/vert-4.jpg",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.005,
+							"repeatY": 0.005
+						}
+					},
+					"fond": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/fond-3.jpg",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.03,
+							"repeatY": 0.03,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					},
+					"cuir": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/cuir.jpg",
+						"material_args": {
+							"roughness": 0.45,
+							"emissive": "#0D0D0D",
+							"bumpScale": 2,
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.03,
+							"repeatY": 0.03,
+							"offsetX": 0.5,
+							"offsetY": 0.5
+						}
+					},
+					"metal": {
+						"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/06/miroir.jpg",
+						"material_args": {
+							"specular": "#ffffff",
+							"emissive": "#0D0D0D",
+							"fog": false
+						},
+						"texture_args": {
+							"repeatX": 0.0001,
+							"repeatY": 0.0001
+						}
+					}
+				}
+			}
+		]
+
+		var defaultdressing, dressing1, material1, laque01
+		fetch("dressings/defaultdressing.json").then(response => response.json()).then(json => defaultdressing = json);
+		fetch("material-chene-blanc.json").then(response => response.json()).then(json => material1 = json);
+		fetch("dressings/dressing-1.json").then(response => response.json()).then(json => dressing1 = json);
+		fetch("material-laque01.json").then(response => response.json()).then(json => laque01 = json);
+
+
+		kino_bridge = function (type, arg) {
+			console.log("kino_bridge", type, arg)
+		}
+		local_scene_bridge = function (type, arg) {
+			console.log("local_scene_bridge", type)
+			switch (type) {
+				case 'new_dressing':
+				case 'load_dressing':
+				case 'save_dressing':
+				case 'download_dressing':
+				case 'generateallpix':
+				case 'take_picture':
+					break;
+
+				case 'select_meuble':
+					break;
+				case 'edit_meuble':
+					break;
+				case 'remove_meuble':
+					arg = true
+					break;
+				case 'set_scene_material':
+					break;
+				case 'brush_mode':
+					break;
+			}
+
+			console.log("scene_bridge returns :", window.scene_bridge(type, arg))
+		}
+	</script>
 </head>
 
 <body style="margin: 0;height: 100vh;">
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div style="margin: 0;width: 100%;height: 100%;overflow: hidden;" id="canvas-wrapper"></div>
+
+	<button class="btn" onclick="local_scene_bridge('new_dressing', defaultdressing)">
+		<i class="fa fa-file"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('save_dressing')">
+		<i class="fa fa-save"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('load_dressing', dressing1)">
+		<i class="fa fa-upload"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('download_dressing')">
+		<i class="fa fa-download"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('take_picture')">
+		<i class="fa fa-image"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('generateallpix')">
+		<i class="fa fa-clone"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('select_meuble')">
+		<i class="fa fa-mouse-pointer"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('edit_meuble')">
+		<i class="fa fa-hammer"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('set_scene_material', 517)">
+		<i class="fa fa-palette"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('set_scene_material', 1281)">
+		<i class="fa fa-palette"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('brush_mode', 1234)">
+		<i class="fa fa-paint-brush"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('brush_mode', 1236)">
+		<i class="fa fa-paint-brush"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('remove_meuble')">
+		<i class="fa fa-trash"></i>
+	</button>
+
+	<div style="margin: 0;width: 100%;height: 100%;overflow: hidden;" id="canvas-wrapper"></div>
 </body>
 
 </html>

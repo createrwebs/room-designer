@@ -1,0 +1,146 @@
+[
+    {
+        "label": "Material de test",
+        "name": "material-de-test",
+        "id": 1281,
+        "textures": {
+            "vert": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/pcb_top_.png",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.005,
+                    "repeatY": 0.005,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            },
+            "hori": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/pcb_bottom_.png",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.005,
+                    "repeatY": 0.005,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            },
+            "cuir": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/167159.jpeg",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.005,
+                    "repeatY": 0.005,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            },
+            "fond": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/07/167159-1.jpeg",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.005,
+                    "repeatY": 0.005,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            }
+        }
+    },
+    {
+        "label": "Chêne Halifax blanc",
+        "name": "chene-halifax-blanc",
+        "id": 517,
+        "textures": {
+            "hori": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/hori-17.jpg",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.005,
+                    "repeatY": 0.005,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            },
+            "vert": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/vert-4.jpg",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.005,
+                    "repeatY": 0.005
+                }
+            },
+            "fond": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/fond-3.jpg",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.03,
+                    "repeatY": 0.03,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            },
+            "cuir": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/05/cuir.jpg",
+                "material_args": {
+                    "roughness": 0.45,
+                    "emissive": "#0D0D0D",
+                    "bumpScale": 2,
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.03,
+                    "repeatY": 0.03,
+                    "offsetX": 0.5,
+                    "offsetY": 0.5
+                }
+            },
+            "metal": {
+                "url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/06/miroir.jpg",
+                "material_args": {
+                    "specular": "#ffffff",
+                    "emissive": "#0D0D0D",
+                    "fog": false
+                },
+                "texture_args": {
+                    "repeatX": 0.0001,
+                    "repeatY": 0.0001
+                }
+            }
+        }
+    }
+]

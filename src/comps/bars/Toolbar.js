@@ -24,7 +24,7 @@ const Panels = {
 }
 
 class Toolbar extends Component {
-    constructor(props) {
+    constructor (props) {
         super(props);
         this.state = { currentPanel: null };
     }
@@ -101,7 +101,7 @@ class Toolbar extends Component {
                         <Button
                             action={() => window.scene_bridge(BridgeEvent.SET_SCENE_MATERIAL, material1)}
                             icon="fa fa-palette" text="Choisir une texture" />
-                        <Button action={() => { this.disconnect() }} icon="fa fa-paint-brush" text="Peindre" />
+                        <Button action={() => window.scene_bridge(BridgeEvent.BRUSH_MODE, 1)} icon="fa fa-paint-brush" text="Peindre" />
                         <Button action={() => { this.disconnect() }} icon="fa fa-ruler-combined" text="Règles" />
                         <Button action={() => window.scene_bridge(BridgeEvent.REMOVE_MEUBLE, true)} icon="fa fa-trash" text="Corbeille" />
                     </div>

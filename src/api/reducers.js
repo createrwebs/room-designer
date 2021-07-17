@@ -2,7 +2,6 @@ import {
     CameraEvent,
     MeubleEvent,
     SceneEvent,
-    Tools,
     LoadingEvent
 }
     from './actions'
@@ -16,20 +15,20 @@ function insertItem(array, item) {
 function removeItem(array, item) {
     return [...array].filter(i => item !== i)
 }
+import defaultdressing from '../../assets/dressings/defaultdressing.json';
 
 const initialState = {
-    config: null,
+    configLoaded: false,
     scenes: [],
     light: true,
     dragged: null,
-    currentScene: null,
+    currentScene: defaultdressing,
     allAssetsLoaded: false,
     camera: {
         fov: 70,
         zoom: 1.0,
         focus: 10
     },
-    tool: Tools.ARROW,
     loadingItems: []
 }
 export const reducer = (state = initialState, action) => {
@@ -45,6 +44,10 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state, loadingItems: removeItem(state.loadingItems, action.url)
             }
+        case LoadingEvent.QUEUE_FINISHED:
+            return {
+                ...state
+            }
         case LoadingEvent.ERROR:
             return {
                 ...state, loadingItems: removeItem(state.loadingItems, action.url)
@@ -52,13 +55,9 @@ export const reducer = (state = initialState, action) => {
 
         /* setters */
 
-        case SceneEvent.SETLIGHT:
-            return {
-                ...state, light: !state.light
-            }
         case SceneEvent.SETCONFIG:
             return {
-                ...state, config: action.config
+                ...state, configLoaded: true
             }
         case SceneEvent.SETCATALOGUE:
             return {
@@ -69,7 +68,11 @@ export const reducer = (state = initialState, action) => {
                 ...state, scenes: action.scenes
             }
 
-        /* scenes */
+        /* scenes 
+        
+        - new dressing comes from wp without ID
+        - loaded dressing comes from wp with ID        
+        */
 
         case SceneEvent.NEWSCENE:
         case SceneEvent.LOADSCENE:
@@ -95,13 +98,6 @@ export const reducer = (state = initialState, action) => {
         case MeubleEvent.DRAG:
             return {
                 ...state, dragged: action.meuble
-            };
-
-        /* tools */
-
-        case SceneEvent.CHANGE_TOOL:
-            return {
-                ...state, tool: action.tool
             };
 
         default:

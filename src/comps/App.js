@@ -39,8 +39,8 @@ import Loading from './Loading';
 import Dragging from './Dragging';
 import { getGui } from './DataGui';
 
-import Toolbar from './bars/Toolbar';
-// import Toolbar from './bars/ToolbarProduction';// test main.bundle.js size
+// import Toolbar from './bars/Toolbar';
+import Toolbar from './bars/ToolbarProduction';// test main.bundle.js size
 
 class App extends Component {
 	constructor (props) {
@@ -67,7 +67,7 @@ class App extends Component {
 
 
 		/* load_objects_of_type
-				fetch('https://preprod.kinoki.fr/minet3d/wp-admin/admin-ajax.php', {
+				fetch('https://kinotools.kinoki.fr/minet3d/wp-admin/admin-ajax.php', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
 					body: new URLSearchParams({
@@ -88,12 +88,17 @@ class App extends Component {
 
 		let gui
 		if (localhost) {
-			fetch('https://preprod.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
+
+			fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
 				method: 'GET',
 			})
 				.then(response => response.json())
 				.then(catalogue => {
 					this.props.setCatalogue(catalogue)
+					/* 
+										catalogue.forEach(element => {
+											console.log(element.sku)
+										}); */
 
 					// this.props.setCatalogue(catalogue)
 					this.props.setConfig(config)// creation scene
@@ -101,51 +106,62 @@ class App extends Component {
 					// this.props.generateAllPix()
 					// this.props.loadAllSku();
 
-					this.props.newScene(defaultdressing);
-					// clickMeubleLine("NYC231H238PP")
-					// clickMeubleLine("NYC155H219P0")
-					// clickMeubleLine("NYC155H219PG")
-					// clickMeubleLine("NYH219P40FD")
-					// clickMeubleLine("NYH219P62FD")
-					// clickMeubleLine("NYH238P62FD")
-					// clickMeubleLine("NYH238P62L040")
-					// clickMeubleLine("NYH238P62L096")
+					if (typeof composition !== 'undefined') {
+						this.props.loadScene(composition)
+					} else {
+						this.props.newScene(defaultdressing);
+						// clickMeubleLine("NYC155H219P0")
+						// clickMeubleLine("NYC155H219PG")
+						// clickMeubleLine("NYH219P40FD")
+						// clickMeubleLine("NYH219P62FD")
+						// clickMeubleLine("NYH238P62FD")
+						// clickMeubleLine("NYH238P62L040")
 
-					// clickMeubleLine("NYH238P62L119")//ID 248
-					// clickMeubleLine("NYH238P62L096")
-					// clickMeubleLine("NYH219P40L096")
-					clickMeubleLine("NYCOIFH238SF")
-					// clickMeubleLine("NYC231H238PP")
-					/* 	.then(e => {
-					console.log("meuble loaded", e);
-					}) */
-					this.props.changeTool(Tools.HAMMER)
-					// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
+						clickMeubleLine("NYH238P62L119")//ID 248 autoput items
+						clickMeubleLine("NYH238P62L096")// autoput items
+						clickMeubleLine("NYH219P40L096")// autoput items
+						clickMeubleLine("NYC231H238PP")// autoput items
+						clickMeubleLine("NYANGH219W")// has laquable
+						clickMeubleLine("NYCOIFH238SF")
+						/* 	.then(e => {
+							console.log("meuble loaded", e);
+						}) */
+						// this.props.changeTool(Tools.HAMMER)
+
+						// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
+					}
 					gui = getGui()
 				})
 		}
 		else {
 			getJson("config")
-				.then(c => this.props.setConfig(c))// creation scene
+				.then(c => {
+					this.props.setConfig(c)
+
+					fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
+						method: 'GET',
+					})
+						.then(response => response.json())
+						.then(catalogue => {
+							this.props.setCatalogue(catalogue)
+							/* 
+							gui = getGui()
+							gui.hide() */
+							if (typeof composition !== 'undefined') {
+								this.props.loadScene(composition)
+							} else {
+								this.props.newScene(defaultdressing);
+							}
+
+						})
+						.catch(e => {
+							console.log("load catalogue error", e);
+						})
+				})
 				.catch(e => {
 					console.log("load config error", e);
 				})
 
-			fetch('https://preprod.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
-				method: 'GET',
-			})
-				.then(response => response.json())
-				.then(catalogue => {
-					this.props.setCatalogue(catalogue)
-					this.props.newScene(defaultdressing);
-					// this.props.loadScene(dressing1)
-
-					gui = getGui()
-					gui.hide()
-				})
-				.catch(e => {
-					console.log("load catalogue error", e);
-				})
 		}
 
 	}
@@ -189,7 +205,7 @@ class App extends Component {
 }
 const mapStateToProps = (state) => {
 	return {
-		configLoaded: state.config != null,
+		configLoaded: state.configLoaded,
 		allAssetsLoaded: state.allAssetsLoaded,
 	}
 }

@@ -1,7 +1,6 @@
 import {
     BridgeEvent,
     Tools,
-    setConfig,
     newScene,
     loadScene,
     takePicture,
@@ -42,7 +41,7 @@ export default function (event, param1, param2) {
             takePicture()
             break;
         case BridgeEvent.GENERATE_ALL_PIX:
-            store.dispatch(generateAllPix())
+            generateAllPix()
             break;
         case BridgeEvent.ADD_MEUBLE_TO_SCENE:
             clickMeubleLine(param1, param2)
@@ -57,18 +56,21 @@ export default function (event, param1, param2) {
             setSceneMaterial(param1)
             break;
         case BridgeEvent.LOAD_ALL_SKU:
-            store.dispatch(generateAllPix(param1))
+            generateAllPix(param1)
         case BridgeEvent.SELECT_MEUBLE:
-            store.dispatch(changeTool(Tools.ARROW))
+            changeTool(Tools.ARROW)
             break;
         case BridgeEvent.EDIT_MEUBLE:
-            store.dispatch(changeTool(Tools.HAMMER))
+            changeTool(Tools.HAMMER)
             break;
         case BridgeEvent.REMOVE_MEUBLE:
-            store.dispatch(changeTool(param1 ? Tools.TRASH : null))
+            changeTool(param1 ? Tools.TRASH : null)
+            break;
+        case BridgeEvent.BRUSH_MODE:
+            changeTool(Tools.BRUSH, param1)
             break;
         case BridgeEvent.ANIM_SELECTED_MEUBLE:
-            store.dispatch(animeSelectedMeuble())
+            animeSelectedMeuble()
             break;
         default:
             console.log("no case found for event ", event)
