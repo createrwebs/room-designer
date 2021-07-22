@@ -1,18 +1,12 @@
 import {
-    loadManagerStart,
-    select,
     Tools
 }
     from '../api/actions'
-import store from '../api/store';
 import {
     Scene,
     Color,
-    Fog,
-    Object3d,
     Raycaster,
     Vector2,
-    Box3,
     WebGLRenderer,
     BasicShadowMap,
     PCFShadowMap,
@@ -27,7 +21,6 @@ import {
     GridHelper,
     DoubleSide,
 } from "three";
-import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { localhost } from '../api/Config';
 
@@ -44,7 +37,6 @@ import Draggable from './Draggable'
 import Angle from './Angle'
 import { setupLights } from './helpers/Lights'
 import { create as createSolGrid } from './helpers/Sol';
-import { getFileNameFromUrl } from '../api/Utils';
 
 const wallHeight = 2380;
 
@@ -53,6 +45,7 @@ export default {
     laque: null,
     laqueId: null,
     selection: null,
+    currentDressing: null,
 
     /*  clickOnScene(event) {// do not work
          // console.log("clickOnScene", event)
@@ -156,10 +149,16 @@ export default {
         /* controls */
 
         this.orbitControls = orbitControls = new OrbitControls(camera, renderer.domElement);
+        /* controls.mouseButtons = {
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.PAN
+        } */
         // orbitControls.addEventListener('start', this.render.bind(this)); // use if there is no animation loop
         orbitControls.addEventListener('change', this.render.bind(this)); // use if there is no animation loop
-        orbitControls.minDistance = 200;//20cm
-        orbitControls.maxDistance = 10000;//10m
+        orbitControls.minDistance = 20;//2cm//How far you can dolly in
+        orbitControls.maxDistance = 10000;//10m//How far you can dolly out
+        orbitControls.enableZoom = true
         orbitControls.target.set(2000, 1000, 2000);
         orbitControls.update();
 
@@ -196,7 +195,7 @@ export default {
         /* walls */
         this.setupWalls(config)
         this.resize()
-        console.log("MainScene setup", this)
+        // console.log("MainScene setup", this)
 
         /* material */
         this.materialId = null
@@ -312,10 +311,6 @@ export default {
             scene.remove(spotLight2);
         }
     },
-    allLoaded() {
-        this.frame_stats.begin();
-        this.render();
-    },
     clear() {
         if (this.scene) this.scene.clear();
         this.meubles = [];
@@ -326,8 +321,11 @@ export default {
         this.clear();
         this.setupLights();
         this.setupWalls(config, wallVisible)
-        if (config && config.materialId) {
-            this.materialId = config.materialId
+        if (config) {
+            if (config.materialId) {
+                this.materialId = config.materialId
+            }
+            this.currentDressing = config
         }
     },
     resize() {
@@ -342,7 +340,7 @@ export default {
     },
     render() {
         if (this.interactionManager) this.interactionManager.update();
-        // this.frame_stats.update();
+        this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
     },
     add(meuble) {
@@ -359,6 +357,14 @@ export default {
     },
     enableMeubleDragging(enabled) {
         this.meubles.forEach(m => enabled ? m.dragControls.activate() : m.dragControls.deactivate())
+    },
+    enableItemsDragging(enabled) {
+        console.log("enableItemsDragging", enabled)
+        this.meubles.forEach(m => {
+            m.items.forEach(i => {
+                enabled ? i.dragControls.activate() : i.dragControls.deactivate()
+            })
+        })
     },
     enableMeubleClicking(enabled) {
         console.log("enableMeubleClicking", enabled)

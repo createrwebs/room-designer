@@ -6,14 +6,18 @@ import {
 import store from '../api/store';
 import { LineBasicMaterial, Vector3, LineSegments, BufferGeometry } from "three";
 import MainScene from './MainScene';
-import Meuble from './Meuble'
 import Fbx from './Fbx'
-
+import {
+    load as loadMaterial,
+    apply as applyMaterial,
+    getMaterialById,
+} from './Material'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+import { parseSKU } from './Utils'
 
 class Space {
     static onWall = []// right,back,left
-    constructor (min, max, prev, next) {
+    constructor(min, max, prev, next) {
         this.min = min;
         this.max = max;
         this.prev = prev;
@@ -34,7 +38,6 @@ class Space {
 export default class Item extends Fbx {
 
     static switchWallThreshold = 250// mm de drag après un angle pour changer de mur
-    static meubleMagnet = 100// magnetisme du meuble (mm)
     static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
 
     static Dragged// current target dragged
@@ -57,11 +60,13 @@ export default class Item extends Fbx {
                     break;
             }
         }   */
-    constructor (props, object, state, parent) {
+    constructor(props, object, state, parent) {
         super(props, object)
 
         this.parent = parent;// parent meuble
-        this.place = "gauche"
+        this.place = "left"
+        this.skuInfo = parseSKU(this.props.sku)
+        // console.log('sku info', this.skuInfo)
 
         const trous = this.parent.props.plandepercage
         if (!trous || (trous && trous[this.place] && trous[this.place].length === 0)) {
@@ -74,6 +79,19 @@ export default class Item extends Fbx {
             dragControls.addEventListener('dragstart', this.dragStart.bind(this))
             dragControls.addEventListener('dragend', this.dragEnd.bind(this))
             this.dragControls = dragControls;
+        }
+
+        /* textures */
+
+        if (MainScene.materialId) {
+            const material = getMaterialById(MainScene.materialId)
+            if (material) {
+                loadMaterial(material.textures).then(m => {
+                    console.log(`material loaded`, m)
+                    applyMaterial(m, this)
+                    MainScene.render()
+                })
+            }
         }
     }
 
@@ -109,7 +127,8 @@ export default class Item extends Fbx {
         event.object.position.z = 0;
 
         const position = event.object.position.y
-        const places = this.parent.props.plandepercage[this.place];
+        // const places = this.parent.props.plandepercage[this.place];
+        const places = this.parent.places[this.place];
         let closest = this.getClosest(position, places)
 
         // from & to ne remplacent pas l'emcombrement !!

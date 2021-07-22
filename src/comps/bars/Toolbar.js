@@ -24,7 +24,7 @@ const Panels = {
 }
 
 class Toolbar extends Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = { currentPanel: null };
     }
@@ -88,7 +88,7 @@ class Toolbar extends Component {
                     <Button action={() => { saveSceneToFile() }} icon="fa fa-download" text="Télecharger la composition" />
                 </div>
 
-                {this.props.hasCurrentScene &&
+                {this.props.hasCurrentDressing &&
                     <div style={{ paddingRight: '4px' }}>
                         <Button
                             status={this.state.currentPanel === Panels.SCENECONFIG ? "active" : ""}
@@ -117,7 +117,7 @@ class Toolbar extends Component {
                     <Button status="npr" action={() => { }} icon="fa fa-sliders-h" text="Mes réglages" />
                     <Button status="npl" action={() => { }} icon="fa fa-ellipsis-v" />
                 </div>
-                {/* {this.props.hasCurrentScene
+                {/* {this.props.hasCurrentDressing
                     && this.state.currentPanel === Panels.SCENECONFIG
                     &&
                     <div className="fab-toolpanels fab-floatingbar">
@@ -130,7 +130,8 @@ class Toolbar extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        hasCurrentScene: state.currentScene != null,
+        // hasCurrentDressing: state.currentScene != null,
+        hasCurrentDressing: MainScene.currentDressing != null,
     }
 }
 const mapDispatchToProps = {

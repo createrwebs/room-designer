@@ -1,12 +1,12 @@
 import store from './store';
 import { loadOne as loadOneMaterial, load as loadMaterial, apply as applyMaterial, getMaterialById, getLaqueById } from '../3d/Material'
 import MainScene from '../3d/MainScene';
-import Draggable from '../3d/Draggable'
 import { Room } from '../3d/Drag'
-import { getCurrentScene } from '../3d/Dressing';
-import { cameraTo, tweenTo } from '../3d/Animate';
-import { takePix } from '../3d/Capture';
+import { getCurrentDressing } from '../3d/Dressing';
+import { cameraTo } from '../3d/Animate';
+import { takePix } from '../3d/helpers/Capture';
 import { loadFbx } from '../3d/Loader'
+import { parseSKU } from '../3d/Utils'
 
 export const KinoEvent = {
     SELECT_MEUBLE: 'select_meuble',
@@ -46,7 +46,6 @@ export const CameraEvent = {
     SET: 'set',
 }
 export const MeubleEvent = {
-    ALLLOADED: 'allLoaded',
     ADD: 'add',
     REMOVE: 'remove',
     SELECT: 'select',
@@ -100,27 +99,14 @@ export const loadManagerError = (url) => {
 }
 
 
-export const setCamera = (prop) => {
-    return {
-        type: CameraEvent.SET, prop
-    }
-}
 export const setConfig = (config) => {
     MainScene.setup(config)
-    return {
-        type: SceneEvent.SETCONFIG
-    }
 }
 export const resizeScene = () => {
     MainScene.resize()
-    /*     return {
-            type: SceneEvent.RESIZE
-        } */
 }
 export const setCatalogue = (catalogue) => {
-    return {
-        type: SceneEvent.SETCATALOGUE, catalogue
-    }
+    MainScene.catalogue = catalogue
 }
 export const setScenes = (scenes) => {
     localScenes = localStorage && localStorage.getItem('scenes');
@@ -129,41 +115,28 @@ export const setScenes = (scenes) => {
         type: SceneEvent.SETSCENES, scenes
     }
 }
-export const newScene = (dressing) => {
-    if (!dressing) {
-        console.error("New scene failed : no config object passed")
-        return
-    }
-    MainScene.update(dressing)
-    MainScene.render()
-    return {
-        type: SceneEvent.NEWSCENE, dressing
-    }
-}
+
 export const saveSceneToLocalStorage = () => {
-    const currentScene = store.getState().currentScene
-    if (currentScene) {
+    if (MainScene.currentDressing) {
         const scenes = []
         const localScenes = localStorage && localStorage.getItem('scenes');
         if (localScenes) scenes.push(...JSON.parse(localScenes))
 
-        const item = scenes.find(s => s.name === currentScene.name)
+        const item = scenes.find(s => s.name === MainScene.currentDressing.name)
         const idx = scenes.indexOf(item)
         if (idx >= 0)
-            scenes[idx] = currentScene
+            scenes[idx] = MainScene.currentDressing
 
         localStorage.setItem('scenes', JSON.stringify(scenes));
     }
 }
 export const saveSceneToFile = () => {
-    const currentScene = store.getState().currentScene
-    if (currentScene) {
-        // const uriContent = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(state.currentScene));
-        const uriContent = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(getCurrentScene(store.getState())));
+    if (MainScene.currentDressing) {
+        const uriContent = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(getCurrentDressing()));
 
         var pom = document.createElement('a');
         pom.setAttribute('href', uriContent);
-        pom.setAttribute('download', `${state.currentScene.name}.minet`);
+        pom.setAttribute('download', `${MainScene.currentDressing.name}.minet`);
         if (document.createEvent) {
             var event = document.createEvent('MouseEvents');
             event.initEvent('click', true, true);
@@ -172,47 +145,65 @@ export const saveSceneToFile = () => {
         else {
             pom.click();
         }
+    } else {
+        console.warn(`No dressing on scene to save`)
     }
 }
 
+/* scenes 
+ 
+- new dressing comes from wp without ID
+- loaded dressing comes from wp with ID        
+*/
+
+export const newScene = (dressing) => {
+    if (!dressing) {
+        console.error("New scene failed : no config object passed")
+        return
+    }
+    MainScene.update(dressing)
+    MainScene.render()
+}
 export const loadScene = (dressing) => {
+    if (!dressing) {
+        console.error("load scene failed : no config object passed")
+        return
+    }
     console.log("loadScene ", dressing)
     MainScene.update(dressing)
 
     /*
-        1/ load scene material
-        2/ load fbx
+    1/ load scene material
+    2/ load fbx
     */
 
     const material = getMaterialById(MainScene.materialId)
     if (material) {
         loadMaterial(material.textures).then(mtl => {
-            createScene(dressing)
+            loadMeubles(dressing)
         })
     }
     else {
-        createScene(dressing)
-    }
-
-    // material put at meuble construction
-
-    //TODO ....renvoyer action juste pour current dressing !!???
-    return {
-        type: SceneEvent.LOADSCENE, dressing
+        loadMeubles(dressing)
     }
 }
 
-const createScene = (dressing) => {
+const loadMeubles = (dressing) => {
     dressing.meubles.forEach(state => {
 
-        const props = store.getState().catalogue.find(f => f.sku === state.sku)
+        const props = MainScene.catalogue.find(f => f.sku === state.sku)
         if (!props) {
-            console.log("no meuble found for sku ", state.sku)
+            console.error(`no meuble found for sku  ${state.sku}`)
+            return null
+        }
+        const skuInfo = parseSKU(state.sku)
+        if (skuInfo.type !== "module") {
+            console.error(`${state.sku} is not a module`)
             return null
         }
 
-        //meuble props are catalogue props + dressing props
-        props.position = state.position;
+        //meuble props are catalogue props + dressing props : no! => dressing props = state 
+        // props.position = state.position;
 
         loadFbx(props.fbx.url, object => {
             if (state.position) {
@@ -233,9 +224,9 @@ export const setSceneMaterial = (materialId) => {
         const material = getMaterialById(materialId)
         if (material) {
             MainScene.materialId = materialId
-            loadMaterial(material.textures).then(m => {
+            loadMaterial(material.textures).then(mtl => {
                 MainScene.meubles.forEach(meuble => {
-                    applyMaterial(m, meuble)
+                    meuble.applyMaterialOnMeuble(mtl)
                 })
                 MainScene.render()
             })
@@ -252,7 +243,6 @@ export const takePicture = () => {
 }
 export const generateAllPix = () => {
     // if meuble selected, take its center to put meubles for pix batching
-    const state = store.getState()
 
     var centerMeubleForPix = 2000
     if (MainScene.selection) {// please on back wall !!
@@ -265,14 +255,16 @@ export const generateAllPix = () => {
         zmax: 8000
     }, false)
 
-    state.catalogue.forEach(props => {
+    MainScene.catalogue.forEach(props => {
         if (props.sku && props.sku != "" && props.fbx.url && props.fbx.url != "") {
             loadFbx(props.fbx.url, object => {
-                props.position = {
-                    wall: "back",
-                    x: centerMeubleForPix - props.largeur / 2
+                const state = {
+                    position: {
+                        wall: "back",
+                        x: centerMeubleForPix - props.largeur / 2// TODO props.largeur => getWidth
+                    }
                 }
-                const meuble = MainScene.createMeuble(props, object)
+                const meuble = MainScene.createMeuble(props, object, state)
 
                 //test textures
                 /* var textu = {
@@ -312,7 +304,7 @@ export const generateAllPix = () => {
             })
         }
         else {
-            console.warn(`Reference problem found in catalogue :`, props)
+            console.error(`Reference problem found in catalogue :`, props)
         }
     })
 }
@@ -327,6 +319,7 @@ export const changeTool = (tool, arg) => {
             MainScene.enableMeubleDragging(true)
             MainScene.enableMeubleClicking(false)
             MainScene.enableMeublePainting(false)
+            MainScene.enableItemsDragging(false)
             break;
         case Tools.BRUSH:
             const laqueId = arg
@@ -339,6 +332,7 @@ export const changeTool = (tool, arg) => {
                         MainScene.enableMeubleDragging(false)
                         MainScene.enableMeubleClicking(false)
                         MainScene.enableMeublePainting(true)
+                        MainScene.enableItemsDragging(false)
                     });
                 }
                 else {
@@ -355,20 +349,12 @@ export const changeTool = (tool, arg) => {
             MainScene.enableMeubleDragging(false)
             MainScene.enableMeubleClicking(true)
             MainScene.enableMeublePainting(false)
+            MainScene.enableItemsDragging(true)
             break;
     }
     MainScene.tool = tool;
-    /*     return {
-            type: SceneEvent.CHANGE_TOOL, tool
-        } */
 }
 
-export const allLoaded = () => {
-    MainScene.allLoaded();
-    return {
-        type: MeubleEvent.ALLLOADED
-    }
-}
 export const drag = (meuble) => {
     return {
         type: MeubleEvent.DRAG, meuble
@@ -459,17 +445,22 @@ export const drop = (meuble) => {
  */
 export const clickMeubleLine = (sku) => {
 
-    const state = store.getState()
-    if (!state.currentScene) {
-        console.warn("No scene : please add a scene before meuble")
+    if (!MainScene.currentDressing) {
+        console.error("No scene : please add a scene before meuble")
+        return null
     }
 
-    const props = state.catalogue.find(f => f.sku === sku)
+    const props = MainScene.catalogue.find(f => f.sku === sku)
     if (!props) {
-        console.warn(`No meuble found for sku ${sku}`)
+        console.error(`No meuble found for sku ${sku}`)
+        return null
     }
-
+    const skuInfo = parseSKU(sku)
     if (MainScene.selection) {
+        if (skuInfo.type == "module") {
+            console.error(`${sku} is a module`)
+            return null
+        }
 
         if (MainScene.selection.props.accessoirescompatibles.indexOf(sku) === -1) {
             console.warn(`${sku} non compatible avec ${MainScene.selection.props.sku} sélectionné`)
@@ -478,30 +469,36 @@ export const clickMeubleLine = (sku) => {
             MainScene.selection.addItem(props);
         }
     } else {
+        if (skuInfo.type !== "module") {
+            console.error(`${sku} is not a module`)
+            return null
+        }
         loadFbx(props.fbx.url, object => {
 
             // find front wall, best location for new Meuble
-            // let wall = Object.keys(state.currentScene.walls)[0] || "right"
+            // let wall = Object.keys(MainScene.currentDressing.walls)[0] || "right"
             let wall = "right"
             const intersects = MainScene.getRaycasterIntersect()
             const intersect = intersects.find(i => i.object.name.includes("wall-"))
             if (intersect) wall = intersect.object.name.substring("wall-".length)
-            console.log("front wall found", wall)
+            console.log(`facing to wall ${wall}`)
 
-            props.position = {
-                wall,
-                x: 0
+            const state = {
+                position: {
+                    wall,
+                    x: 1000
+                }
             }
-            const selection = MainScene.createMeuble(props, object)
+            const selection = MainScene.createMeuble(props, object, state)
 
 
             // place on front wall ? ..Draggable routines ! //TODO
             // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
             const axis = Room.getAxisForWall(wall);
-            Room.setWallsLength(state.currentScene, state.config)
+            Room.setWallsLength(MainScene.currentDressing, MainScene.config)
             const x = Room.getSpaceOnWall(selection, MainScene.meubles)
             if (x === false) {
-                console.log(`no space for ${selection.ID} on wall ${wall}`)
+                console.warn(`no space for ${selection.ID} on wall ${wall}`)
             }
             else {
                 selection.object.position[axis] = x

@@ -14,7 +14,7 @@ import { create as createCross } from './helpers/Cross';
 import { Space, Room } from './Drag';
 
 export default class Angle extends Draggable {
-    constructor (props, object, state) {
+    constructor(props, object, state) {
         super(props, object, state)
 
     }
@@ -29,7 +29,7 @@ export default class Angle extends Draggable {
 
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
-        Room.setWallsLength(store.getState().currentScene, MainScene.config)
+        Room.setWallsLength(MainScene.currentDressing, MainScene.config)
         Room.setupWallConstraints(this)
 
         // Angle.Nowtime = Date.now();

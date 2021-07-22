@@ -1,4 +1,4 @@
-import MainScene from '../3d/MainScene';
+import MainScene from '../MainScene';
 
 const saveFile = function (strData, filename) {
     var link = document.createElement('a');

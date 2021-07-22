@@ -5,11 +5,7 @@ import {
     loadScene,
     takePicture,
     downloadScene,
-    setScenes,
-    loadAllSku,
-    setCatalogue,
     clickMeubleLine,
-    select,
     dragMeubleOverScene,
     dropMeubleOnScene,
     animeSelectedMeuble,
@@ -20,19 +16,19 @@ import {
     from './actions'
 import store from './store';// localhost tests
 
-import { getCurrentScene } from '../3d/Dressing';
+import { getCurrentDressing } from '../3d/Dressing';
 
 export default function (event, param1, param2) {
     console.log("scene_bridge :", event, param1, param2)
     switch (event) {
         case BridgeEvent.NEW_DRESSING:
-            store.dispatch(newScene(param1, param2))
+            newScene(param1, param2)
             break;
         case BridgeEvent.SAVE_DRESSING:
-            return getCurrentScene()
+            return getCurrentDressing()
             break;
         case BridgeEvent.LOAD_DRESSING:
-            store.dispatch(loadScene(param1, param2))
+            loadScene(param1, param2)
             break;
         case BridgeEvent.DOWNLOAD_DRESSING:
             downloadScene(param1, param2)

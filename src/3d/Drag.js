@@ -1,4 +1,5 @@
-import { getSegment } from './Utils'
+import Meuble from './Meuble';
+import { getSegment, Measures } from './Utils'
 
 /* dragging help routines & objects */
 
@@ -14,7 +15,7 @@ export class Space {
             Math.min(segment.max - s2.min, s2.max - segment.min) - Math.min(segment.max - s1.min, s1.max - segment.min))
         return Space.onWall[wall][0]
     }
-    constructor (min, max, prev, next) {
+    constructor(min, max, prev, next) {
         this.min = min;
         this.max = max;
         this.prev = prev;// Draggable object (Meuble...) located at the minimum of the segment
@@ -40,12 +41,14 @@ export const Room = {
     back: {},
     axis: "x",
     MeublesOnWall: [],
+    meubleMagnet: 50,// magnetisme du meuble (mm)
 
     // set walls length
     setWallsLength(scene, config) {
-        console.log(`setWallsLength`, scene, config)
+        // console.log(`setWallsLength`, scene, config)
         Room.xmax = scene ? scene.xmax : config && config.defaultdressing ? config.defaultdressing.xmax : Room.xmax;
         Room.zmax = scene ? scene.zmax : config && config.defaultdressing ? config.defaultdressing.zmax : Room.zmax;
+        // console.log(`Room`, Room.xmax, Room.zmax)
     },
 
     /*
@@ -108,6 +111,11 @@ export const Room = {
         ["right", "back", "left", "front"].forEach(w => {// right,back,left if exists
             Room.getSpacesOnWall(w, Room.getAxisForWall(w), meuble)
         });
+
+        //log
+        window.mow = Room.MeublesOnWall
+        window.Space = Space
+
     },
 
     /* get spaces on a wall for meuble */
@@ -122,15 +130,16 @@ export const Room = {
             if (segment.min - lastPos >= meuble.width) {
                 Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
             }
+            // console.warn(segment, segment.max - segment.min)
             lastMeuble = m;
-            lastPos = m.position;
+            lastPos = segment.max;//m.position;
         })
         if (wallLength - (segment ? segment.max : 0) >= meuble.width) {
             Space.onWall[wall].push(new Space((segment ? segment.max : 0), wallLength, lastMeuble, null))
         }
         // console.log(`Spaces.onWall ${wall}`, Space.onWall[wall]);
         if (Space.onWall[wall].length == 0) {
-            console.log(`no space on wall ${wall}`)
+            console.warn(`no space on wall ${wall}`)
             return false;
         }
         else return true
@@ -142,7 +151,6 @@ export const Room = {
         ["right", "back", "left", "front"].forEach(w => {// right,back,left if exists
             Room.MeublesOnWall[w] = Room.getMeublesOnWall(meublesOnScene, w, Room.getAxisForWall(w))
         });
-        window.zaa = Room.MeublesOnWall
     },
 
     /* get all other meubles on a wall */
@@ -157,25 +165,39 @@ export const Room = {
         const axis = Room.axis
         const segment = getSegment(meuble.object, axis)
 
-        if (Space.onWall[meuble.wall] && Space.onWall[meuble.wall].length == 0)//TODO
-            return meuble.position
+        if (Space.onWall[meuble.wall] && Space.onWall[meuble.wall].length == 0) {
+            console.warn(`no space on wall ${meuble.wall}`)
+            return meuble.position//TODO
+        }
 
         const toRight = Room.toRightDirection(meuble.wall);
-
         const closestSpace = Space.getClosest(meuble.wall, segment);
+
+        let stickTo = null;
+        Meuble.detach(meuble)
         if (closestSpace.include(segment)) {
-            if (closestSpace.max - segment.max <= Room.meubleMagnet) {
-                return closestSpace.max + (toRight ? -meuble.width : 0)
-            } else if (segment.min - closestSpace.min <= Room.meubleMagnet) {
-                return closestSpace.min + (!toRight ? meuble.width : 0)
-            } else return meuble.position
-        } else if (closestSpace.min >= segment.min) {
-            return closestSpace.min + (!toRight ? meuble.width : 0)
-        } else if (closestSpace.max <= segment.max) {
-            return closestSpace.max - (toRight ? meuble.width : 0)
+            if (closestSpace.max - segment.max <= Room.meubleMagnet) {// stick to right
+                stickTo = "right"
+            } else if (segment.min - closestSpace.min <= Room.meubleMagnet) {// stick to left
+                stickTo = "left"
+            } else {
+            }
+        } else if (closestSpace.max <= segment.max) {// stick to right
+            stickTo = "right"
+        } else if (closestSpace.min >= segment.min) {// stick to left
+            stickTo = "left"
         } else {
-            console.log("wtf", closestSpace, segment)
-            return meuble.position
+            console.error("collisionSolver fails", closestSpace, segment)
+        }
+        switch (stickTo) {
+            case "left":
+                Meuble.attach(closestSpace.prev, meuble)
+                return closestSpace.min + (!toRight ? meuble.width : 0) - (closestSpace.prev ? Measures.thick : 0)
+            case "right":
+                Meuble.attach(meuble, closestSpace.next)
+                return closestSpace.max + (toRight ? -meuble.width : 0) + (closestSpace.next ? Measures.thick : 0)
+            default:
+                return meuble.position
         }
     },
 

@@ -1,7 +1,7 @@
 import { Vector3, Box3 } from "three";
 
 export default class Fbx {
-    constructor (props, object) {
+    constructor(props, object) {
         // console.log('Fbx', props, object)
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
@@ -10,21 +10,19 @@ export default class Fbx {
         const d = 3000// distance de recul pour observer le meuble selectionné
         const center = this.getCenterPoint()
         switch (this.wall) {
+            case "front":
+                return center.add(new Vector3(d, 0, 0))
             case "right":
                 return center.add(new Vector3(0, 0, d))
-                break;
             case "back":
                 return center.add(new Vector3(d, 0, 0))
-                break;
             case "left":
                 return center.add(new Vector3(0, 0, -d))
-                break;
+
             case "right-back":
                 return center.add(new Vector3(d, 0, d))
-                break;
             case "left-back":
                 return center.add(new Vector3(d, 0, -d))
-                break;
             default:
         }
     }

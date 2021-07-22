@@ -1,30 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {
-	allLoaded
-}
-	from '../api/actions'
-
 import MainScene from '../3d/MainScene';
-import Draggable from '../3d/Draggable'
-
-// const localhost = window.location.hostname.indexOf('localhost') !== -1;
+import { localhost } from '../api/Config';
 
 class Room extends Component {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.threejsSceneRef = React.createRef();
-
-		this.state = {
-		};
 	}
 	componentDidMount() {
 		const node = this.threejsSceneRef.current;
 		node.appendChild(MainScene.getRendererNodeElement());
-		// if (localhost) node.appendChild(MainScene.getStatNodeElement());
-
-		// shortcut to display scene:
-		// this.props.allLoaded()
+		if (localhost) node.appendChild(MainScene.getStatNodeElement());
 	}
 	render() {
 		MainScene.orbitControls.update();
@@ -43,15 +29,4 @@ class Room extends Component {
 		)
 	}
 }
-const mapStateToProps = (state) => {
-
-	return {
-		zoom: state.camera.zoom,
-		focus: state.camera.focus,
-		light: state.light,
-	}
-}
-const mapDispatchToProps = {
-	allLoaded
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Room)
+export default Room

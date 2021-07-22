@@ -12,11 +12,11 @@ import Meuble from './Meuble'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { create as createCross } from './helpers/Cross';
 import { Space, Room } from './Drag';
+import { getSize } from './Utils'
 
 export default class Draggable extends Meuble {
 
     static switchWallThreshold = 250// mm de drag après un angle pour changer de mur
-    static meubleMagnet = 100// magnetisme du meuble (mm)
     // static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
 
     // from scene walls config or app current settings
@@ -32,7 +32,7 @@ export default class Draggable extends Meuble {
         return this.object.position[Room.getAxisForWall(this.wall)];
     }
 
-    constructor (props, object, state) {
+    constructor(props, object, state) {
         super(props, object, state)
 
         const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
@@ -76,7 +76,7 @@ export default class Draggable extends Meuble {
 
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
-        Room.setWallsLength(store.getState().currentScene, MainScene.config)
+        Room.setWallsLength(MainScene.currentDressing, MainScene.config)
         Room.setupWallConstraints(this)
 
         // Draggable.Nowtime = Date.now();
@@ -84,48 +84,15 @@ export default class Draggable extends Meuble {
         Room.populateMeublesOnWalls(MainScene.meubles)
         Room.populateSpacesOnWalls(this)
 
+        this.width = this.getWidth()
+
+        // action to reducer for display info :
         store.dispatch(drag(this))
-        // store.dispatch(select(this))// selection
+
+        const wall = "right"
+        console.log(`Spaces.onWall ${wall}`, Space.onWall[wall]);
 
         if (Draggable.Cross && !Draggable.Cross.parent) MainScene.scene.add(Draggable.Cross)
-    }
-    getWallChange(x, z, wall, thresh) {
-        switch (wall) {
-            case "front":
-                if (z < - thresh && Space.onWall["right"].length > 0) {
-                    return "right"
-                }
-                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
-                    return "left"
-                }
-                break;
-            case "back":
-                if (z < - thresh && Space.onWall["right"].length > 0) {
-                    return "right"
-                }
-                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
-                    return "left"
-                }
-                break;
-            case "right":
-                if (x < - thresh && Space.onWall["front"].length > 0) {
-                    return "front"
-                }
-                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
-                    return "back"
-                }
-                break;
-            case "left":
-                if (x < - thresh && Space.onWall["front"].length > 0) {
-                    return "front"
-                }
-                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
-                    return "back"
-                }
-                break;
-            default:
-        }
-        return null
     }
     dragging(event) {
         // drag start delay to let selection click
@@ -175,9 +142,10 @@ export default class Draggable extends Meuble {
         Room.axis = Room.getAxisForWall(this.wall);
         const axis = Room.axis
         event.object.position[axis] = 10 * (Math.round(event.object.position[axis] / 10))//grid magnet 1cm
-        event.object.position[axis] =
-            Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
+        event.object.position[axis] = Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
         event.object.position[axis] = Room.collisionSolver(this);
+
+        // console.log("Joins", Meuble.Joins)
 
         // console.log("drag", Room[this.wall])
         // console.log("drag", event, event.object.position.x)
@@ -195,5 +163,45 @@ export default class Draggable extends Meuble {
         if (Draggable.Cross && Draggable.Cross.parent) MainScene.scene.remove(Draggable.Cross)
 
         MainScene.meubles.forEach(m => m.dragControls.enabled = true)// reactivation of others
+    }
+
+
+    getWallChange(x, z, wall, thresh) {
+        switch (wall) {
+            case "front":
+                if (z < - thresh && Space.onWall["right"].length > 0) {
+                    return "right"
+                }
+                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
+                    return "left"
+                }
+                break;
+            case "back":
+                if (z < - thresh && Space.onWall["right"].length > 0) {
+                    return "right"
+                }
+                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
+                    return "left"
+                }
+                break;
+            case "right":
+                if (x < - thresh && Space.onWall["front"].length > 0) {
+                    return "front"
+                }
+                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
+                    return "back"
+                }
+                break;
+            case "left":
+                if (x < - thresh && Space.onWall["front"].length > 0) {
+                    return "front"
+                }
+                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
+                    return "back"
+                }
+                break;
+            default:
+        }
+        return null
     }
 }

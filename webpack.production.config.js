@@ -53,11 +53,11 @@ module.exports = {
             title: 'NY Minet',
             template: './src/index.html'
         }),
-        new BundleAnalyzerPlugin({
-            generateStatsFile: false,
-            analyzerMode: 'static',
-            openAnalyzer: true
-        })
+        /*         new BundleAnalyzerPlugin({
+                    generateStatsFile: false,
+                    analyzerMode: 'static',
+                    openAnalyzer: true
+                }) */
         /*         new CopyPlugin({
                     patterns: [
                         { from: "./assets", to: "./" },
