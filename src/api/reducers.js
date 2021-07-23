@@ -20,6 +20,7 @@ const initialState = {
     scenes: [],
     light: true,
     dragged: null,
+    raycast: "",
     loadingItems: []
 }
 export const reducer = (state = initialState, action) => {
@@ -57,7 +58,10 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state, dragged: action.meuble
             };
-
+        case SceneEvent.PRINTRAYCAST:
+            return {
+                ...state, raycast: action.raycast
+            };
         default:
             return state;
     }

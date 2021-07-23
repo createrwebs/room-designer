@@ -60,12 +60,11 @@ export default class Item extends Fbx {
                     break;
             }
         }   */
-    constructor(props, object, state, parent) {
-        super(props, object)
+    constructor(props, object, state, skuInfo, parent) {
+        super(props, object, skuInfo)
 
         this.parent = parent;// parent meuble
         this.place = "left"
-        this.skuInfo = parseSKU(this.props.sku)
         // console.log('sku info', this.skuInfo)
 
         const trous = this.parent.props.plandepercage

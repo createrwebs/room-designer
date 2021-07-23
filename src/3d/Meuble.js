@@ -27,9 +27,9 @@ import { create as createRuler } from './helpers/Ruler';
 import { localhost } from '../api/Config';
 
 export default class Meuble extends Fbx {
-    constructor(props, object, state) {
+    constructor(props, object, state, skuInfo) {
         // console.log('Meuble', props, object, state)
-        super(props, object)
+        super(props, object, skuInfo)
         this.uid = object.uuid.substring(0, 8)
 
         this.items = []
@@ -46,7 +46,6 @@ export default class Meuble extends Fbx {
                 this.largeur = props.largeur;
                 this.hauteur = props.hauteur; */
 
-        this.skuInfo = parseSKU(this.props.sku)
         // console.log('sku info', this.skuInfo)
 
         this.places = {}// clonage des plans de perçage
@@ -55,7 +54,7 @@ export default class Meuble extends Fbx {
         if (props.plandepercage.droite) this.places.right = props.plandepercage.droite.slice();
 
         this.wall = state.position.wall;
-        this.angle = props.angle;
+
         if (props.subGroups) {
             this.object.subGroups = props.subGroups;
         } else {
@@ -85,9 +84,9 @@ export default class Meuble extends Fbx {
             switch (this.props.sku) {
                 case "NYH219P62L040":
                     // scene_bridge("add_meuble_to_scene", "NYETAP62L040")
-                    this.addItemBySku("NYETAP62L040")
-                    this.addItemBySku("NYETTP62L040")
-                    this.addItemBySku("NYETLP62L040")
+                    // this.addItemBySku("NYETAP62L040")
+                    // this.addItemBySku("NYETTP62L040")
+                    // this.addItemBySku("NYETLP62L040")
                     break;
                 case "NYH238P62L119":
                     this.addItemBySku("NYRP1P62L119")
@@ -147,13 +146,15 @@ export default class Meuble extends Fbx {
 
         /* panneaux */
 
-        this.panneaux = []
-        const pL = MainScene.catalogue.find(f => f.sku === `NYH${this.skuInfo.H}P${this.skuInfo.P}FG`)
-        const pR = MainScene.catalogue.find(f => f.sku === `NYH${this.skuInfo.H}P${this.skuInfo.P}FD`)
-        const pS = MainScene.catalogue.find(f => f.sku === `NYH${this.skuInfo.H}P${this.skuInfo.P}SE`)
-        loadFbx(pL.fbx.url, this.panneauLoaded.bind(this, pL, "left"))
-        loadFbx(pR.fbx.url, this.panneauLoaded.bind(this, pR, "right"))
-        loadFbx(pS.fbx.url, this.panneauLoaded.bind(this, pS, "separateur"))
+        if (!this.skuInfo.hasSides) {
+            this.panneaux = []
+            const pL = MainScene.catalogue.find(f => f.sku === `NYH${this.skuInfo.H}P${this.skuInfo.PL}FG`)
+            const pR = MainScene.catalogue.find(f => f.sku === `NYH${this.skuInfo.H}P${this.skuInfo.PR}FD`)
+            const pS = MainScene.catalogue.find(f => f.sku === `NYH${this.skuInfo.H}P${this.skuInfo.P}SE`)
+            loadFbx(pL.fbx.url, this.panneauLoaded.bind(this, pL, "left"))
+            loadFbx(pR.fbx.url, this.panneauLoaded.bind(this, pR, "right"))
+            loadFbx(pS.fbx.url, this.panneauLoaded.bind(this, pS, "separateur"))
+        }
 
         /* ruler (modifies box size) */
 
@@ -163,8 +164,8 @@ export default class Meuble extends Fbx {
         // get dimensions after transforms
 
         this.width = this.getWidth()// store width for performance collision
-        // this.height = getSize(this.object, "y")
-        // this.depth = getSize(this.object, "z")
+        this.height = getSize(this.object, "y")
+        this.depth = getSize(this.object, "z")
 
 
         // this.segment = this.getSegment(object)// store width for performance collision
@@ -177,7 +178,7 @@ export default class Meuble extends Fbx {
         // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID}`, props.plandepercage, props.accessoirescompatibles, props, object, state, this);
 
         const front = this.getFrontPosition()
-        const center = this.getCenterPoint()
+        // const center = this.getCenterPoint()
         MainScene.camera.position.set(front.x, front.y, front.z)
         MainScene.orbitControls.target = this.getCenterPoint()
         MainScene.orbitControls.update();
@@ -193,8 +194,8 @@ export default class Meuble extends Fbx {
         this.items.forEach(item => {
             applyMaterial(mtl, item)
         })
-        if (this.panneaux["right"]) applyMaterial(mtl, this.panneaux["right"])
-        if (this.panneaux["left"]) applyMaterial(mtl, this.panneaux["left"])
+        if (this.panneaux && this.panneaux["right"]) applyMaterial(mtl, this.panneaux["right"])
+        if (this.panneaux && this.panneaux["left"]) applyMaterial(mtl, this.panneaux["left"])
     }
     loadAndApplyMaterial() {
         if (MainScene.materialId) {
@@ -227,7 +228,7 @@ export default class Meuble extends Fbx {
         select(this, interactiveEvent)
     }
     info() {
-        return `${this.props.sku} (L ${this.props.largeur / 10}cm H ${this.props.hauteur / 10}cm P ${this.props.profondeur / 10}cm) ${this.width}`
+        return `${this.props.sku} (L ${this.width / 10}cm H ${this.height / 10}cm P ${this.depth / 10}cm)`
     }
     select() {
         this.object.add(this.ruler);
@@ -246,22 +247,23 @@ export default class Meuble extends Fbx {
     //localhost helper (getState() forbidden to use when updating)
     addItemBySku(sku, state) {
         const props = MainScene.catalogue.find(f => f.sku === sku)
+        const skuInfo = parseSKU(sku)
         if (!props) {
             console.warn(`No accessoire found for sku ${sku}`)
         }
         else {
-            this.addItem(props, state)
+            this.addItem(props, state, skuInfo)
         }
     }
-    addItem(props, state) {
+    addItem(props, state, skuInfo) {
         if (this.props.accessoirescompatibles.indexOf(props.sku) === -1) {
             console.warn(`${props.sku} non compatible avec ${this.props.sku} sélectionné`)
             return false
         }
-        loadFbx(props.fbx.url, this.itemLoaded.bind(this, props, state))
+        loadFbx(props.fbx.url, this.itemLoaded.bind(this, props, state, skuInfo))
     }
-    itemLoaded(props, state, object) {
-        const item = new Item(props, object, state, this)
+    itemLoaded(props, state, skuInfo, object) {
+        const item = new Item(props, object, state, skuInfo, this)
         // console.log(item)
 
         // TODO
@@ -293,7 +295,7 @@ export default class Meuble extends Fbx {
         else {// new Item by user click
             item.object.position.x = 0;
             // item.object.position.y = state.selection.props.plandepercage['gauche'][0];
-            item.object.position.y = item.props.from
+            item.object.position.y = item.props.from// TODO find room for that item
             item.object.position.z = 0;
         }
         this.items.push(item)
@@ -309,7 +311,7 @@ export default class Meuble extends Fbx {
         switch (where) {
             case "right":
                 panneau.object.position.x = this.skuInfo.L * 10 + Measures.thick;
-                panneau.object.rotation.y = 0;
+                panneau.object.position.y = 0;
                 panneau.object.position.z = 0;
                 this.object.add(panneau.object);
                 break;
@@ -333,6 +335,7 @@ export default class Meuble extends Fbx {
 
     setPosition(position) {
         const wallConfig = MainScene.config;
+        console.log(position, MainScene);
         switch (position.wall) {
             case "right":
                 this.object.rotation.y = 0;// natural wall for fbx
@@ -352,25 +355,39 @@ export default class Meuble extends Fbx {
                 // this.object.rotateY(Math.PI);
                 this.object.position.x = position.x;
                 this.object.position.y = 0;
-                this.object.position.z = wallConfig.zmax;
+                this.object.position.z = MainScene.zmax;
                 break;
             case "back":
                 this.object.rotation.y = -Math.PI / 2;
                 // this.object.rotateY(Math.PI);
-                this.object.position.x = wallConfig.xmax;
+                this.object.position.x = MainScene.xmax;
                 this.object.position.y = 0;
                 this.object.position.z = position.x;
                 break;
-            case "right-back":
+
+            //special ANG :
+            case "front-right":
                 this.object.position.x = 0;
                 this.object.position.y = 0;
                 this.object.position.z = 0;
                 break;
-            case "left-back":
-                // this.object.rotateY(Math.PI / 2);
+            case "right-back":
+                this.object.rotation.y = -Math.PI / 2;
+                this.object.position.x = MainScene.xmax;
+                this.object.position.y = 0;
+                this.object.position.z = 0;
+                break;
+            case "back-left":
+                this.object.rotation.y = Math.PI;
+                this.object.position.x = MainScene.xmax;
+                this.object.position.y = 0;
+                this.object.position.z = MainScene.zmax;
+                break;
+            case "left-front":
+                this.object.rotation.y = Math.PI / 2;
                 this.object.position.x = 0;
                 this.object.position.y = 0;
-                this.object.position.z = wallConfig.zmax;
+                this.object.position.z = MainScene.zmax;
                 break;
             default:
         }

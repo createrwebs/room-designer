@@ -77,8 +77,10 @@ class App extends Component {
 					/* catalogue.forEach(element => {
 						console.log(element.sku)
 					}); */
-					const modules = catalogue.filter(i => parseSKU(i.sku).type === "module")
-					console.log("sku of type module :", modules)
+
+					/* print all sku and skuinfo fmor catalogue */
+					/* const modules = catalogue.filter(i => parseSKU(i.sku).type === "module")
+					console.log("sku of type module :", modules) */
 
 					setConfig(config)// creation scene
 					// loadScene(dressing2)
@@ -96,14 +98,14 @@ class App extends Component {
 						// clickMeubleLine("NYH238P62FD")
 						// clickMeubleLine("NYH238P62L040")
 
-						clickMeubleLine("NYH219P62L040")//ID 248 autoput items
-						clickMeubleLine("NYH219P62L040")//ID 248 autoput items
-						clickMeubleLine("NYH219P62L040")//ID 248 autoput items
+						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
+						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
+						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
 						// clickMeubleLine("NYH238P62L119")//ID 248 autoput items
 						// clickMeubleLine("NYH238P62L096")// autoput items
 						// clickMeubleLine("NYH219P40L096")// autoput items
 						// clickMeubleLine("NYC231H238PP")// autoput items
-						// clickMeubleLine("NYANGH219W")// has laquable
+						clickMeubleLine("NYANGH219")// has laquable
 						// clickMeubleLine("NYCOIFH238SF")
 						/* 	.then(e => {
 							console.log("meuble loaded", e);

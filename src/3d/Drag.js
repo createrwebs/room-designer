@@ -52,6 +52,22 @@ export const Room = {
     },
 
     /*
+    given raycaster wall & point on wall, get closest corner from that point
+    */
+    getClosestCorner(wall, point) {
+        switch (wall.name) {
+            case "wall-front":
+                return point.z > Room.zmax / 2 ? "left-front" : "front-right"
+            case "wall-right":
+                return point.x > Room.xmax / 2 ? "right-back" : "front-right"
+            case "wall-back":
+                return point.z > Room.zmax / 2 ? "back-left" : "right-back"
+            case "wall-left":
+                return point.x > Room.xmax / 2 ? "back-left" : "left-front"
+        }
+    },
+
+    /*
      for click to add new meuble (called from reducers)
      */
     getSpaceOnWall(meuble, meublesOnScene) {
@@ -130,7 +146,7 @@ export const Room = {
             if (segment.min - lastPos >= meuble.width) {
                 Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
             }
-            // console.warn(segment, segment.max - segment.min)
+            console.warn(segment, segment.max - segment.min)
             lastMeuble = m;
             lastPos = segment.max;//m.position;
         })
@@ -173,29 +189,60 @@ export const Room = {
         const toRight = Room.toRightDirection(meuble.wall);
         const closestSpace = Space.getClosest(meuble.wall, segment);
 
-        let stickTo = null;
+        let stickTo = null, fusion = false, insideDrag = false;
         Meuble.detach(meuble)
         if (closestSpace.include(segment)) {
-            if (closestSpace.max - segment.max <= Room.meubleMagnet) {// stick to right
+            if (closestSpace.max - segment.max <= Room.meubleMagnet) {// stick to right, still in space
                 stickTo = "right"
-            } else if (segment.min - closestSpace.min <= Room.meubleMagnet) {// stick to left
+            } else if (segment.min - closestSpace.min <= Room.meubleMagnet) {// stick to left, still in space
                 stickTo = "left"
             } else {
             }
-        } else if (closestSpace.max <= segment.max) {// stick to right
+        } else if (closestSpace.max <= segment.max) {// stick to right, inside drag
             stickTo = "right"
-        } else if (closestSpace.min >= segment.min) {// stick to left
+            insideDrag = true
+        } else if (closestSpace.min >= segment.min) {// stick to left, inside drag
+            insideDrag = true
             stickTo = "left"
         } else {
             console.error("collisionSolver fails", closestSpace, segment)
         }
+
+        let prev = closestSpace.prev
+        let next = closestSpace.next
+        if (stickTo && !toRight) {
+            stickTo = stickTo == "left" ? "right" : "left"
+            prev = closestSpace.next
+            next = closestSpace.prev
+        }
+
+        // if (insideDrag) console.warn(`stickTo ${stickTo}`, closestSpace.prev ? closestSpace.prev.skuInfo.PR : "", meuble.skuInfo.PL)
+        // insideDrag
+        if (meuble.insideDrag) {
+            meuble.insideDrag(insideDrag, stickTo, stickTo == "left" ? prev : next)
+        }
+
         switch (stickTo) {
             case "left":
-                Meuble.attach(closestSpace.prev, meuble)
-                return closestSpace.min + (!toRight ? meuble.width : 0) - (closestSpace.prev ? Measures.thick : 0)
+                fusion = prev
+                    && !prev.skuInfo.hasSides
+                    && !meuble.skuInfo.hasSides
+                    && prev.skuInfo.PR == meuble.skuInfo.PL
+                if (fusion) {
+                    Meuble.attach(prev, meuble)
+                }
+                return toRight ? closestSpace.min + (fusion ? -Measures.thick : 0) :
+                    closestSpace.max + (fusion ? Measures.thick : 0)
             case "right":
-                Meuble.attach(meuble, closestSpace.next)
-                return closestSpace.max + (toRight ? -meuble.width : 0) + (closestSpace.next ? Measures.thick : 0)
+                fusion = next
+                    && !next.skuInfo.hasSides
+                    && !meuble.skuInfo.hasSides
+                    && next.skuInfo.PL == meuble.skuInfo.PR
+                if (fusion) {
+                    Meuble.attach(meuble, next)
+                }
+                return toRight ? closestSpace.max - meuble.width + (fusion ? Measures.thick : 0) :
+                    closestSpace.min + meuble.width + (fusion ? -Measures.thick : 0)
             default:
                 return meuble.position
         }

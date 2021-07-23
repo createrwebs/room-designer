@@ -41,6 +41,7 @@ export const SceneEvent = {
     SETCURRENTSCENEWALL: 'setcurrentscenewall',
     SETCURRENTSCENEWALLLENGTH: 'setcurrentscenewalllength',
     CHANGE_TOOL: 'change_tool',
+    PRINTRAYCAST: 'printraycast',
 }
 export const CameraEvent = {
     SET: 'set',
@@ -189,31 +190,35 @@ export const loadScene = (dressing) => {
 }
 
 const loadMeubles = (dressing) => {
-    dressing.meubles.forEach(state => {
+    dressing.meubles.forEach(state => loadMeuble(state))
+}
+const loadMeuble = (state) => {
+    const props = MainScene.catalogue.find(f => f.sku === state.sku)
+    if (!props) {
+        console.error(`no meuble found for sku  ${state.sku}`)
+        return null
+    }
+    const skuInfo = parseSKU(state.sku)
+    if (!skuInfo.isModule) {
+        console.error(`${state.sku} is not a module`)
+        return null
+    }
 
-        const props = MainScene.catalogue.find(f => f.sku === state.sku)
-        if (!props) {
-            console.error(`no meuble found for sku  ${state.sku}`)
-            return null
-        }
-        const skuInfo = parseSKU(state.sku)
-        if (skuInfo.type !== "module") {
-            console.error(`${state.sku} is not a module`)
-            return null
-        }
+    if (!state.position) {
+        console.error(`skipped ${state.sku} has no position`)
+        return null
+    }
 
-        //meuble props are catalogue props + dressing props : no! => dressing props = state 
-        // props.position = state.position;
+    //meuble props are catalogue props + dressing props : no! => dressing props = state 
+    // props.position = state.position;
 
-        loadFbx(props.fbx.url, object => {
-            if (state.position) {
-                const meuble = MainScene.createMeuble(props, object, state)
-                MainScene.add(meuble);
-            }
-            MainScene.render()
-        })
+    loadFbx(props.fbx.url, object => {
+        const meuble = MainScene.createMeuble(props, object, state, skuInfo)
+        MainScene.add(meuble);
+        MainScene.render()
     })
 }
+
 /**
  * click on palette to set material on scene.
  * window.scene_bridge('set_scene_material',materialId) *
@@ -457,60 +462,29 @@ export const clickMeubleLine = (sku) => {
     }
     const skuInfo = parseSKU(sku)
     if (MainScene.selection) {
-        if (skuInfo.type == "module") {
+        if (skuInfo.isModule) {
             console.error(`${sku} is a module`)
             return null
         }
-
         if (MainScene.selection.props.accessoirescompatibles.indexOf(sku) === -1) {
             console.warn(`${sku} non compatible avec ${MainScene.selection.props.sku} sélectionné`)
         }
         else {
-            MainScene.selection.addItem(props);
+            MainScene.selection.addItem(props, {}, skuInfo);
         }
     } else {
-        if (skuInfo.type !== "module") {
+        if (!skuInfo.isModule) {
             console.error(`${sku} is not a module`)
             return null
         }
         loadFbx(props.fbx.url, object => {
-
-            // find front wall, best location for new Meuble
-            // let wall = Object.keys(MainScene.currentDressing.walls)[0] || "right"
-            let wall = "right"
-            const intersects = MainScene.getRaycasterIntersect()
-            const intersect = intersects.find(i => i.object.name.includes("wall-"))
-            if (intersect) wall = intersect.object.name.substring("wall-".length)
-            console.log(`facing to wall ${wall}`)
-
-            const state = {
-                position: {
-                    wall,
-                    x: 1000
-                }
-            }
-            const selection = MainScene.createMeuble(props, object, state)
-
-
-            // place on front wall ? ..Draggable routines ! //TODO
-            // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
-            const axis = Room.getAxisForWall(wall);
-            Room.setWallsLength(MainScene.currentDressing, MainScene.config)
-            const x = Room.getSpaceOnWall(selection, MainScene.meubles)
-            if (x === false) {
-                console.warn(`no space for ${selection.ID} on wall ${wall}`)
-            }
-            else {
-                selection.object.position[axis] = x
-                console.log(selection.wall, x)
-
-                MainScene.add(selection);
-                // MainScene.selection = selection// ????
-                MainScene.render()
-            }
+            const selection = MainScene.createMeuble(props, object, null, skuInfo)
+            MainScene.add(selection);
+            MainScene.render()
         })
     }
 }
+
 /**
  * drag meuble on scene.
  * window.scene_bridge('drag_meuble_over_scene','NYC155H219P0').
@@ -532,6 +506,12 @@ export const dragMeubleOverScene = (sku) => {
 export const dropMeubleOnScene = (sku) => {
     return {
         type: MeubleEvent.DROP_MEUBLE_TO_SCENE, sku
+    }
+}
+
+export const printRaycast = (raycast) => {
+    return {
+        type: SceneEvent.PRINTRAYCAST, raycast
     }
 }
 

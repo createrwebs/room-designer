@@ -1,4 +1,5 @@
 import {
+    printRaycast,
     Tools
 }
     from '../api/actions'
@@ -23,6 +24,7 @@ import {
 } from "three";
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { localhost } from '../api/Config';
+import store from '../api/store';
 
 // Controls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,7 +34,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { Interaction } from 'three.interaction';// fails to use
 // import { InteractionManager } from "three.interactive";// ok but 500kB re-imports all three !
 import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
-
+import { Room } from './Drag'
 import Draggable from './Draggable'
 import Angle from './Angle'
 import { setupLights } from './helpers/Lights'
@@ -321,12 +323,14 @@ export default {
         this.clear();
         this.setupLights();
         this.setupWalls(config, wallVisible)
+        // this.setup(config)
         if (config) {
             if (config.materialId) {
                 this.materialId = config.materialId
             }
             this.currentDressing = config
         }
+        Room.setWallsLength(this.currentDressing, this.config)
     },
     resize() {
         const canvasWrapper = document.getElementById("canvas-wrapper")
@@ -340,6 +344,10 @@ export default {
     },
     render() {
         if (this.interactionManager) this.interactionManager.update();
+
+        this.getRaycasterIntersect()
+
+
         this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
     },
@@ -396,14 +404,24 @@ export default {
         })
     },
     getRaycasterIntersect() {
-        var raycaster = new Raycaster();
-        var vec = new Vector2();
+        const raycaster = new Raycaster();
+        const vec = new Vector2();
         raycaster.setFromCamera(vec, this.camera);
-        var intersects = raycaster.intersectObjects(this.scene.children, false); //array
+        const intersects = raycaster.intersectObjects(this.scene.children, false); //array
+        const intersect = intersects.find(i => i.object.name.includes("wall-"))
+        let pRaycast = ""
+        if (intersect) {
+            const wall = intersect.object
+            const p = intersect.point
+            const corner = Room.getClosestCorner(wall, p)
+            pRaycast = `Central ray on ${wall.name} @${Math.round(intersect.distance)}mm`
+            // pRaycast += ` ${Math.round(p.x)}|${Math.round(p.y)}|${Math.round(p.z)} ${corner}`
+        }
+        store.dispatch(printRaycast(pRaycast))
+
         return intersects;
         // if (intersects.length > 0) {
         //     // selectedObject = intersects[0];
-        //     // console.log(selectedObject);
         // }
     },
     getMeubleList() {
@@ -416,14 +434,63 @@ export default {
         object from fbx (3d)
         state from saved dressing (user modifications)
     */
-    createMeuble(props, object, state) {
+    createMeuble(props, object, state, skuInfo) {
 
-        if (props.angle) {
-
-            return new Angle(props, object, state)
-        } else {
-            return new Draggable(props, object, state)
-
+        if (!skuInfo.isModule) {
+            console.error(`${sku} is not a module`)
+            return null
         }
+
+        let pState, wall = "right", corner = "front-right"
+        if (!state) {
+            // find front wall, best location for new Meuble
+            // let wall = Object.keys(MainScene.currentDressing.walls)[0] || "right"
+            const intersects = this.getRaycasterIntersect()
+            const intersect = intersects.find(i => i.object.name.includes("wall-"))
+            if (intersect) {
+                const wallObject = intersect.object
+                wall = wallObject.name.substring("wall-".length)
+                corner = Room.getClosestCorner(wallObject, intersect.point)
+                console.log(`facing to wall ${wall}, closest corner ${corner}`, intersect)
+            }
+            pState = {
+                position: {
+                    wall,
+                    x: 1000
+                }
+            }
+        }
+        else {
+            pState = state
+        }
+        let selection
+        switch (skuInfo.type) {
+            case "ANG":
+                selection = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
+                break;
+            default:
+                selection = new Draggable(props, object, pState, skuInfo)
+
+                if (!state) {
+
+                    // place on front wall ? ..Draggable routines ! //TODO
+                    // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
+                    const axis = Room.getAxisForWall(wall);
+                    Room.setWallsLength(this.currentDressing, this.config)
+                    const x = Room.getSpaceOnWall(selection, this.meubles)
+                    if (x === false) {
+                        console.warn(`no space for on wall ${wall}`)
+                    }
+                    else {
+                        selection.object.position[axis] = x
+                        console.log(selection.wall, x)
+
+
+                    }
+                }
+        }
+
+
+        return selection
     }
 }

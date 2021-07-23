@@ -10,7 +10,7 @@ class Room extends Component {
 	componentDidMount() {
 		const node = this.threejsSceneRef.current;
 		node.appendChild(MainScene.getRendererNodeElement());
-		if (localhost) node.appendChild(MainScene.getStatNodeElement());
+		// if (localhost) node.appendChild(MainScene.getStatNodeElement());
 	}
 	render() {
 		MainScene.orbitControls.update();

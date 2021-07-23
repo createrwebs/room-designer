@@ -12,7 +12,7 @@ import Meuble from './Meuble'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { create as createCross } from './helpers/Cross';
 import { Space, Room } from './Drag';
-import { getSize } from './Utils'
+import { Measures } from './Utils'
 
 export default class Draggable extends Meuble {
 
@@ -32,8 +32,8 @@ export default class Draggable extends Meuble {
         return this.object.position[Room.getAxisForWall(this.wall)];
     }
 
-    constructor(props, object, state) {
-        super(props, object, state)
+    constructor(props, object, state, skuInfo) {
+        super(props, object, state, skuInfo)
 
         const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
         dragControls.transformGroup = true;
@@ -62,17 +62,68 @@ export default class Draggable extends Meuble {
             this.dragControls.activate()
         }
     }
-
+    insideDrag(inside, stickTo, target) {
+        // console.log("insideDrag", inside, stickTo, this.width)
+        switch (this.skuInfo.type) {
+            case "P40RL057":// TODO 1/4 turn range chaussure
+                switch (stickTo) {
+                    case "right":
+                        if (target && target.skuInfo.PL != 62) return;
+                        this.object.children.forEach(child => {
+                            child.position.set(!inside ? 0 : 579, 0, 0)
+                            child.rotation.set(0, !inside ? 0 : -Math.PI / 2, 0)
+                        })
+                        this.panneaux["right"].object.position.x = 579
+                        this.panneaux["right"].object.position.y = 0;
+                        this.panneaux["right"].object.position.z = 579
+                        this.panneaux["left"].object.position.x = 579
+                        this.panneaux["left"].object.position.y = 0
+                        this.panneaux["left"].object.position.z = 0
+                        break;
+                    case "left":// 1/4 turn to right
+                        if (target && target.skuInfo.PR != 62) return;
+                        this.object.children.forEach(child => {
+                            child.position.set(0, 0, !inside ? 0 : 579)
+                            child.rotation.set(0, !inside ? 0 : Math.PI / 2, 0)
+                        })
+                        this.panneaux["right"].object.position.x = 0;
+                        this.panneaux["right"].object.position.y = 0;
+                        this.panneaux["right"].object.position.z = Measures.thick;
+                        this.panneaux["left"].object.position.x = 0
+                        this.panneaux["left"].object.position.y = 0
+                        this.panneaux["left"].object.position.z = 579 + Measures.thick;
+                        break;
+                    default:
+                        this.object.children.forEach(child => {
+                            child.rotation.set(0, 0, 0)
+                            child.position.set(Measures.thick, 0, 0)
+                        })
+                        this.panneaux["right"].object.position.x = this.skuInfo.L * 10
+                        this.panneaux["right"].object.position.y = 0;
+                        this.panneaux["right"].object.position.z = 0
+                        this.panneaux["left"].object.position.x = 0
+                        this.panneaux["left"].object.position.y = 0
+                        this.panneaux["left"].object.position.z = 0;
+                }
+                break;
+            default:
+        }
+    }
     destroy() {
         this.dragControls.dispose()
     }
     dragStart(event) {
-        console.log("dragStart", this)
+        // console.log("dragStart", this, event)
         if (Draggable.Dragged) {//|| tool != Tools.ARROW
             event.target.enabled = false;// deactivation of other Draggable
             return
         }
         Draggable.Dragged = this;
+
+        if (event.altKey) {
+            console.debug("alt+click has just happened!");
+            return;
+        }
 
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
@@ -89,9 +140,6 @@ export default class Draggable extends Meuble {
         // action to reducer for display info :
         store.dispatch(drag(this))
 
-        const wall = "right"
-        console.log(`Spaces.onWall ${wall}`, Space.onWall[wall]);
-
         if (Draggable.Cross && !Draggable.Cross.parent) MainScene.scene.add(Draggable.Cross)
     }
     dragging(event) {
@@ -99,20 +147,15 @@ export default class Draggable extends Meuble {
         /*         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
                     return
                 } */
-        // const wallLength = Room[this.wall].length;
-        const wallLength =
-            (this.wall === "left" || this.wall === "right") ? Room.xmax : Room.zmax
-        // console.log(this.wall);
-        // console.log(event.object.position.x, event.object.position.z)
+
+        const wallLength = (this.wall === "left" || this.wall === "right") ? Room.xmax : Room.zmax
         Draggable.Cross.position.x = event.object.position.x
         Draggable.Cross.position.z = event.object.position.z
         const thresh = Draggable.switchWallThreshold
-        // let axis;
         Room.axis = Room.getAxisForWall(this.wall);
 
         //looking for change of destination
-        const newWall =
-            this.getWallChange(event.object.position.x, event.object.position.z, this.wall, thresh)
+        const newWall = this.getWallChange(event.object.position.x, event.object.position.z, this.wall, thresh)
         if (newWall) {
             console.warn(`change wall from ${this.wall} to ${newWall}`)// Date.getTime() and forbid flicker change wall !??
             this.wall = newWall
@@ -145,15 +188,11 @@ export default class Draggable extends Meuble {
         event.object.position[axis] = Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
         event.object.position[axis] = Room.collisionSolver(this);
 
-        // console.log("Joins", Meuble.Joins)
-
-        // console.log("drag", Room[this.wall])
-        // console.log("drag", event, event.object.position.x)
         MainScene.render();
     }
 
     dragEnd(event) {
-        console.log("dragEnd", this)
+        // console.log("dragEnd", this)
         MainScene.orbitControls.enabled = true;
         /*         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
                     select(this)

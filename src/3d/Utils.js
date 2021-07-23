@@ -27,54 +27,63 @@ export const getCenterPoint = (object) => {
 
 
 const types = [
-    "ANG",// Module angle
-    "ANGTIR",// NYANGTIR
-    "ANGAB",// Gabarit montage d'angles 45°
     "ANG90",
-    "FIL",// fileur droit
-    "PPC0",// jeu de 2 portes pleines
-    "PPD",// porte pleine droite
-    "PPG",// porte pleine gauche    
-    "PVD",// porte verre droite
-    "PVG",// porte verre gauche
-    "PGD",// porte glace droite
-    "PGG",// porte glace gauche    
-    "ETA",// étagère
-    "ETT",// étagère tringle
-    "ETL",// étagère tringle led
-    "COIF",// coiffeuse
-    "RGC",// Range Chaussure
-    "PENRAB",// Penderie rabattable
-    "TABREP",// table repasser
-    "MIROIR",
-    "CHACAS",//chassis
-    "CHALINGE",
-    "CHAPANT",
-    "CHAPANF",
-    "CHACHAUSS",
-    "CAS",
-    "TIR2",// Module 2 Tiroirs
-    "TIR4",
-    "BLOTMM",// bloc ...
+    "ANGAB",// Gabarit montage d'angles 45° 40 & 62
+    "ANGETAL",
+    "ANGETAP",
+    "ANGTIR",// option tiroir supp pour angle
+    "ANG",// Module angle, last match after ANGXX
+    "BC",// porte cintre // sans NY
+    "BLOT0G",// bloc ...
+    "BLOTMM",
     "BLOTMP",
     "BLOTPP",
-    "BLOT0G",
-    "FD",// Finition droite
-    "FG",// Finition gauche
-    "SE",// separateur
-    "BC",// porte cintre
+    "C155",// armoire coulissante
+    "C191",
+    "C231",
+    "CAS",
+    "CHACAS",//chassis
+    "CHACHAUSS",
+    "CHALINGE",
+    "CHAPANF",
+    "CHAPANT",
+    "COIF",// coiffeuse
+    "ETA",// étagère
+    "ETL",// étagère tringle led
+    "ETT",// étagère tringle
+    "FIL",// fileur droit
+    "MIROIR",
+    "PENRAB",// Penderie rabattable
+    "PGD2",// porte glace droite
+    "PGD4",
+    "PGD-",
+    "PGG2",// porte glace gauche    
+    "PGG4",
+    "PGG-",
+    "PPC-",// jeu de 2 portes pleines
+    "PPD2",// porte pleine droite
+    "PPD4",
+    "PPD-",
+    "PPG2",// porte pleine gauche    
+    "PPG4",
+    "PPG-",
+    "PVD2",// porte verre droite
+    "PVD4",
+    "PVD-",
+    "PVG2",// porte verre gauche
+    "PVG4",
+    "PVG-",
+    "RGCH",// Range Chaussure accessoire
+    "P40RL057",// Range Chaussure pivotable
+    "TABREP",// table repasser
+    // "TIR2",// Module 2 Tiroirs
+    // "TIR4",
 ]
 
-/* NYH238P62FD */
-const panneaux__ = [
-    "FD",// Finition droite
-    "FG",// Finition gauche
-    "SE"// separateur
-]
 export const panneaux = [
-    "NYH238P62FG",
-    "NYH238P62FD",
-    "NYH238P62SE",
+    "NYH238P62FG",// Finition gauche
+    "NYH238P62FD",// Finition droite
+    "NYH238P62SE",// separateur
     "NYH238P40FG",
     "NYH238P40FD",
     "NYH238P40SE",
@@ -98,17 +107,19 @@ export const parseSKU = (sku) => {
         obj.H = parseInt(HMatch[0].substring(1))
     }
 
+    const PMatch = sku.match(/P\d*/g)
+    if (PMatch && PMatch.length > 0 && PMatch[0] != "P") {
+        obj.PR = obj.PL = parseInt(PMatch[0].substring(1))
+        if (PMatch.length > 1) {// Module de liaison
+            obj.PR = parseInt(PMatch[1].substring(1))
+            obj.L = 40// modulae liaison fixed L
+        }
+        obj.P = Math.max(obj.PR, obj.PL)
+    }
+
     const LMatch = sku.match(/L\d*/g)
     if (LMatch && LMatch.length > 0) {
         obj.L = parseInt(LMatch[0].substring(1))
-    }
-
-    const PMatch = sku.match(/P\d*/g)
-    if (PMatch && PMatch.length > 0 && PMatch[0] != "P") {
-        obj.P = parseInt(PMatch[0].substring(1))
-        if (PMatch.length > 1) {// Module de liaison
-            obj.PRight = parseInt(PMatch[1].substring(1))
-        }
     }
 
 
@@ -116,6 +127,47 @@ export const parseSKU = (sku) => {
         return new RegExp(pattern).test(sku);
     })
     obj.type = typeMatches.length > 0 ? typeMatches[0] : "module"
+
+    /* module to put on scene */
+    obj.isModule = obj.type === "module"
+        || obj.type === "ANG"
+        || obj.type === "COIF"
+        || obj.type === "C155"
+        || obj.type === "C191"
+        || obj.type === "C231"
+        || obj.type === "P40RL057"
+
+    /* panneaux inamovibles */
+    obj.hasSides = obj.type === "ANG"
+        || obj.type === "C155"
+        || obj.type === "C191"
+        || obj.type === "C231"
+
+    switch (obj.type) {
+        case "ANG":
+            obj.P = obj.PR = obj.PL = 62// angle module has fixed depth of 62
+            obj.L = 106
+            break;
+        case "COIF":
+            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.L = 81
+            break;
+        case "C155":
+            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.L = 155
+            break;
+        case "C191":
+            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.L = 191
+            break;
+        case "C231":
+            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.L = 231
+            break;
+
+    }
+
+    console.log(sku, obj)
 
     return obj
 }

@@ -19,14 +19,17 @@ export class Dragging extends Component {
 				{this.props.sku &&
 					<span>{this.props.sku}</span>
 				}
+				{this.props.raycast &&
+					<span>{this.props.raycast}</span>
+				}
 			</div>
 		)
 	}
 }
 const mapStateToProps = (state) => {
-	if (!state.dragged) return {}
 	return {
-		sku: state.dragged.info(),
+		sku: state.dragged ? state.dragged.info() : "",
+		raycast: state.raycast
 	}
 }
 export default connect(mapStateToProps)(Dragging)
