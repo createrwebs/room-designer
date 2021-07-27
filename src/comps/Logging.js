@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { localhost } from '../api/Config';
 
-const mainDiv = {
-	color: '#BB7788',
+const rightBottomDiv = {
+	color: '#222222',
 	font: '.8em Arial, sans-serif',
 	position: 'absolute',
 	padding: '8px',
 	bottom: '0px',
+	right: '0px',
+	textAlign: "right"
 };
 
 export class Dragging extends Component {
@@ -15,11 +18,12 @@ export class Dragging extends Component {
 	}
 	render() {
 		return (
-			<div style={mainDiv}>
-				{this.props.sku &&
-					<span>{this.props.sku}</span>
+			<div style={rightBottomDiv}>
+				{this.props.info &&
+					<span>{this.props.info}</span>
 				}
-				{this.props.raycast &&
+				<br />
+				{localhost && this.props.raycast &&
 					<span>{this.props.raycast}</span>
 				}
 			</div>
@@ -28,7 +32,7 @@ export class Dragging extends Component {
 }
 const mapStateToProps = (state) => {
 	return {
-		sku: state.dragged ? state.dragged.info() : "",
+		info: state.dragged ? state.dragged.info() : "",
 		raycast: state.raycast
 	}
 }

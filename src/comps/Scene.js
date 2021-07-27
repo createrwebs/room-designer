@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import MainScene from '../3d/MainScene';
-import { localhost } from '../api/Config';
 
 class Room extends Component {
 	constructor(props) {

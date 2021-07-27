@@ -34,7 +34,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { Interaction } from 'three.interaction';// fails to use
 // import { InteractionManager } from "three.interactive";// ok but 500kB re-imports all three !
 import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
-import { Room } from './Drag'
+import { Room, Corners } from './Drag'
 import Draggable from './Draggable'
 import Angle from './Angle'
 import { setupLights } from './helpers/Lights'
@@ -200,7 +200,7 @@ export default {
         // console.log("MainScene setup", this)
 
         /* material */
-        this.materialId = null
+        this.materialId = window.materials[0].id
 
     },
     setupSize(config) {
@@ -286,7 +286,7 @@ export default {
             this.scene.add(this.wallBack);
         }
 
-        if (visible && false) {
+        if (visible) {
             if (this.sol && this.sol.parent == this.scene) this.scene.remove(this.sol);
             this.sol = createSolGrid(config.xmax, config.zmax)
             this.scene.add(this.sol);
@@ -314,6 +314,7 @@ export default {
         }
     },
     clear() {
+        console.log("scene clear")
         if (this.scene) this.scene.clear();
         this.meubles = [];
 
@@ -364,26 +365,44 @@ export default {
         this.selection = null
     },
     enableMeubleDragging(enabled) {
-        this.meubles.forEach(m => enabled ? m.dragControls.activate() : m.dragControls.deactivate())
+        this.meubles.forEach(m => {
+            if (m.dragControls) {
+                if (enabled) m.dragControls.activate()
+                else m.dragControls.deactivate()
+            }
+        })
     },
     enableItemsDragging(enabled) {
         console.log("enableItemsDragging", enabled)
         this.meubles.forEach(m => {
             m.items.forEach(i => {
-                enabled ? i.dragControls.activate() : i.dragControls.deactivate()
+                if (i.dragControls) {
+                    if (enabled) i.dragControls.activate()
+                    else i.dragControls.deactivate()
+                }
             })
         })
     },
     enableMeubleClicking(enabled) {
         console.log("enableMeubleClicking", enabled)
         this.meubles.forEach(m => {
-            if (enabled) {
-                this.interactionManager.add(m.object)
-                m.object.addEventListener('click', m.click.bind(m))
-            } else {
-                this.interactionManager.remove(m.object)
-                m.object.removeEventListener('click', m.click.bind(m))
-            }
+            /*             m.items.forEach(i => {
+                            if (enabled) {
+                                this.interactionManager.add(i.object)
+                                i.object.addEventListener('click', i.click.bind(i))
+                            } else {
+                                this.interactionManager.remove(i.object)
+                                i.object.removeEventListener('click', i.click.bind(i))
+                            }
+                        }) */
+            m.enableClick(enabled)
+            /*             if (enabled) {
+                            this.interactionManager.add(m.object)
+                            m.addClickListener()
+                        } else {
+                            this.interactionManager.remove(m.object)
+                            m.removeClickListener()
+                        } */
         })
     },
     enableMeublePainting(enabled) {
@@ -400,6 +419,17 @@ export default {
                     this.interactionManager.remove(c)
                     c.removeEventListener('click', m.clickLaquable.bind(m))
                 }
+            })
+            m.items.forEach(i => {
+                i.object.children.filter(c => i.props.laquables.includes(c.name)).forEach(c => {
+                    if (enabled) {
+                        this.interactionManager.add(c)
+                        c.addEventListener('click', i.clickLaquable.bind(i))
+                    } else {
+                        this.interactionManager.remove(c)
+                        c.removeEventListener('click', i.clickLaquable.bind(i))
+                    }
+                })
             })
         })
     },
@@ -424,11 +454,6 @@ export default {
         //     // selectedObject = intersects[0];
         // }
     },
-    getMeubleList() {
-        let meubleList = []
-        this.meubles.forEach(m => meubleList.push(m.props.sku))
-        return meubleList
-    },
     /*
         props from catalogue (infos)
         object from fbx (3d)
@@ -441,7 +466,7 @@ export default {
             return null
         }
 
-        let pState, wall = "right", corner = "front-right"
+        let pState, wall = "right", corner = Corners.FR
         if (!state) {
             // find front wall, best location for new Meuble
             // let wall = Object.keys(MainScene.currentDressing.walls)[0] || "right"

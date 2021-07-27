@@ -26,10 +26,14 @@ const textParam = {
     bevelOffset: 0,
     bevelSegments: 5
 };
+const textParamTitle = {
+    font: font,
+    size: 40,
+    height: 2,
+};
 const material = new LineBasicMaterial({ color: 0x223344, linewidth: 3, opacity: 1 });
 
 export const create = (sku, largeur, hauteur) => {
-
     const pointsV = [];
     let k = 0;
     while (k <= hauteur) {
@@ -80,7 +84,7 @@ export const create = (sku, largeur, hauteur) => {
         k += division1;
     }
 
-    const skuMesh = new Mesh(new TextGeometry(sku, textParam), material);
+    const skuMesh = new Mesh(new TextGeometry(sku, textParamTitle), material);
 
     skuMesh.position.y = hauteur + 80
     rulerV.position.x = largeur

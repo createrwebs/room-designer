@@ -25,12 +25,23 @@ export class Space {
         return segment.max <= this.max && segment.min >= this.min
     }
 }
-
+// get closest value from x in array
+export const getClosestInArray = (x, array) => {
+    return array.reduce(function (prev, curr) {
+        return (Math.abs(curr - x) < Math.abs(prev - x) ? curr : prev);
+    });
+}
 export const Walls = {
-    R: 'right',
-    L: 'left',
-    F: 'front',
-    B: 'back',
+    R: "right",
+    L: "left",
+    F: "front",
+    B: "back",
+}
+export const Corners = {
+    FR: "front-right",
+    RB: "right-back",
+    BL: "back-left",
+    LF: "left-front",
 }
 export const Room = {
     xmax: 1000,
@@ -57,13 +68,13 @@ export const Room = {
     getClosestCorner(wall, point) {
         switch (wall.name) {
             case "wall-front":
-                return point.z > Room.zmax / 2 ? "left-front" : "front-right"
+                return point.z > Room.zmax / 2 ? Corners.LF : Corners.FR
             case "wall-right":
-                return point.x > Room.xmax / 2 ? "right-back" : "front-right"
+                return point.x > Room.xmax / 2 ? Corners.RB : Corners.FR
             case "wall-back":
-                return point.z > Room.zmax / 2 ? "back-left" : "right-back"
+                return point.z > Room.zmax / 2 ? Corners.BL : Corners.RB
             case "wall-left":
-                return point.x > Room.xmax / 2 ? "back-left" : "left-front"
+                return point.x > Room.xmax / 2 ? Corners.BL : Corners.LF
         }
     },
 
@@ -88,18 +99,18 @@ export const Room = {
     /* right and left walls along x-axis */
     getAxisForWall(wall) {
         switch (wall) {
-            case "right":
-            case "left":
+            case Walls.R:
+            case Walls.L:
                 return "x";
-            case "front":
-            case "back":
+            case Walls.F:
+            case Walls.B:
                 return "z";
         }
     },
 
     /* right & back walls has right hand direction when looking at */
     toRightDirection(wall) {
-        return wall === "right" || wall === "back"
+        return wall === Walls.R || wall === Walls.B
     },
 
     setupWallConstraints(meuble) {
@@ -124,7 +135,7 @@ export const Room = {
     /* populate Space.onWall list of spaces for meuble on all walls */
     populateSpacesOnWalls(meuble) {
         // Object.keys(Room).forEach(w => {// right,back,left if exists
-        ["right", "back", "left", "front"].forEach(w => {// right,back,left if exists
+        [Walls.R, Walls.B, Walls.L, Walls.F].forEach(w => {// right,back,left if exists
             Room.getSpacesOnWall(w, Room.getAxisForWall(w), meuble)
         });
 
@@ -138,7 +149,7 @@ export const Room = {
     getSpacesOnWall(wall, axis, meuble) {
         let lastMeuble = null;
         let lastPos = 0, segment;
-        const wallLength = (wall === "left" || wall === "right") ? Room.xmax : Room.zmax
+        const wallLength = (wall === Walls.L || wall === Walls.R) ? Room.xmax : Room.zmax
 
         Space.onWall[wall] = []
         Room.MeublesOnWall[wall].filter(m => m !== meuble).forEach(m => {
@@ -146,7 +157,7 @@ export const Room = {
             if (segment.min - lastPos >= meuble.width) {
                 Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
             }
-            console.warn(segment, segment.max - segment.min)
+            // console.warn(segment, segment.max - segment.min)
             lastMeuble = m;
             lastPos = segment.max;//m.position;
         })
@@ -164,15 +175,16 @@ export const Room = {
     /* populate MeublesOnWall list for all walls */
     populateMeublesOnWalls(meublesOnScene) {
         // Object.keys(Room).forEach(w => {// right,back,left
-        ["right", "back", "left", "front"].forEach(w => {// right,back,left if exists
+        [Walls.R, Walls.B, Walls.L, Walls.F].forEach(w => {// right,back,left if exists
             Room.MeublesOnWall[w] = Room.getMeublesOnWall(meublesOnScene, w, Room.getAxisForWall(w))
+            // console.log(Room.MeublesOnWall[w])
         });
     },
 
     /* get all other meubles on a wall */
     getMeublesOnWall(meublesOnScene, wall, axis) {
         return meublesOnScene
-            .filter(m => m.wall === wall)
+            .filter(m => m.wall.includes(wall))
             .sort((m1, m2) => m1.object.position[axis] - m2.object.position[axis])
     },
 
@@ -249,4 +261,84 @@ export const Room = {
     },
 
 
+}
+/*
+test on floor to switch from wall to wall and corners
+*/
+export const getWallChange = (wall, position, thresh1, thresh2) => {
+
+    const x = position.x
+    const z = position.z
+
+    const t1 = 620//change wall threshold : inside room distance from wall
+    const t2 = 300//enter wall threshold : outside room distance 
+
+    switch (wall) {
+        case Corners.FR:
+        case Corners.LF:
+        case Walls.F:
+            if (z < -t2 && x < -t2) {
+                return Corners.FR
+            }
+            if (z > t2 + Room.zmax && x < -t2) {
+                return Corners.LF
+            }
+            if (z < t1 && x > t1 && Space.onWall[Walls.R].length > 0) {
+                return Walls.R
+            }
+            if (z > Room.zmax - t1 && x > t1 && Space.onWall[Walls.L].length > 0) {
+                return Walls.L
+            }
+            break;
+        case Corners.BL:
+        case Corners.RB:
+        case Walls.B:
+            if (z < -t2 && x > Room.xmax) {
+                return Corners.RB
+            }
+            if (z > t2 + Room.zmax && x > Room.xmax) {
+                return Corners.BL
+            }
+            if (z < t1 && x < Room.xmax - t1 && Space.onWall[Walls.R].length > 0) {
+                return Walls.R
+            }
+            if (z > Room.zmax - t1 && x < Room.xmax - t1 && Space.onWall[Walls.L].length > 0) {
+                return Walls.L
+            }
+            break;
+        case Corners.FR:
+        case Corners.RB:
+        case Walls.R:
+            if (z < -t2 && x < -t2) {
+                return Corners.FR
+            }
+            if (z < -t2 && x > t2 + Room.xmax) {
+                return Corners.RB
+            }
+            if (x < t1 && z > t1 && Space.onWall[Walls.F].length > 0) {
+                return Walls.F
+            }
+            if (x > Room.xmax - t1 && z > t1 && Space.onWall[Walls.B].length > 0) {
+                return Walls.B
+            }
+            break;
+        case Corners.LF:
+        case Corners.BL:
+        case Walls.L:
+            if (z > t2 + Room.zmax && x < -t2) {
+                return Corners.LF
+            }
+            if (z > t2 + Room.zmax && x > t2 + Room.xmax) {
+                return Corners.BL
+            }
+            if (x < t1 && z < Room.zmax - t1 && Space.onWall[Walls.F].length > 0) {
+                return Walls.F
+            }
+            if (x > Room.xmax - t1 && z < Room.zmax - t1 && Space.onWall[Walls.B].length > 0) {
+                return Walls.B
+            }
+            break;
+        default:
+    }
+    return null
 }

@@ -1,6 +1,7 @@
 import {
     select,
     drag,
+    sceneChange,
     Tools
 }
     from '../api/actions'
@@ -11,12 +12,13 @@ import Meuble from './Meuble'
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { create as createCross } from './helpers/Cross';
-import { Space, Room } from './Drag';
+import { Space, Room, getWallChange, Walls, Corners } from './Drag';
 import { Measures } from './Utils'
 
 export default class Draggable extends Meuble {
 
-    static switchWallThreshold = 250// mm de drag après un angle pour changer de mur
+    static switchWallThreshold = 300// mm de drag après un angle pour changer de mur
+    static enterWallThreshold = 150// mm de drag après un angle pour changer de mur
     // static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
 
     // from scene walls config or app current settings
@@ -65,7 +67,7 @@ export default class Draggable extends Meuble {
     insideDrag(inside, stickTo, target) {
         // console.log("insideDrag", inside, stickTo, this.width)
         switch (this.skuInfo.type) {
-            case "P40RL057":// TODO 1/4 turn range chaussure
+            case "P40RL057____":// TODO 1/4 turn range chaussure
                 switch (stickTo) {
                     case "right":
                         if (target && target.skuInfo.PL != 62) return;
@@ -98,12 +100,18 @@ export default class Draggable extends Meuble {
                             child.rotation.set(0, 0, 0)
                             child.position.set(Measures.thick, 0, 0)
                         })
-                        this.panneaux["right"].object.position.x = this.skuInfo.L * 10
-                        this.panneaux["right"].object.position.y = 0;
-                        this.panneaux["right"].object.position.z = 0
-                        this.panneaux["left"].object.position.x = 0
-                        this.panneaux["left"].object.position.y = 0
-                        this.panneaux["left"].object.position.z = 0;
+                        if (this.panneaux) {
+                            if (this.panneaux["right"] && this.panneaux["right"].object) {
+                                this.panneaux["right"].object.position.x = this.skuInfo.L * 10
+                                this.panneaux["right"].object.position.y = 0;
+                                this.panneaux["right"].object.position.z = 0
+                            }
+                            if (this.panneaux["left"] && this.panneaux["left"].object) {
+                                this.panneaux["left"].object.position.x = 0
+                                this.panneaux["left"].object.position.y = 0
+                                this.panneaux["left"].object.position.z = 0;
+                            }
+                        }
                 }
                 break;
             default:
@@ -151,34 +159,53 @@ export default class Draggable extends Meuble {
         const wallLength = (this.wall === "left" || this.wall === "right") ? Room.xmax : Room.zmax
         Draggable.Cross.position.x = event.object.position.x
         Draggable.Cross.position.z = event.object.position.z
-        const thresh = Draggable.switchWallThreshold
+        const thresh1 = Draggable.enterWallThreshold
+        const thresh2 = Draggable.switchWallThreshold
         Room.axis = Room.getAxisForWall(this.wall);
 
-        //looking for change of destination
-        const newWall = this.getWallChange(event.object.position.x, event.object.position.z, this.wall, thresh)
-        if (newWall) {
-            console.warn(`change wall from ${this.wall} to ${newWall}`)// Date.getTime() and forbid flicker change wall !??
-            this.wall = newWall
-        }
         event.object.position.y = 0;
 
+        //looking for change of destination
+        const newWall = getWallChange(this.wall, event.object.position, thresh1, thresh2)
+
+        if (Object.values(Walls).includes(newWall)) {
+            console.warn(`change wall from ${this.wall} to ${newWall}`)
+            this.wall = newWall
+        }
+        else if (Object.values(Corners).includes(newWall)) {
+            console.warn(`goto corner wall from ${this.wall} to ${newWall}`)
+
+            return
+        }
+
         switch (this.wall) {
-            case "right":
+            case Walls.R:
                 event.object.position.z = 0;
                 event.object.rotation.y = 0;
                 break;
-            case "left":
+            case Walls.L:
                 event.object.position.z = Room.zmax;
                 event.object.rotation.y = Math.PI;
                 break;
-            case "front":
+            case Walls.F:
                 event.object.position.x = 0;
                 event.object.rotation.y = Math.PI / 2;
                 break;
-            case "back":
+            case Walls.B:
                 event.object.position.x = Room.xmax;
                 event.object.rotation.y = -Math.PI / 2;
                 break;
+            case Corners.FR:
+                event.object.position.z = 0;
+                event.object.rotation.y = Math.PI / 4;
+
+                MainScene.render();
+                return
+                break;
+
+
+
+
             default:
                 console.error("no wall for draggable")
         }
@@ -201,46 +228,13 @@ export default class Draggable extends Meuble {
         Draggable.Dragged = null
         if (Draggable.Cross && Draggable.Cross.parent) MainScene.scene.remove(Draggable.Cross)
 
-        MainScene.meubles.forEach(m => m.dragControls.enabled = true)// reactivation of others
+        sceneChange()
+
+        MainScene.meubles.forEach(m => {
+            if (m.dragControls) m.dragControls.enabled = true
+        })// reactivation of others
     }
 
 
-    getWallChange(x, z, wall, thresh) {
-        switch (wall) {
-            case "front":
-                if (z < - thresh && Space.onWall["right"].length > 0) {
-                    return "right"
-                }
-                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
-                    return "left"
-                }
-                break;
-            case "back":
-                if (z < - thresh && Space.onWall["right"].length > 0) {
-                    return "right"
-                }
-                if (z > thresh + Room.zmax && Space.onWall["left"].length > 0) {
-                    return "left"
-                }
-                break;
-            case "right":
-                if (x < - thresh && Space.onWall["front"].length > 0) {
-                    return "front"
-                }
-                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
-                    return "back"
-                }
-                break;
-            case "left":
-                if (x < - thresh && Space.onWall["front"].length > 0) {
-                    return "front"
-                }
-                if (x > thresh + Room.xmax && Space.onWall["back"].length > 0) {
-                    return "back"
-                }
-                break;
-            default:
-        }
-        return null
-    }
+
 }

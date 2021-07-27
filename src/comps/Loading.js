@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-const mainDiv = {
+const leftBottomDiv = {
 	color: '#887788',
 	font: '.8em Arial, sans-serif',
 	position: 'absolute',
@@ -15,7 +15,7 @@ export class Loading extends Component {
 	}
 	render() {
 		return (
-			<div style={mainDiv}>
+			<div style={leftBottomDiv}>
 				{this.props.items.length > 0 &&
 					<span>loading...</span>
 				}

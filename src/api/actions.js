@@ -2,7 +2,7 @@ import store from './store';
 import { loadOne as loadOneMaterial, load as loadMaterial, apply as applyMaterial, getMaterialById, getLaqueById } from '../3d/Material'
 import MainScene from '../3d/MainScene';
 import { Room } from '../3d/Drag'
-import { getCurrentDressing } from '../3d/Dressing';
+import { getCurrentDressing, getCurrentDressingForDevis } from '../3d/Dressing';
 import { cameraTo } from '../3d/Animate';
 import { takePix } from '../3d/helpers/Capture';
 import { loadFbx } from '../3d/Loader'
@@ -266,7 +266,7 @@ export const generateAllPix = () => {
                 const state = {
                     position: {
                         wall: "back",
-                        x: centerMeubleForPix - props.largeur / 2// TODO props.largeur => getWidth
+                        x: centerMeubleForPix - object.getWidth() / 2
                     }
                 }
                 const meuble = MainScene.createMeuble(props, object, state)
@@ -349,12 +349,22 @@ export const changeTool = (tool, arg) => {
 
             break;
         case Tools.HAMMER:
+            MainScene.enableMeubleDragging(false)
+            MainScene.enableMeubleClicking(true)
+            MainScene.enableMeublePainting(false)
+            MainScene.enableItemsDragging(false)
+            break;
         case Tools.TRASH:
+            MainScene.enableMeubleDragging(false)
+            MainScene.enableMeubleClicking(true)
+            MainScene.enableMeublePainting(false)
+            MainScene.enableItemsDragging(false)
+            break;
         default:
             MainScene.enableMeubleDragging(false)
             MainScene.enableMeubleClicking(true)
             MainScene.enableMeublePainting(false)
-            MainScene.enableItemsDragging(true)
+            MainScene.enableItemsDragging(false)
             break;
     }
     MainScene.tool = tool;
@@ -375,6 +385,7 @@ export const select = (meuble, arg) => {
             break;
         case Tools.HAMMER:
             if (meuble) {
+                console.warn(`meuble`, meuble)
                 if (MainScene.selection === meuble) return
                 if (MainScene.selection) MainScene.selection.deselect();
                 meuble.select()
@@ -388,16 +399,16 @@ export const select = (meuble, arg) => {
                 if (window.kino_bridge)
                     window.kino_bridge(KinoEvent.SELECT_MEUBLE, meuble.props.sku)
                 MainScene.selection = meuble
+                meuble.enableItemsDragging(true)
 
-                if (window.kino_bridge)
-                    window.kino_bridge(KinoEvent.SCENE_CHANGE, MainScene.getMeubleList())
+                sceneChange()
             }
             else {
 
             }
             break;
         case Tools.BRUSH:
-            const interactiveEvent = arg;
+            let interactiveEvent = arg;
             console.warn(`Brush on`, interactiveEvent)
 
 
@@ -405,13 +416,27 @@ export const select = (meuble, arg) => {
             break;
         case Tools.TRASH:
             MainScene.deselect()
+            interactiveEvent = arg;
+            if (interactiveEvent.target != this) {
+                const itemClicked = meuble.items.filter(i => i.object == interactiveEvent.target)
+                console.warn(`trash tool itemClicked`, itemClicked)
+            }
+            else {
+            }
             MainScene.remove(meuble)
             MainScene.render()
             break;
         default:
             console.warn(`No tool selected`)
     }
+    sceneChange()
 }
+
+export const sceneChange = () => {
+    if (window.kino_bridge)
+        window.kino_bridge(KinoEvent.SCENE_CHANGE, getCurrentDressingForDevis())
+}
+
 export const animeSelectedMeuble = () => {
     const selectedMeuble = MainScene.selection
     if (!selectedMeuble) return
@@ -441,6 +466,7 @@ export const drop = (meuble) => {
         type: MeubleEvent.DROP, meuble
     }
 }
+
 /**
  * click on meuble to add it on scene.
  * window.scene_bridge('add_meuble_to_scene','NYC155H219P0').
@@ -483,6 +509,7 @@ export const clickMeubleLine = (sku) => {
             MainScene.render()
         })
     }
+    sceneChange()
 }
 
 /**

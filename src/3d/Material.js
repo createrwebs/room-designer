@@ -32,7 +32,14 @@ export const setTransparent = (meuble, opacity, parts) => {
             c.material.opacity = opacity;
         });
 }
-
+export const setVisible = (meuble, visible, parts) => {
+    meuble.object.children//c.type === "Mesh"
+        .filter(c => (parts ? parts.some(element => c.name.includes(element)) : true))
+        .forEach(c => {
+            // console.log(c)
+            c.visible = visible;
+        });
+}
 /* for laque */
 
 export const loadOne = (material) => {
@@ -138,7 +145,7 @@ export const load = (materials) => {
     })
 }
 export const apply = (materials, meuble) => {
-    console.log('Material : apply', materials, 'on', meuble)
+    // console.log('Material : apply', materials, 'on', meuble)
     let material_args, material, mtl
 
     /*
@@ -181,27 +188,27 @@ export const apply = (materials, meuble) => {
 
     /* mirror */
 
-    const mirrorMesh = meuble.object.children.find(child => child.name.indexOf("miroir") > -1)// array of several mirrors?
-    if (mirrorMesh && mirrorMesh.parent.getObjectByName("mirror") == undefined) {// remplacement of mirror only once
-        // mirrorMesh.geometry.computeBoundingBox();
-        var box = new Box3().copy(mirrorMesh.geometry.boundingBox);
-        box.applyMatrix4(mirrorMesh.matrix); // apply child scale & transforms to box
-        const m_width = box.max.x - box.min.x
-        const m_height = box.max.y - box.min.y
-        const m_depth = box.max.z - box.min.z
+    const mirrorMeshes = meuble.object
+        .children.filter(child => child.name.indexOf("miroir") > -1)// array of several mirrors?
+        .forEach(child => {
+            const box = new Box3().copy(child.geometry.boundingBox);
+            box.applyMatrix4(child.matrix); // apply child scale & transforms to box
+            const m_width = box.max.x - box.min.x
+            const m_height = box.max.y - box.min.y
+            const m_depth = box.max.z - box.min.z
 
-        var mirrorBox = new BoxBufferGeometry(m_width, m_height, m_depth);
-        var mirror = new Reflector(mirrorBox, {
-            color: new Color(0x7F7F7F),
-            textureWidth: window.innerWidth * window.devicePixelRatio,
-            textureHeight: window.innerHeight * window.devicePixelRatio,
-        });
-        mirror.name = "mirror"
-        mirror.position.set(box.min.x + m_width / 2, box.min.y + m_height / 2, box.min.z + m_depth / 2);
-        mirrorMesh.parent.add(mirror);
-        mirrorMesh.parent.remove(mirrorMesh);
-        console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, mirrorMesh.name)
-    }
+            const mirrorBox = new BoxBufferGeometry(m_width, m_height, m_depth);
+            const mirror = new Reflector(mirrorBox, {
+                color: new Color(0x7F7F7F),
+                textureWidth: window.innerWidth * window.devicePixelRatio,
+                textureHeight: window.innerHeight * window.devicePixelRatio,
+            });
+            mirror.name = "mirror"
+            mirror.position.set(box.min.x + m_width / 2, box.min.y + m_height / 2, box.min.z + m_depth / 2);
+            child.parent.add(mirror);
+            child.parent.remove(child);
+            // console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, child.name)
+        })
 
     /* light */
 
@@ -232,7 +239,7 @@ export const apply = (materials, meuble) => {
 /* laquage d'un mesh subobject */
 
 export const applyOnMesh = (mtl, child) => {
-    console.log('Material : applyOnMesh', mtl, 'on', child)
+    // console.log('Material : applyOnMesh', mtl, 'on', child)
     let material_args, material
 
     // const materialMatch = child.name.match(/-mtl-(.*)/)

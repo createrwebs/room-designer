@@ -5,7 +5,7 @@ to avoid re-import of three
 import { Raycaster, Vector2 } from 'three';
 
 export class InteractiveObject {
-  constructor (target, name) {
+  constructor(target, name) {
     this.target = target;
     this.name = name;
     this.intersected = false;
@@ -14,7 +14,7 @@ export class InteractiveObject {
 }
 
 export class InteractiveEvent {
-  constructor (type, originalEvent = null) {
+  constructor(type, originalEvent = null) {
     this.cancelBubble = false;
     this.type = type;
     this.originalEvent = originalEvent;
@@ -25,7 +25,7 @@ export class InteractiveEvent {
 }
 
 export class InteractionManager {
-  constructor (renderer, camera, domElement) {
+  constructor(renderer, camera, domElement) {
     this.renderer = renderer;
     this.camera = camera;
     this.domElement = domElement;
@@ -102,8 +102,11 @@ export class InteractionManager {
           }
         });
       } else {
-        const interactiveObject = new InteractiveObject(object, object.name);
-        this.interactiveObjects.push(interactiveObject);
+        const alreadyPushed = this.interactiveObjects.find(io => io.target == object && io.name == object.name)
+        if (!alreadyPushed) {
+          const interactiveObject = new InteractiveObject(object, object.name);
+          this.interactiveObjects.push(interactiveObject);
+        }
       }
     }
   };

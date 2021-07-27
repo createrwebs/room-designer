@@ -13,6 +13,7 @@ export const getSize = (object, axis) => {
     const box = new Box3().setFromObject(object);
     return Math.round(box.max[axis] - box.min[axis]);
 }
+window.getSize = getSize
 
 export const getCenterPoint = (object) => {
     const box = new Box3().setFromObject(object);
@@ -24,7 +25,10 @@ export const getCenterPoint = (object) => {
     return middle;
 }
 
-
+// const trous219 = [2071]
+const trous219 = [372, 431, 599, 663, 727, 815, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815, 1879, 1943, 2007, 2071]
+const trous238 = trous219.concat([2135, 2199, 2263])
+export const trousTIR = [80, 290, 480, 640]// trous du bas pour les tiroirs
 
 const types = [
     "ANG90",
@@ -76,8 +80,8 @@ const types = [
     "RGCH",// Range Chaussure accessoire
     "P40RL057",// Range Chaussure pivotable
     "TABREP",// table repasser
-    // "TIR2",// Module 2 Tiroirs
-    // "TIR4",
+    "TIR2",// Module 2 Tiroirs
+    "TIR4",
 ]
 
 export const panneaux = [
@@ -96,18 +100,19 @@ export const panneaux = [
 ]
 
 export const Measures = {
-    thick: 25,
+    thick: 25,// epaisseur de planche
+    arrondi: 2,// rayon du champfrein arrondi
 }
 
 export const parseSKU = (sku) => {
     const obj = {}
 
-    const HMatch = sku.match(/H\d*/g)
+    const HMatch = sku.match(/H\d{2,}/g)//https://regex101.com/
     if (HMatch && HMatch.length > 0) {
         obj.H = parseInt(HMatch[0].substring(1))
     }
 
-    const PMatch = sku.match(/P\d*/g)
+    const PMatch = sku.match(/P\d{2,}/g)
     if (PMatch && PMatch.length > 0 && PMatch[0] != "P") {
         obj.PR = obj.PL = parseInt(PMatch[0].substring(1))
         if (PMatch.length > 1) {// Module de liaison
@@ -117,7 +122,7 @@ export const parseSKU = (sku) => {
         obj.P = Math.max(obj.PR, obj.PL)
     }
 
-    const LMatch = sku.match(/L\d*/g)
+    const LMatch = sku.match(/L\d{2,}/g)
     if (LMatch && LMatch.length > 0) {
         obj.L = parseInt(LMatch[0].substring(1))
     }
@@ -136,12 +141,24 @@ export const parseSKU = (sku) => {
         || obj.type === "C191"
         || obj.type === "C231"
         || obj.type === "P40RL057"
+        || obj.type === "FIL"
 
     /* panneaux inamovibles */
     obj.hasSides = obj.type === "ANG"
         || obj.type === "C155"
         || obj.type === "C191"
         || obj.type === "C231"
+        || obj.type === "FIL"
+
+    /* portes */
+    obj.isPorte = obj.type.substr(0, 1) === "P" && obj.type.length == 4
+
+    /* titoir */
+    obj.isTiroir = obj.type.substr(0, 3) === "TIR"
+
+    /* alignement en applique */
+    obj.frontAlign = obj.type.substr(0, 2) === "ET"//etagere
+        || obj.isTiroir// tiroir en applique
 
     switch (obj.type) {
         case "ANG":
@@ -153,21 +170,26 @@ export const parseSKU = (sku) => {
             obj.L = 81
             break;
         case "C155":
-            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.P = obj.PR = obj.PL = 62
             obj.L = 155
             break;
         case "C191":
-            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.P = obj.PR = obj.PL = 62
             obj.L = 191
             break;
         case "C231":
-            obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
+            obj.P = obj.PR = obj.PL = 62
             obj.L = 231
             break;
+    }
 
+    if (obj.isModule) {
+        obj.trous = obj.H === 219 ? trous219 : trous238
+        obj.has2Doors = obj.L > 70
     }
 
     console.log(sku, obj)
 
     return obj
 }
+window.parseSKU = parseSKU

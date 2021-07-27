@@ -34,9 +34,9 @@ import { parseSKU } from '../3d/Utils'
 import sceneBridge from '../api/Bridge';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-import Room from './Room';
+import Room from './Scene';
 import Loading from './Loading';
-import Dragging from './Dragging';
+import Dragging from './Logging';
 import { getGui } from './DataGui';
 
 // import Toolbar from './bars/Toolbar';
@@ -110,11 +110,11 @@ class App extends Component {
 						/* 	.then(e => {
 							console.log("meuble loaded", e);
 						}) */
-						// this.props.changeTool(Tools.HAMMER)
 
 						// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
 					}
 					this.setState({ catalogueLoaded: true })
+					setTimeout(changeTool, 1500, Tools.HAMMER)
 					gui = getGui()
 				})
 		}
@@ -198,8 +198,6 @@ const mapDispatchToProps = {
 	dragMeubleOverScene,
 	dropMeubleOnScene,
 	animeSelectedMeuble,
-	changeTool,
 	generateAllPix,
-	setSceneMaterial
 };
 export default connect(null, mapDispatchToProps)(App)
