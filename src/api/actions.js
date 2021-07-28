@@ -6,7 +6,7 @@ import { getCurrentDressing, getCurrentDressingForDevis } from '../3d/Dressing';
 import { cameraTo } from '../3d/Animate';
 import { takePix } from '../3d/helpers/Capture';
 import { loadFbx } from '../3d/Loader'
-import { parseSKU } from '../3d/Utils'
+import { parseSKU } from '../3d/Sku'
 
 export const KinoEvent = {
     SELECT_MEUBLE: 'select_meuble',

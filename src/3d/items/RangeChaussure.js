@@ -9,18 +9,17 @@ export default class RangeChaussure extends Item {
     }
     setPositionX(x) {
         this.object.position.x =
-            this.isLeft ? Measures.thick : this.parent.skuInfo.L * 10 - this.width + Measures.thick
+            this.isLeft ? Measures.thick : this.parent.skuInfo.L - this.width + Measures.thick
     }
     setPositionY(y) {
 
         if (y) {
-            y = Math.min(this.parent.skuInfo.H * 10 - getSize(this.object, "y"),
-                Math.max(getSize(this.object, "y"), y))
+            y = Math.min(this.parent.skuInfo.H * 10 - this.height, Math.max(this.height, y))
         }
 
         super.setPositionY(y)
     }
     setPositionZ(z) {
-        this.object.position.z = this.parent.depth - getSize(this.object, "z") - 11
+        this.object.position.z = this.parent.depth - this.depth// - 11
     }
 }

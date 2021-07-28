@@ -1,11 +1,9 @@
 import {
-    select,
     drag,
     Tools
 }
     from '../../api/actions'
 import store from '../../api/store';
-import { LineBasicMaterial, Vector3, LineSegments, BufferGeometry } from "three";
 import MainScene from '../MainScene';
 import Fbx from '../Fbx'
 import {
@@ -14,28 +12,8 @@ import {
     getMaterialById,
 } from '../Material'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-import { parseSKU, Measures, getSize } from '../Utils'
+import { Measures, getSize } from '../Utils'
 import { getClosestInArray } from '../Drag'
-
-class Space {
-    static onWall = []// right,back,left
-    constructor(min, max, prev, next) {
-        this.min = min;
-        this.max = max;
-        this.prev = prev;
-        this.next = next;
-    }
-    include(segment) {
-        return segment.max <= this.max && segment.min >= this.min
-    }
-    static getClosest(wall, segment) {
-        if (!Space.onWall[wall]) return null;
-        if (Space.onWall[wall] && Space.onWall[wall].length == 0) return null;
-        Space.onWall[wall].sort((s1, s2) =>
-            Math.min(segment.max - s2.min, s2.max - segment.min) - Math.min(segment.max - s1.min, s1.max - segment.min))
-        return Space.onWall[wall][0]
-    }
-}
 
 export default class Item extends Fbx {
 
@@ -72,7 +50,7 @@ export default class Item extends Fbx {
         this.width = getSize(this.object, "x")
         this.height = getSize(this.object, "y")
         this.depth = getSize(this.object, "z")
-        console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.parent)
+        console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.depth, this.parent)
 
         /* textures */
 
@@ -89,6 +67,7 @@ export default class Item extends Fbx {
     }
 
     /* position */
+
     setPosition(x, y, z) {
         this.setPositionX(x)
         this.setPositionY(y)
@@ -98,43 +77,39 @@ export default class Item extends Fbx {
         this.object.position.x = x ? x : Measures.thick;// TODO state.position.place
     }
     setPositionY(y) {
-        if (false && this.state && this.state.position) {// Item from saved dressing
 
-            this.positionY = this.state.position.x// y=x yes it is
-            this.object.position.y = this.positionY
+        // dragging Item | from saved dressing | by user click
+
+        let places = this.parent.places[this.place]
+        // console.log("setPositionY", this.positionY, y, places, this.place)
+        if (places.length == 0) {
+            console.warn(`no slot available for ${this.props.sku}`)
+            // this.parent.removeItem(this)
+            this.object.position.y = this.positionY - Measures.thick / 2
+            return
         }
-        else {// new Item by user click or dragging Item
-            let places = this.parent.places[this.place]
-            // console.log("setPositionY", this.positionY, y, places, this.place)
-            if (places.length == 0) {
-                console.warn(`no slot available for ${this.props.sku}`)
-                // this.parent.removeItem(this)
-                this.object.position.y = this.positionY - Measures.thick / 2
-                return
-            }
-            if (this.positionY && !places.includes(this.positionY)) {
-                places.push(this.positionY)
-            }
-            const position = y ? y : 0
-            const closest = getClosestInArray(position, places)
-            if (y) {//dragging Item
-                if (closest != this.positionY) {
-                    if (this.positionY && !places.includes(this.positionY)) {
-                        places.push(this.positionY)
-                    }
-                    this.positionY = closest
+        if (this.positionY && !places.includes(this.positionY)) {
+            places.push(this.positionY)
+        }
+        const position = y ? y : 0
+        const closest = getClosestInArray(position, places)
+        if (y) {
+            if (closest != this.positionY) {
+                if (this.positionY && !places.includes(this.positionY)) {
+                    places.push(this.positionY)
                 }
-            }
-            else {// new Item by user click
                 this.positionY = closest
             }
-            places = places.filter(function (item) {
-                return item !== closest
-            })
-            this.object.position.y = this.positionY - Measures.thick / 2
-            this.parent.places[this.place] = places
-            // console.log("---setPositionY", this.parent.places[this.place])
         }
+        else {// new Item by user click
+            this.positionY = closest
+        }
+        places = places.filter(function (item) {
+            return item !== closest
+        })
+        this.object.position.y = this.positionY - Measures.thick / 2
+        this.parent.places[this.place] = places
+        // console.log("---setPositionY", this.parent.places[this.place])
     }
     setPositionZ(z) {
         if (this.skuInfo.frontAlign) {
@@ -161,6 +136,8 @@ export default class Item extends Fbx {
         console.warn(`deselect Item ${this.info()}`, this)
     }
 
+    /*dragging */
+
     dragStart(event) {
         // console.warn(`dragStart Item ${this.info()}`, Item.Dragged)
         if (Item.Dragged) {
@@ -169,11 +146,9 @@ export default class Item extends Fbx {
         }
         Item.Dragged = this;
         store.dispatch(drag(this))
-
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
         Item.Nowtime = Date.now();
     }
-
     dragging(event) {
         // console.warn(`dragging Item ${this.info()}`, Item.Dragged)
         // drag start delay to let selection click
@@ -183,7 +158,6 @@ export default class Item extends Fbx {
         this.setPosition(null, event.object.position.y, null)
         MainScene.render();
     }
-
     dragEnd(event) {
         MainScene.orbitControls.enabled = true;
         if (Item.Dragged === this && Date.now() - Item.Nowtime < Item.selectClickBeforeDragDelay) {
@@ -203,7 +177,7 @@ export default class Item extends Fbx {
             laqueOnMeshes: this.getLaqueOnMeshesJson(),
             position: {
                 place: this.place,
-                x: this.object.position.y
+                x: this.positionY ? this.positionY : this.object.position.y
             },
         }
     }

@@ -5,7 +5,8 @@ import {
 
 import MainScene from './MainScene';
 import Fbx from './Fbx'
-import { getSize, parseSKU, Measures, trousTIR } from './Utils'
+import { Measures, getSize } from './Utils'
+import { parseSKU, trousTIR } from './Sku'
 import { Room, Walls, Corners } from './Drag';
 import { loadFbx } from './Loader'
 import {
@@ -25,8 +26,11 @@ import { localhost } from '../api/Config';
 
 import Item from './items/Item'
 import Porte from './items/Porte'
-import RangeChaussure from './items/RangeChaussure'
+import Etagere from './items/Etagere'
 import Tiroir from './items/Tiroir'
+import RangeChaussure from './items/RangeChaussure'
+import Chassis from './items/Chassis'
+import BC from './items/BC'
 
 export default class Meuble extends Fbx {
     constructor(props, object, state, skuInfo) {
@@ -130,12 +134,12 @@ export default class Meuble extends Fbx {
                 // this.addItemBySku("NYETAP62L081")
                 break;
             case "NYH238P62L096":
-                this.addItemBySku("NYRP1P62L096")
-                this.addItemBySku("NYETLP62L096")
-                this.addItemBySku("NYETAP62L096")
-                this.addItemBySku("NYH238P62SE")
-                this.addItemBySku("NYH238P62FG")
-                this.addItemBySku("NYH238P62FD")
+                // this.addItemBySku("NYRP1P62L096")
+                // this.addItemBySku("NYETLP62L096")
+                // this.addItemBySku("NYETAP62L096")
+                // this.addItemBySku("NYH238P62SE")
+                // this.addItemBySku("NYH238P62FG")
+                // this.addItemBySku("NYH238P62FD")
                 break;
             case "NYH219P40L096":
                 this.addItemBySku("NYETAP40L096")
@@ -156,14 +160,17 @@ export default class Meuble extends Fbx {
     positionAllChildren() {
         this.object.children.forEach(child => {
             // child.rotation.set(props.rotateX * Math.PI / 180, props.rotateY * Math.PI / 180, props.rotateZ * Math.PI / 180)
-            child.position.set(Measures.thick, 0, 0)
+            if (!this.skuInfo.hasSides) {
+                child.position.set(Measures.thick, 0, 0)
+            }
         })
     }
 
     /* ruler for hammer tool */
 
     setupRuler() {
-        this.ruler = createRuler(this.props.sku, this.width + 2 * Measures.thick, this.height)
+        const rulerWidth = this.width + (this.skuInfo.hasSides ? 0 : 2 * Measures.thick)
+        this.ruler = createRuler(this.props.sku, rulerWidth, this.height)
         this.ruler.position.z = this.depth + 20
     }
 
@@ -226,8 +233,7 @@ export default class Meuble extends Fbx {
         }
     }
     info() {
-        return `${this.props.sku}`
-        // (L ${ this.width / 10 }cm H ${ this.height / 10 }cm P ${ this.depth / 10 }cm)
+        return `${this.props.sku} (L ${this.width / 10}cm H ${this.height / 10}cm P ${this.depth / 10}cm)`
     }
     select() {
         if (this.ruler) this.object.add(this.ruler);
@@ -288,20 +294,27 @@ export default class Meuble extends Fbx {
         if (skuInfo.isPorte) {
             item = new Porte(props, object, state, skuInfo, this)
         }
-        else if (skuInfo.type === "RGCH") {
-            item = new RangeChaussure(props, object, state, skuInfo, this)
+        else if (skuInfo.isEtagere) {
+            item = new Etagere(props, object, state, skuInfo, this)
+        }
+        else if (skuInfo.isChassis) {
+            item = new Chassis(props, object, state, skuInfo, this)
         }
         else if (skuInfo.isTiroir) {
             item = new Tiroir(props, object, state, skuInfo, this)
+        }
+        else if (skuInfo.type === "RGCH") {
+            item = new RangeChaussure(props, object, state, skuInfo, this)
+        }
+        else if (skuInfo.type === "BC") {
+            item = new BC(props, object, state, skuInfo, this)
         }
         else {
             item = new Item(props, object, state, skuInfo, this)
         }
 
 
-
-
-        item.setPosition(null, state && state.position ? state.position.x : null, null)
+        item.setPosition(null, state && state.position ? state.position.x : null, null)// y=x yes it is
         // console.log(item)
 
         // TODO
@@ -327,7 +340,7 @@ export default class Meuble extends Fbx {
         switch (where) {
             case "right":
                 panneau.object.name = "panneauRight";
-                panneau.object.position.x = this.skuInfo.L * 10 + Measures.thick;
+                panneau.object.position.x = this.skuInfo.L + Measures.thick;
                 panneau.object.position.y = 0;
                 panneau.object.position.z = 0;
                 this.object.add(panneau.object);
@@ -385,8 +398,8 @@ export default class Meuble extends Fbx {
                 break;
             case Corners.FR:
                 this.object.rotation.y = Math.PI / 4;
-                this.object.position.z = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
-                // this.object.position.z = this.skuInfo.L * 10 * Math.cos(Math.PI / 4);
+                this.object.position.z = (this.skuInfo.L + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
+                // this.object.position.z = this.skuInfo.L * Math.cos(Math.PI / 4);
                 break;
             default:
         }

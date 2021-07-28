@@ -102,7 +102,7 @@ export default class Draggable extends Meuble {
                         })
                         if (this.panneaux) {
                             if (this.panneaux["right"] && this.panneaux["right"].object) {
-                                this.panneaux["right"].object.position.x = this.skuInfo.L * 10
+                                this.panneaux["right"].object.position.x = this.skuInfo.L
                                 this.panneaux["right"].object.position.y = 0;
                                 this.panneaux["right"].object.position.z = 0
                             }

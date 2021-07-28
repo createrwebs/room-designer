@@ -30,7 +30,7 @@ import {
 	setSceneMaterial,
 }
 	from '../api/actions'
-import { parseSKU } from '../3d/Utils'
+import { parseSKU } from '../3d/Sku'
 import sceneBridge from '../api/Bridge';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';

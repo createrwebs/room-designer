@@ -1,4 +1,5 @@
 import { Vector3, Box3 } from "three";
+import { localhost } from '../api/Config';
 
 import MainScene from './MainScene';
 import {
@@ -40,7 +41,7 @@ export default class Fbx {
         }
     }
     getFrontPosition() {
-        const d = 3000// distance de recul pour observer le meuble selectionné
+        const d = localhost ? 2000 : 3000// distance de recul pour observer le meuble selectionné
         const center = this.getCenterPoint()
         switch (this.wall) {
             case Walls.F:
