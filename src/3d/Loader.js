@@ -42,15 +42,15 @@ export const loadFbx = (url, callback) => {
     const filename = getFileNameFromUrl(url)
     const alreadyLoaded = Fbxs.find(fbx => fbx.userData.filename === filename)
     if (alreadyLoaded) {
-        return callback(alreadyLoaded)
+        return callback(alreadyLoaded.clone())
     }
     store.dispatch(loadManagerStart(filename))
     fbxLoader.load(url,
         (object) => {
+            object.userData.filename = filename
             if (undefined == Fbxs.find(fbx => fbx.userData.filename === filename))
                 Fbxs.push(object)
-            object.userData.filename = filename
-            callback(object)
+            callback(object.clone())
         },
         (xhr) => {
             // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -65,4 +65,3 @@ export const loadFbx = (url, callback) => {
             store.dispatch(loadManagerError(filename))
         })
 }
-

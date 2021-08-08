@@ -1,0 +1,36 @@
+{
+    "name": "1 armoire avec 3 blots",
+    "xmax": 6000,
+    "zmax": 4000,
+    "materialId": 1301,
+    "meubles": [
+        {
+            "sku": "NYC231H238PG",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1400
+            },
+            "items": [
+                {
+                    "sku": "NYBLOTMML074",
+                    "position": {
+                        "place": "left"
+                    }
+                },
+                {
+                    "sku": "NYBLOTPPL074",
+                    "position": {
+                        "place": "center"
+                    }
+                },
+                {
+                    "sku": "NYBLOTMPL074",
+                    "position": {
+                        "place": "right"
+                    }
+                }
+            ]
+        }
+    ]
+}

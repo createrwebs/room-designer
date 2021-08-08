@@ -17,7 +17,7 @@ const types = [
     "ANGTIR",// option tiroir supp pour angle
     "ANG",// Module angle, last match after ANGXX
     "BC",// porte cintre, range cravate  // sans NY
-    "BLOT0G",// bloc ...
+    "BLOT0G",// bloc tiroir
     "BLOTMM",
     "BLOTMP",
     "BLOTPP",
@@ -91,7 +91,7 @@ export const parseSKU = (sku) => {
         obj.PR = obj.PL = parseInt(PMatch[0].substring(1))
         if (PMatch.length > 1) {// Module de liaison
             obj.PR = parseInt(PMatch[1].substring(1))
-            obj.L = 40// modulae liaison fixed L
+            obj.L = 40// module liaison fixed L
         }
         obj.P = Math.max(obj.PR, obj.PL)
     }
@@ -136,6 +136,9 @@ export const parseSKU = (sku) => {
     /* chassis */
     obj.isChassis = obj.type.substr(0, 3) === "CHA"
 
+    /* blot */
+    obj.isBlot = obj.type.substr(0, 4) === "BLOT"
+
     /* alignement en applique */
     obj.frontAlign = obj.isEtagere//etagere
         || obj.isTiroir// tiroir en applique
@@ -170,12 +173,18 @@ export const parseSKU = (sku) => {
         default:
             if (obj.isModule) {
                 obj.trous = obj.H === 219 ? trous219Panneaux : trous238Panneaux
+
+                if (obj.PR === obj.PL) {// module de liaison not in corners
+                    obj.angABSku = {// TODO to use
+                        "right": `NYANGABP${obj.P}R`,
+                        "left": `NYANGABP${obj.P}L`,
+                    }
+                }
             }
     }
 
     if (obj.isModule) {
         obj.has2Doors = obj.L > 70 && obj.type != "ANG"
-        obj.angABSku = `NYANGABP${obj.P}`
 
         obj.paneSku = {// TODO to use
             "right": `NYH${obj.H}P${obj.PR}FD`,

@@ -179,6 +179,8 @@ export default class Draggable extends Meuble {
         this.wall = newWall
         const widthInCorner = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
 
+        // TODO corner occupied ?
+
         switch (this.wall) {
             case Walls.R:
                 event.object.position.z = 0;

@@ -1,0 +1,158 @@
+{
+    "name": "1 armoire avec ses items",
+    "xmax": 5000,
+    "zmax": 4000,
+    "materialId": 1301,
+    "meubles": [
+        {
+            "sku": "NYC231H238PG",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 800
+            },
+            "items": [
+                {
+                    "sku": "NYETAPCOL074",
+                    "position": {
+                        "place": "right",
+                        "x": 1588
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "position": {
+                        "place": "center",
+                        "x": 1588
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "position": {
+                        "place": "left",
+                        "x": 1588
+                    }
+                },
+                {
+                    "sku": "NYSEPVP62",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYANG90H219",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYFILH219",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYRGCHP62D",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYRGCHP62G",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "BC50000",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYRP1P62L074",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYRP2P62L074",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYBLOTMML074",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYBLOTPPL074",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYBLOTMPL074",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "NYBLOT0GL074",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "BC77000",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "BC80000",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "BC81000",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "BC82000",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                },
+                {
+                    "sku": "BC84000",
+                    "position": {
+                        "place": "left",
+                        "x": 1559
+                    }
+                }
+            ]
+        }
+    ]
+}

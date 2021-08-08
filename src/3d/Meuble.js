@@ -29,6 +29,7 @@ import Item from './items/Item'
 import Porte from './items/Porte'
 import Etagere from './items/Etagere'
 import Tiroir from './items/Tiroir'
+import Blot from './items/Blot'
 import RangeChaussure from './items/RangeChaussure'
 import Chassis from './items/Chassis'
 import BC from './items/BC'
@@ -36,7 +37,7 @@ import AngAB from './items/AngAB'
 
 export default class Meuble extends Fbx {
     constructor (props, object, state, skuInfo) {
-        // console.log('Meuble',props, object, state, skuInfo)
+        console.log('Meuble', props, object, state, skuInfo)
         super(props, object, state, skuInfo)
         this.uid = this.getUid()
 
@@ -106,7 +107,7 @@ export default class Meuble extends Fbx {
 
         // log meuble to console
         // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`)
-        // console.log(this.props.accessoirescompatibles)
+        console.log(this.props.accessoirescompatibles)
 
         // const front = this.getFrontPosition()
         // MainScene.camera.position.set(front.x, front.y, front.z)
@@ -300,7 +301,9 @@ export default class Meuble extends Fbx {
         this.addItem(props, state, skuInfo)
     }
     addItem(props, state, skuInfo) {
-        if (this.props.accessoirescompatibles.indexOf(props.sku) === -1) {
+        if (this.props.accessoirescompatibles.indexOf(props.sku) === -1
+            && skuInfo.type !== "ANGAB"// triangles not in acccompatibles
+        ) {
             console.warn(`${props.sku} non compatible avec ${this.props.sku} sélectionné`)
             return false
         }
@@ -324,6 +327,9 @@ export default class Meuble extends Fbx {
         }
         else if (skuInfo.isTiroir) {
             item = new Tiroir(props, object, state, skuInfo, this)
+        }
+        else if (skuInfo.isBlot) {
+            item = new Blot(props, object, state, skuInfo, this)
         }
         else if (skuInfo.type === "RGCH") {
             item = new RangeChaussure(props, object, state, skuInfo, this)
@@ -359,11 +365,15 @@ export default class Meuble extends Fbx {
     /* angab */
 
     addAngAB() {
-        this.addItemBySku(this.skuInfo.angABSku)
+        if (this.skuInfo.angABSku) {
+            this.addItemBySku(this.skuInfo.angABSku.left)
+            this.addItemBySku(this.skuInfo.angABSku.right)
+        }
     }
     removeAngAB() {
-        const angAB = this.items.find(i => i.props.sku === this.skuInfo.angABSku)
-        if (angAB) this.removeItem(angAB)
+        if (this.skuInfo.angABSku) {
+            this.items.filter(i => Object.values(this.skuInfo.angABSku).includes(i.props.sku)).forEach(i => this.removeItem(i))
+        }
     }
 
     /* panneaux */
@@ -420,6 +430,7 @@ export default class Meuble extends Fbx {
     */
     setPosition(position) {
         // console.log(position, MainScene);
+        const widthInCorner = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
         switch (position.wall) {
             case Walls.R:
                 this.object.rotation.y = 0;// natural wall for fbx
@@ -449,30 +460,32 @@ export default class Meuble extends Fbx {
                 this.object.position.z = position.x;
                 break;
 
+
+            // copied from Draggable.dragging :
             case Corners.FR:
                 this.object.position.x = 0;
-                this.object.position.z = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
+                this.object.position.z = widthInCorner;
                 this.object.rotation.y = Math.PI / 4;
                 break;
             case Corners.RB:
-                this.object.position.x = Room.xmax - (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
+                this.object.position.x = Room.xmax - widthInCorner;
                 this.object.position.z = 0;
                 this.object.rotation.y = -Math.PI / 4;
                 break;
             case Corners.BL:
-                this.object.position.x = 0;
-                this.object.position.z = Room.zmax - (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
-                this.object.rotation.y = 3 * Math.PI / 4;
+                this.object.position.x = Room.xmax
+                this.object.position.z = Room.zmax - widthInCorner
+                this.object.rotation.y = 5 * Math.PI / 4;
                 break;
             case Corners.LF:
-                this.object.position.x = Room.xmax
-                this.object.position.z = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4)
+                this.object.position.x = widthInCorner;
+                this.object.position.z = Room.zmax
                 this.object.rotation.y = 3 * Math.PI / 4;
                 break;
             default:
         }
         if (!this.isOnAWall()) {// from wall to corner
-            this.addItemBySku(this.skuInfo.angABSku)
+            this.addAngAB()
         }
     }
 

@@ -5,6 +5,12 @@ export default class AngAB extends Item {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo, parent)
 
+        // .clone *3 *4 selon H !!!
+
+        const isRight = this.props.sku.substr(-1) === "R"
+
+        console.log(this)
+
         // trying to access triangles positioning, but meshes position are setup in fbx
 
         /*         this.object.children.forEach(child => child.visible = false)
@@ -16,9 +22,16 @@ export default class AngAB extends Item {
                 console.log(this.t2)
          */
 
-        // this.t1.position.x =
-        // this.t1.position.y = this.parent.skuInfo.H * 10 - Measures.thick
-        // this.t1.position.x = 
+        this.object.position.y = this.parent.skuInfo.H * 10 - Measures.thick
+
+        if (isRight) {
+            this.object.position.x = (this.parent.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4)
+            this.object.position.z = 0
+        }
+        else {
+            this.object.position.x = 0
+            this.object.position.z = (this.parent.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4)
+        }
     }
     setPosition(x, y, z) {
         // this.object.position.x = 0

@@ -3,10 +3,6 @@ import { connect } from 'react-redux';
 
 import config from '../../assets/config.json';
 import defaultdressing from '../../assets/dressings/defaultdressing.json';
-import dressing1 from '../../assets/dressings/dressing-1.json';
-import dressing2 from '../../assets/dressings/dressing-2.json';
-// import catalogue from '../../assets/catalogue.json';
-// import catalogueitem from '../../assets/dressings/catalogueitem.json';
 
 import { getJson } from '../api/request';
 import { localhost } from '../api/Config';
@@ -98,6 +94,8 @@ class App extends Component {
 						// clickMeubleLine("NYH219P62FD")
 						// clickMeubleLine("NYH238P62FD")
 						// clickMeubleLine("NYH238P62L040")
+						// clickMeubleLine("NYH238P62L040")
+						// clickMeubleLine("NYH238P62L040")
 
 						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
 						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
@@ -115,7 +113,7 @@ class App extends Component {
 						// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
 					}
 					this.setState({ catalogueLoaded: true })
-					// setTimeout(changeTool, 1500, Tools.HAMMER)
+					setTimeout(changeTool, 1500, Tools.HAMMER)
 					gui = getGui()
 				})
 		}

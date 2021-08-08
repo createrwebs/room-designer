@@ -12,208 +12,6 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 	<script>
-		// set var name to composition to load dressing at start :
-
-		var composition = {
-			"name": "Nouveau dressing du 2021-07-15 12:46:39pm",
-			"xmax": 6000,
-			"zmax": 4000,
-			"meubles": [
-				/* 				{
-									"sku": "NYANGH219",
-									"laqueOnMeshes": [
-										{
-											"mesh": "tirroirfront-mtl-cuir",
-											"laque": 1234
-										}
-									],
-									"position": {
-										"wall": "right-back"
-									},
-									"items": []
-								}, */
-				// {
-				// 	"sku": "NYC231H238PG",
-				// 	"laqueOnMeshes": [],
-				// 	"position": {
-				// 		"wall": "right",
-				// 		"x": 1400
-				// 	},
-				// 	"items": [
-				// { sku: "NYETAPCOL074", position: { place: "right", x: 1588 } },
-				// { sku: "NYETAPCOL074", position: { place: "center", x: 1588 } },
-				// { sku: "NYETAPCOL074", position: { place: "left", x: 1588 } },
-				// { sku: "NYSEPVP62", position: { place: "left", x: 1559 } },
-				// { sku: "NYANG90H219", position: { place: "left", x: 1559 } },
-				// { sku: "NYFILH219", position: { place: "left", x: 1559 } },
-				// { sku: "NYRGCHP62D", position: { place: "left", x: 1559 } },
-				// { sku: "NYRGCHP62G", position: { place: "left", x: 1559 } },
-				// 		{ sku: "BC50000", position: { place: "left", x: 1559 } },
-				// 		{ sku: "NYRP1P62L074", position: { place: "left", x: 1559 } },
-				// 		{ sku: "NYRP2P62L074", position: { place: "left", x: 1559 } },
-				// 		{ sku: "NYBLOTMML074", position: { place: "left", x: 1559 } },
-				// 		{ sku: "NYBLOTPPL074", position: { place: "left", x: 1559 } },
-				// 		{ sku: "NYBLOTMPL074", position: { place: "left", x: 1559 } },
-				// 		{ sku: "NYBLOT0GL074", position: { place: "left", x: 1559 } },
-				// 		{ sku: "BC77000", position: { place: "left", x: 1559 } },
-				// 		{ sku: "BC80000", position: { place: "left", x: 1559 } },
-				// 		{ sku: "BC81000", position: { place: "left", x: 1559 } },
-				// 		{ sku: "BC82000", position: { place: "left", x: 1559 } },
-				// 		{ sku: "BC84000", position: { place: "left", x: 1559 } }
-				// ]
-				// },
-				/* 				{
-									"sku": "NYH219P40RL057",
-									"laqueOnMeshes": [],
-									"position": {
-										"wall": "right",
-										"x": 4090
-									},
-									"items": []
-								}, */
-				{
-					"sku": "NYH219P40RL057",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "front-right",
-						"x": 0
-					},
-					"items": []
-				},
-				{
-					"sku": "NYH238P40P62",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "right",
-						"x": 585
-					},
-					"items": []
-				},
-				{
-					"sku": "NYH238P62P40",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "right",
-						"x": 1200
-					},
-					"items": []
-				},
-				/* {
-					"sku": "NYANGH238",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "front",
-						"x": 1110
-					},
-					"items": [
-						{ sku: "NYPGD-H238L59", position: { place: "left", x: 0 } },
-					]
-				}, */
-				{
-					"sku": "NYCOIFH238",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "front",
-						"x": 1500
-					},
-					"items": []
-				},
-				/* {
-					"sku": "NYC231H219PP",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "front",
-						"x": 1110
-					},
-					"items": []
-				}, */
-				// {
-				// 	"sku": "NYC155H219PP",
-				// 	"laqueOnMeshes": [],
-				// 	"position": {
-				// 		"wall": "left",
-				// 		"x": 1000
-				// 	},
-				// 	"items": [
-				// 	]
-				// },
-				// {
-				// 	"sku": "NYH238P62L096",
-				// 	"laqueOnMeshes": [],
-				// 	"position": {
-				// 		"wall": "right",
-				// 		"x": 0
-				// 	},
-				// 	"items": [
-				// { sku: "NYETAP62L096", position: 727 },
-				// { sku: "NYETAP62L096", position: 2071 },
-				// { sku: "NYETTP62L096", position: 0 },
-				// { sku: "NYETLP62L096", position: 0 },
-				// { sku: "NYETAP62L096", position: { place: "left", x: 1559 } },
-				// { sku: "NYSEPVP62", position: 0 },
-				// { sku: "NYANGABP62", position: 0 },
-				// { sku: "NYANG90H238", position: 0 },
-				// { sku: "NYFILH238", position: 0 },
-				// { sku: "NYPPG-H238L48", position: 0 },
-				// { sku: "NYPPD-H238L48", position: 0 },
-				// { sku: "NYPGG-H238L48", position: 0 },
-				// { sku: "NYPGD-H238L48", position: 0 },
-				// { sku: "NYPVG-H238L48", position: 0 },
-				// { sku: "NYPVD-H238L48", position: 0 },
-				// { sku: "NYPENRABP62M3", position: 0 },
-				// { sku: "NYRGCHP62D", position: 0 },
-				// { sku: "NYRGCHP62G", position: 0 },
-				// { sku: "NYCHACHAUSS96", position: 0 },
-				// { sku: "NYCHAPANF96", position: 0 },
-				// { sku: "NYCHAPANT96", position: 0 },
-				// { sku: "BC50000", position: 0 },
-				// { sku: "NYCHACAS96", position: 0 },
-				// { sku: "NYCHALINGE96", position: 0 },
-				// { sku: "NYRP1P62L096", position: 0 },
-				// { sku: "NYRP2P62L096", position: 0 },
-				// { sku: "NYBLOTMML096", position: 0 },
-				// { sku: "NYBLOTPPL096", position: 0 },
-				// { sku: "NYBLOTMPL096", position: 0 },
-				// { sku: "NYBLOT0GL096", position: 0 },
-				// { sku: "NYTIR2P62L096", position: 0 },
-				// { sku: "NYTIR4P62L096", position: 0 },
-				// { sku: "NYCASP62L096", position: 0 },
-				// { sku: "NYMIROIRP62", position: 0 },
-				// { sku: "NYTABREP", position: 0 },
-				// 		{ sku: "BC83000", position: 0 },
-				// 		{ sku: "BC77000", position: 0 },
-				// 		{ sku: "BC80000", position: 0 },
-				// 		{ sku: "BC81000", position: 0 },
-				// { sku: "BC82000", position: { place: "left", x: 1495 } },
-				// 		{ sku: "BC84000", position: 0 },
-				// ]
-				// },
-				/* 				{
-									"sku": "NYFILH238",
-									"laqueOnMeshes": [],
-									"position": {
-										"wall": "right",
-										"x": 2000
-									},
-									"items": [
-									]
-								}, */
-				/*{
-					"sku": "NYH219P40L096",
-					"laqueOnMeshes": [],
-					"position": {
-						"wall": "right",
-						"x": 4000
-					},
-					"items": [
-		
-					]
-				}*/
-			],
-			"materialId": 1301,
-			"id": 1292
-		}
-
 		var laques = [
 			{
 				"label": "laque 2",
@@ -692,10 +490,14 @@
 			}
 		]
 
-		var defaultdressing, dressing1, material1, laque01
+		var defaultdressing, dressingCorners, material1, laque01
+
+		load_dressing = function (url) {
+			fetch(url).then(response => response.json()).then(json => local_scene_bridge('load_dressing', json));
+		}
 		fetch("dressings/defaultdressing.json").then(response => response.json()).then(json => defaultdressing = json);
 		fetch("material-chene-blanc.json").then(response => response.json()).then(json => material1 = json);
-		fetch("dressings/dressing-1.json").then(response => response.json()).then(json => dressing1 = json);
+		fetch("dressings/dressing-corners.json").then(response => response.json()).then(json => dressingCorners = json);
 		fetch("material-laque01.json").then(response => response.json()).then(json => laque01 = json);
 
 
@@ -741,13 +543,18 @@
 		<i class="fa fa-save"></i>
 	</button>
 
-	<button class="btn" onclick="local_scene_bridge('load_dressing', dressing1)">
-		<i class="fa fa-upload"></i>
-	</button>
+	<select id="load-dressing" onchange="load_dressing(this.value)">
+		<option value="dressings/defaultdressing.json">default</option>
+		<option value="dressings/dressing-blot.json">Blots</option>
+		<option value="dressings/dressing-corners.json">Corners</option>
+		<option value="dressings/dressing-C231.json">C231</option>
+		<option value="dressings/dressing-ang.json">Angles</option>
+	</select>
 
 	<button class="btn" onclick="local_scene_bridge('download_dressing')" style="margin-right: 1em;">
 		<i class="fa fa-download"></i>
 	</button>
+
 
 	<button class="btn" onclick="local_scene_bridge('take_picture')">
 		<i class="fa fa-image"></i>
@@ -787,6 +594,14 @@
 
 	<button class="btn" onclick="local_scene_bridge('remove_meuble')" style="margin-right: 1em;">
 		<i class="fa fa-trash"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYH238P62P40')">
+		<i class="fa fa-plus-circle"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYC155H219PG')">
+		<i class="fa fa-plus-circle"></i>
 	</button>
 
 	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYC155H219PG')">
