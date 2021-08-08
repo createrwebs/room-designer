@@ -11,6 +11,7 @@ import {
     animeSelectedMeuble,
     changeTool,
     generateAllPix,
+    generateOnePix,
     setSceneMaterial,
 }
     from './actions'
@@ -38,6 +39,9 @@ export default function (event, param1, param2) {
             break;
         case BridgeEvent.GENERATE_ALL_PIX:
             generateAllPix()
+            break;
+        case BridgeEvent.GENERATE_ONE_PIX:
+            generateOnePix(param1)
             break;
         case BridgeEvent.ADD_MEUBLE_TO_SCENE:
             clickMeubleLine(param1, param2)

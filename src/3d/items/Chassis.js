@@ -5,7 +5,7 @@ export default class Chassis extends Item {
 
     setPositionX(x) {
         this.object.position.x = Measures.thick
-        //this.parent.skuInfo.L - this.width + Measures.thick
+        //this.parent.skuInfo.L*10 - this.width + Measures.thick
     }
     setPositionY(y) {
 

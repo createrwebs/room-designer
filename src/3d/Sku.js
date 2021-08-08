@@ -1,7 +1,12 @@
 
-// const trous219 = [2071]
-const trous219 = [372, 431, 599, 663, 727, 815, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815, 1879, 1943, 2007, 2071]
-const trous238 = trous219.concat([2135, 2199, 2263])
+// perçages sur panneaux amovibles :
+const trous219Panneaux = [372, 431, 599, 663, 727, 815, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815, 1879, 1943, 2007, 2071]
+const trous238Panneaux = trous219Panneaux.concat([2135, 2199, 2263])
+
+// perçages sur armoire coulissante :
+const trous219COL = [343, 407, 471, 535, 599, 663, 727, 791, 855, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815]
+const trous238COL = [372, 436, 500, 564, 628, 692, 756, 820, 884, 948, 1012, 1076, 1140, 1204, 1268, 1332, 1396, 1460, 1524, 1588, 1652, 1716, 1780, 1844, 1908, 1972, 2036]
+
 export const trousTIR = [80, 290, 480, 640]// trous du bas pour les tiroirs
 
 const types = [
@@ -91,11 +96,11 @@ export const parseSKU = (sku) => {
         obj.P = Math.max(obj.PR, obj.PL)
     }
 
+    // largeurs : 40 48 57 59 74 81 96 119 106 155 191 231
     const LMatch = sku.match(/L\d{2,}/g)
     if (LMatch && LMatch.length > 0) {
-        obj.L = parseInt(LMatch[0].substring(1)) * 10
+        obj.L = parseInt(LMatch[0].substring(1))
     }
-
 
     const typeMatches = types.filter(function (pattern) {
         return new RegExp(pattern).test(sku);
@@ -112,7 +117,7 @@ export const parseSKU = (sku) => {
         || obj.type === "P40RL057"
         || obj.type === "FIL"
 
-    /* panneaux inamovibles */
+    /* modules with panneaux inamovibles */
     obj.hasSides = obj.type === "ANG"
         || obj.type === "C155"
         || obj.type === "C191"
@@ -147,26 +152,43 @@ export const parseSKU = (sku) => {
         case "C155":
             obj.P = obj.PR = obj.PL = 62
             obj.L = 155
-            obj.slots = 2
+            obj.slots = [0, 760]
+            obj.trous = obj.H === 219 ? trous219COL : trous238COL
             break;
         case "C191":
             obj.P = obj.PR = obj.PL = 62
             obj.L = 191
-            obj.slots = 2
+            obj.slots = [0, 940]
+            obj.trous = obj.H === 219 ? trous219COL : trous238COL
             break;
         case "C231":
             obj.P = obj.PR = obj.PL = 62
             obj.L = 231
-            obj.slots = 3
+            obj.slots = [0, 760, 1520]
+            obj.trous = obj.H === 219 ? trous219COL : trous238COL
             break;
+        default:
+            if (obj.isModule) {
+                obj.trous = obj.H === 219 ? trous219Panneaux : trous238Panneaux
+            }
     }
 
     if (obj.isModule) {
-        obj.trous = obj.H === 219 ? trous219 : trous238
-        obj.has2Doors = obj.L > 70
+        obj.has2Doors = obj.L > 70 && obj.type != "ANG"
+        obj.angABSku = `NYANGABP${obj.P}`
+
+        obj.paneSku = {// TODO to use
+            "right": `NYH${obj.H}P${obj.PR}FD`,
+            "left": `NYH${obj.H}P${obj.PR}FG`,
+        }
+    }
+    else {
+        obj.draggable = obj.type !== "ANG90"
+            && obj.type !== "ANGAB"
+            && obj.type !== "FIL"
     }
 
-    console.log(sku, obj)
+    console.info(sku, obj)
 
     return obj
 }

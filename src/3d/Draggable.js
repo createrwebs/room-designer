@@ -17,10 +17,6 @@ import { Measures } from './Utils'
 
 export default class Draggable extends Meuble {
 
-    static switchWallThreshold = 300// mm de drag après un angle pour changer de mur
-    static enterWallThreshold = 150// mm de drag après un angle pour changer de mur
-    // static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
-
     // from scene walls config or app current settings
     static WallConfig = Room;
 
@@ -34,7 +30,7 @@ export default class Draggable extends Meuble {
         return this.object.position[Room.getAxisForWall(this.wall)];
     }
 
-    constructor(props, object, state, skuInfo) {
+    constructor (props, object, state, skuInfo) {
         super(props, object, state, skuInfo)
 
         const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
@@ -102,7 +98,7 @@ export default class Draggable extends Meuble {
                         })
                         if (this.panneaux) {
                             if (this.panneaux["right"] && this.panneaux["right"].object) {
-                                this.panneaux["right"].object.position.x = this.skuInfo.L
+                                this.panneaux["right"].object.position.x = this.skuInfo.L * 10
                                 this.panneaux["right"].object.position.y = 0;
                                 this.panneaux["right"].object.position.z = 0
                             }
@@ -138,8 +134,9 @@ export default class Draggable extends Meuble {
         Room.setWallsLength(MainScene.currentDressing, MainScene.config)
         Room.setupWallConstraints(this)
 
-        // Draggable.Nowtime = Date.now();
-        Room.axis = Room.getAxisForWall(this.wall);
+        if (!Object.values(Walls).includes(this.wall)) {// meuble in corner
+        }
+        // Room.axis = Room.getAxisForWall(this.wall);
         Room.populateMeublesOnWalls(MainScene.meubles)
         Room.populateSpacesOnWalls(this)
 
@@ -159,24 +156,28 @@ export default class Draggable extends Meuble {
         const wallLength = (this.wall === "left" || this.wall === "right") ? Room.xmax : Room.zmax
         Draggable.Cross.position.x = event.object.position.x
         Draggable.Cross.position.z = event.object.position.z
-        const thresh1 = Draggable.enterWallThreshold
-        const thresh2 = Draggable.switchWallThreshold
         Room.axis = Room.getAxisForWall(this.wall);
 
         event.object.position.y = 0;
 
         //looking for change of destination
-        const newWall = getWallChange(this.wall, event.object.position, thresh1, thresh2)
+        const newWall = getWallChange(this.wall, event.object.position)
 
-        if (Object.values(Walls).includes(newWall)) {
-            console.warn(`change wall from ${this.wall} to ${newWall}`)
-            this.wall = newWall
-        }
-        else if (Object.values(Corners).includes(newWall)) {
-            console.warn(`goto corner wall from ${this.wall} to ${newWall}`)
+        if (this.wall != newWall) {
+            console.warn(`Moving from ${this.wall} to ${newWall}`)
 
-            return
+            // TODO is meuble ok to 1/4 turn in corner ?? => if not : newWall=this.wall !
+
+            if (this.isOnAWall() && Object.values(Corners).includes(newWall)) {// from wall to corner
+                this.addAngAB()
+            }
+            else if (!this.isOnAWall() && Object.values(Walls).includes(newWall)) {// from corner to wall
+                this.removeAngAB()
+            }
         }
+
+        this.wall = newWall
+        const widthInCorner = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
 
         switch (this.wall) {
             case Walls.R:
@@ -196,25 +197,41 @@ export default class Draggable extends Meuble {
                 event.object.rotation.y = -Math.PI / 2;
                 break;
             case Corners.FR:
-                event.object.position.z = 0;
+                event.object.position.x = 0;
+                event.object.position.z = widthInCorner;
                 event.object.rotation.y = Math.PI / 4;
-
-                MainScene.render();
-                return
                 break;
-
-
-
-
+            case Corners.RB:
+                event.object.position.x = Room.xmax - widthInCorner;
+                event.object.position.z = 0;
+                event.object.rotation.y = -Math.PI / 4;
+                break;
+            case Corners.BL:
+                event.object.position.x = Room.xmax
+                event.object.position.z = Room.zmax - widthInCorner
+                event.object.rotation.y = 5 * Math.PI / 4;
+                break;
+            case Corners.LF:
+                event.object.position.x = widthInCorner;
+                event.object.position.z = Room.zmax
+                event.object.rotation.y = 3 * Math.PI / 4;
+                break;
             default:
                 console.error("no wall for draggable")
         }
-        Room.axis = Room.getAxisForWall(this.wall);
-        const axis = Room.axis
-        event.object.position[axis] = 10 * (Math.round(event.object.position[axis] / 10))//grid magnet 1cm
-        event.object.position[axis] = Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
-        event.object.position[axis] = Room.collisionSolver(this);
 
+        if (Object.values(Walls).includes(this.wall)) {// on a wall
+            Room.axis = Room.getAxisForWall(this.wall);
+            const axis = Room.axis
+            event.object.position[axis] = 10 * (Math.round(event.object.position[axis] / 10))//grid magnet 1cm
+            event.object.position[axis] = Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
+
+            // console.log(">>>", axis, event.object.position)// object disappear because position NaN !
+            event.object.position[axis] = Room.collisionSolver(this);
+        }
+        else if (Object.values(Corners).includes(this.wall)) {// on a corner
+
+        }
         MainScene.render();
     }
 

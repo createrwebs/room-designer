@@ -1,6 +1,7 @@
 import {
     printRaycast,
-    Tools
+    Tools,
+    sceneChange
 }
     from '../api/actions'
 import {
@@ -14,6 +15,7 @@ import {
     PCFSoftShadowMap,
     VSMShadowMap,
     PerspectiveCamera,
+    OrthographicCamera,
     Mesh,
     PlaneGeometry,
     MeshPhongMaterial,
@@ -21,6 +23,7 @@ import {
     AxesHelper,
     GridHelper,
     DoubleSide,
+    CameraHelper,
 } from "three";
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { localhost } from '../api/Config';
@@ -147,6 +150,21 @@ export default {
         // +Z is up in Blender, whereas + Y is up in three.js
         this.camera = camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 100, 15000);
         camera.position.set(this.xmax / 2, 1700, this.zmax / 2)
+        this.cameraHelper = new CameraHelper(this.camera);
+
+        /* orthographic camera for 2d plan */
+
+        /*         const left = -this.xmax / 2;
+                const right = this.xmax / 2;  // default canvas size
+                const top = -this.zmax / 2;
+                const bottom = this.zmax / 2;  // default canvas size
+                const near = 10;
+                const far = 6000;
+                this.orthoCamera = new OrthographicCamera(left, right, top, bottom, near, far);
+                this.orthoCamera.position.set(this.xmax / 2, 6000, this.zmax / 2)
+                this.orthoCamera.lookAt(this.xmax / 2, 0, this.zmax / 2);
+                this.orthoCamera.zoom = 1;
+                this.orthoCameraHelper = new CameraHelper(this.orthoCamera); */
 
         /* controls */
 
@@ -203,6 +221,74 @@ export default {
         this.materialId = window.materials[0].id
 
     },
+    /*     setScissorForElement(elem) {
+            const canvas = document.getElementById("canvas-wrapper")
+            const canvasRect = canvas.getBoundingClientRect();
+            const elemRect = elem.getBoundingClientRect();
+    
+            // compute a canvas relative rectangle
+            const right = Math.min(elemRect.right, canvasRect.right) - canvasRect.left;
+            const left = Math.max(0, elemRect.left - canvasRect.left);
+            const bottom = Math.min(elemRect.bottom, canvasRect.bottom) - canvasRect.top;
+            const top = Math.max(0, elemRect.top - canvasRect.top);
+    
+            const width = Math.min(canvasRect.width, right - left);
+            const height = Math.min(canvasRect.height, bottom - top);
+    
+            // setup the scissor to only render to that part of the canvas
+            const positiveYUpBottom = canvasRect.height - bottom;
+            this.renderer.setScissor(left, positiveYUpBottom, 5000, 5000);
+            this.renderer.setViewport(left, positiveYUpBottom, 5000, 5000);
+    
+            // return the aspect
+            return width / height;
+        }, */
+    render() {
+        if (this.interactionManager) this.interactionManager.update();
+
+        this.getRaycasterIntersect()
+
+        // this.cameraHelper.update();
+        // this.cameraHelper.visible = true;
+
+        const renderer = this.renderer
+        // renderer.setScissorTest(true);
+        // const view1Elem = document.getElementById('view1')
+        // const view2Elem = document.getElementById('view2')
+
+        this.frame_stats.update();
+        // this.renderer.render(this.scene, this.camera);
+        // this.cameraHelper.update();
+        // this.orthoCameraHelper.update();
+        // this.orthoCamera.updateProjectionMatrix();
+
+        // renderer.clear();
+        // const aspect1 = this.setScissorForElement(view1Elem);
+
+        // adjust the camera for this aspect
+        // this.camera.aspect = aspect1;
+        // this.camera.updateProjectionMatrix();
+        // this.cameraHelper.update();
+        // renderer.setScissor(0, 600, 500, 500);
+        // renderer.setViewport(0, 600, 500, 500);
+        this.renderer.render(this.scene, this.camera);
+
+
+        // const camera = this.orthoCamera
+        // camera.near = -1;
+        // camera.far = 1;
+        // camera.zoom = 1;
+        /*         renderer.setScissorTest(true);
+                const aspect = this.setScissorForElement(view2Elem);
+                this.orthoCamera.aspect = aspect;
+                this.orthoCamera.updateProjectionMatrix();
+                this.orthoCameraHelper.update(); */
+
+        // renderer.clearDepth(); // important! clear the depth buffer
+        // renderer.setViewport(0, 0, 500, 500);
+        // renderer.render(this.scene, this.orthoCamera);
+    },
+
     setupSize(config) {
         if (config) {
             this.xmax = config.xmax > 0 ? config.xmax :
@@ -292,13 +378,13 @@ export default {
             this.scene.add(this.sol);
         }
     },
-    updateCamera(props) {
-        let camera = this.camera
-        camera.fov = props.fov;
-        camera.zoom = props.zoom;
-        camera.focus = props.focus;
-        camera.updateProjectionMatrix();
-    },
+    /*     updateCamera(props) {// unused!
+            let camera = this.camera
+            camera.fov = props.fov;
+            camera.zoom = props.zoom;
+            camera.focus = props.focus;
+            camera.updateProjectionMatrix();
+        }, */
     updateLights(light) {
         let scene = this.scene
         let spotLight = this.spotLight
@@ -314,7 +400,7 @@ export default {
         }
     },
     clear() {
-        console.log("scene clear")
+        // console.log("scene clear")
         if (this.scene) this.scene.clear();
         this.meubles = [];
 
@@ -324,10 +410,15 @@ export default {
         this.clear();
         this.setupLights();
         this.setupWalls(config, wallVisible)
+
+        /*         this.scene.add(this.cameraHelper);
+                this.scene.add(this.orthoCameraHelper); */
+
         // this.setup(config)
         if (config) {
             if (config.materialId) {
                 this.materialId = config.materialId
+                sceneChange()
             }
             this.currentDressing = config
         }
@@ -341,24 +432,22 @@ export default {
         this.renderer.setSize(canvasWrapper.offsetWidth, canvasWrapper.offsetHeight);
         this.camera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
         this.camera.updateProjectionMatrix();
+
+        // this.orthoCamera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
+        // this.orthoCamera.updateProjectionMatrix();
+
         this.render()
     },
-    render() {
-        if (this.interactionManager) this.interactionManager.update();
 
-        this.getRaycasterIntersect()
-
-
-        this.frame_stats.update();
-        this.renderer.render(this.scene, this.camera);
-    },
     add(meuble) {
         this.scene.add(meuble.object);
         this.meubles.unshift(meuble);
+        sceneChange()
     },
     remove(meuble) {
         this.scene.remove(meuble.object);
         this.meubles = this.meubles.filter(item => item !== meuble)
+        sceneChange()
     },
     deselect() {
         if (this.selection && this.selection.deselect) this.selection.deselect()
@@ -373,7 +462,7 @@ export default {
         })
     },
     enableItemsDragging(enabled) {
-        console.log("enableItemsDragging", enabled)
+        // console.log("enableItemsDragging", enabled)
         this.meubles.forEach(m => {
             m.items.forEach(i => {
                 if (i.dragControls) {
@@ -384,7 +473,7 @@ export default {
         })
     },
     enableMeubleClicking(enabled) {
-        console.log("enableMeubleClicking", enabled)
+        // console.log("enableMeubleClicking", enabled)
         this.meubles.forEach(m => {
             /*             m.items.forEach(i => {
                             if (enabled) {
@@ -412,7 +501,7 @@ export default {
                     this.interactionManager.add(c)
                     c.addEventListener('click', m.clickLaquable.bind(m))
 
-                    console.log("interactionManager", c.hasEventListener('click'), this.interactionManager)
+                    // console.log("interactionManager", c.hasEventListener('click'), this.interactionManager)
 
 
                 } else {
@@ -430,6 +519,19 @@ export default {
                         c.removeEventListener('click', i.clickLaquable.bind(i))
                     }
                 })
+            })
+        })
+    },
+    enableItemsRemoving(enabled) {
+        this.meubles.forEach(m => {
+            m.items.forEach(i => {
+                if (enabled) {
+                    this.interactionManager.add(i.object)
+                    i.object.addEventListener('click', m.removeItem.bind(m, i))
+                } else {
+                    this.interactionManager.remove(i.object)
+                    i.object.removeEventListener('click', m.removeItem.bind(m, i))
+                }
             })
         })
     },
@@ -488,13 +590,13 @@ export default {
         else {
             pState = state
         }
-        let selection
+        let meuble
         switch (skuInfo.type) {
             case "ANG":
-                selection = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
+                meuble = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;
             default:
-                selection = new Draggable(props, object, pState, skuInfo)
+                meuble = new Draggable(props, object, pState, skuInfo)
 
                 if (!state) {
 
@@ -502,20 +604,21 @@ export default {
                     // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
                     const axis = Room.getAxisForWall(wall);
                     Room.setWallsLength(this.currentDressing, this.config)
-                    const x = Room.getSpaceOnWall(selection, this.meubles)
-                    if (x === false) {
+                    const x = Room.getSpaceOnWall(meuble, this.meubles)
+
+                    if (x === false) {// destroy Meuble?
                         console.warn(`no space for on wall ${wall}`)
+                        return "Il n'y a pas assez de place pour ce meuble"
                     }
                     else {
-                        selection.object.position[axis] = x
-                        console.log(selection.wall, x)
+                        meuble.object.position[axis] = x
+                        // console.log(meuble.wall, x)
 
 
                     }
                 }
         }
 
-
-        return selection
+        return meuble
     }
 }

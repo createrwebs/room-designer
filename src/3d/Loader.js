@@ -30,14 +30,39 @@ manager.onError = (url) => {
     store.dispatch(loadManagerError(getFileNameFromUrl(url)))
 }
 
-const fbxLoader = new FBXLoader(manager)
 const textureLoader = new TextureLoader(manager)
-
-export const loadFbx = (url, callback) => {
-    store.dispatch(loadManagerStart(getFileNameFromUrl(url)))
-    fbxLoader.load(url, callback)
-}
 export const loadTexture = (url, callback) => {
     store.dispatch(loadManagerStart(getFileNameFromUrl(url)))
     textureLoader.load(url, callback)
 }
+
+const fbxLoader = new FBXLoader()//(manager)
+const Fbxs = []
+export const loadFbx = (url, callback) => {
+    const filename = getFileNameFromUrl(url)
+    const alreadyLoaded = Fbxs.find(fbx => fbx.userData.filename === filename)
+    if (alreadyLoaded) {
+        return callback(alreadyLoaded)
+    }
+    store.dispatch(loadManagerStart(filename))
+    fbxLoader.load(url,
+        (object) => {
+            if (undefined == Fbxs.find(fbx => fbx.userData.filename === filename))
+                Fbxs.push(object)
+            object.userData.filename = filename
+            callback(object)
+        },
+        (xhr) => {
+            // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+            store.dispatch(loadManagerProgress(filename, xhr.loaded / xhr.total))
+            // if (itemsLoaded === itemsTotal) {
+            if (xhr.loaded / xhr.total) {
+                store.dispatch(loadManagerQueueFinished())
+            }
+        },
+        (error) => {
+            // console.log(error)
+            store.dispatch(loadManagerError(filename))
+        })
+}
+

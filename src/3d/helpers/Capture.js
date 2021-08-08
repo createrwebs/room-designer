@@ -21,7 +21,7 @@ export const takePix = (name) => {
         var strMime = "image/jpeg";
         imgData = MainScene.getRendererNodeElement().toDataURL(strMime);
 
-        saveFile(imgData.replace(strMime, strDownloadMime), name ? `${name}.jpg` : "scene-3d.png");
+        saveFile(imgData.replace(strMime, strDownloadMime), name ? `${name}.png` : "scene-3d.png");
     } catch (e) {
         console.log('takePix error', e);
         return;

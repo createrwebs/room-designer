@@ -10,8 +10,8 @@ import {
 import { Corners, Walls } from './Drag';
 
 export default class Fbx {
-    constructor(props, object, state, skuInfo) {
-        // console.log('Fbx', props, object)
+    constructor (props, object, state, skuInfo) {
+        // console.log('Fbx', props, object, state)
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
         this.state = state// position & dressing stuff

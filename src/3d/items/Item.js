@@ -13,29 +13,26 @@ import {
 } from '../Material'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { Measures, getSize } from '../Utils'
-import { getClosestInArray } from '../Drag'
+import { getClosestInArray, Slots } from '../Drag'
 
 export default class Item extends Fbx {
 
-    static switchWallThreshold = 250// mm de drag après un angle pour changer de mur
-    static selectClickBeforeDragDelay = 250// delay (ms) before meuble drag start
-
     static Dragged// current target dragged
     static axis;// axis for current wall where Item is dragged
-    static Nowtime;// timer for selection click
 
-    constructor(props, object, state, skuInfo, parent) {
+    constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo)
 
         this.parent = parent;// parent meuble
-        this.place = "left"
-        this.positionY = null
+        this.place = (state && state.position && state.position.place) ? state.position.place : Slots.L
+        this.positionY = (state && state.position && state.position.x) ? state.position.x : null
 
         const trous = this.parent.places
-        if (!trous || (trous && trous[this.place] && trous[this.place].length === 0)) {
-            console.warn(`Accessoire ${this.props.sku} says : No percage for Meuble ${this.parent.props.sku}`)
+        if (!trous) {//|| (trous && trous[this.place] && trous[this.place].length === 0)) {
+            console.warn(`Accessoire ${this.props.sku} says : No percage for parent Meuble ${this.parent.props.sku}`)
         }
-        else {
+
+        if (skuInfo.draggable) {
             const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
             dragControls.transformGroup = true;
             dragControls.addEventListener('drag', this.dragging.bind(this))
@@ -43,14 +40,14 @@ export default class Item extends Fbx {
             dragControls.addEventListener('dragend', this.dragEnd.bind(this))
             this.dragControls = dragControls;
 
-            if (MainScene.tool === Tools.HAMMER) this.dragControls.activate()
-            else this.dragControls.deactivate()
+            // if (MainScene.tool === Tools.HAMMER) this.dragControls.activate()
+            // else this.dragControls.deactivate()
         }
 
         this.width = getSize(this.object, "x")
         this.height = getSize(this.object, "y")
         this.depth = getSize(this.object, "z")
-        console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.depth, this.parent)
+        // console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.depth, state, this.parent, this)
 
         /* textures */
 
@@ -74,7 +71,35 @@ export default class Item extends Fbx {
         this.setPositionZ(z)
     }
     setPositionX(x) {
-        this.object.position.x = x ? x : Measures.thick;// TODO state.position.place
+
+        // TODO 
+        // when slot changes, filter positions Y like in setPositionY(y)
+        // x => y !
+
+
+        const slots = this.parent.skuInfo.slots && this.parent.skuInfo.slots.length > 1 ? this.parent.skuInfo.slots.length : 1
+
+        // set x from this.place info
+        if (!x) {
+            x = this.place == Slots.R ? this.parent.skuInfo.slots[2]
+                : this.place == Slots.C ? this.parent.skuInfo.slots[1]
+                    : 0
+        }
+        if (slots > 1) {
+            if (slots > 2 && x >= this.parent.skuInfo.slots[2]) {
+                this.object.position.x = this.parent.skuInfo.slots[2]
+                this.place = Slots.R
+            } else if (x >= this.parent.skuInfo.slots[1]) {
+                this.object.position.x = this.parent.skuInfo.slots[1]
+                this.place = Slots.C
+            } else {
+                this.object.position.x = 0
+                this.place = Slots.L
+            }
+            this.object.position.x += Measures.thick;
+        } else {
+            this.object.position.x = Measures.thick;
+        }
     }
     setPositionY(y) {
 
@@ -126,51 +151,38 @@ export default class Item extends Fbx {
         // console.warn(`click Item ${this.props.sku}`, interactiveEvent)
         interactiveEvent.stopPropagation()
     }
-    info() {
-        return `${this.props.sku}`
-    }
-    select() {
-        console.warn(`select Item ${this.info()}`, this)
-    }
-    deselect() {
-        console.warn(`deselect Item ${this.info()}`, this)
-    }
-
-    /*dragging */
-
     dragStart(event) {
-        // console.warn(`dragStart Item ${this.info()}`, Item.Dragged)
-        if (Item.Dragged) {
-            event.target.enabled = false;// deactivation of other Item
-            return
+        // console.warn(`dragStart Item ${this.info()}`, event, this, Item.Dragged)
+
+        if (Item.Dragged && Item.Dragged != this) {
+            return event.target.deactivate()// deactivation of drag controls of others
         }
         Item.Dragged = this;
         store.dispatch(drag(this))
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
-        Item.Nowtime = Date.now();
     }
     dragging(event) {
-        // console.warn(`dragging Item ${this.info()}`, Item.Dragged)
-        // drag start delay to let selection click
-        if (Item.Dragged === this && Date.now() - Item.Nowtime < Item.selectClickBeforeDragDelay) {
+        if (Item.Dragged != this) {
             return
         }
-        this.setPosition(null, event.object.position.y, null)
+        // console.warn(`dragging Item ${this.info()}`, event)
+        // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        // mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;        
+        this.setPosition(event.object.position.x, event.object.position.y, event.object.position.z)
         MainScene.render();
     }
     dragEnd(event) {
-        MainScene.orbitControls.enabled = true;
-        if (Item.Dragged === this && Date.now() - Item.Nowtime < Item.selectClickBeforeDragDelay) {
-            // select(this)
-        }
-        store.dispatch(drag(null))
         Item.Dragged = null
+        store.dispatch(drag(null))
+        this.parent.enableItemsDragging(true)// reactivation of drag controls of all
+        MainScene.orbitControls.enabled = true;
     }
 
-    /*
-        info
-    */
+    /* info */
 
+    info() {
+        return `${this.object.uuid.substring(0, 8)} | ${this.props.sku}`
+    }
     getJSON() {
         return {
             sku: this.props.sku,

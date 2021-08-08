@@ -1,4 +1,5 @@
 import store from './store';
+import { Vector3 } from "three";
 import { loadOne as loadOneMaterial, load as loadMaterial, apply as applyMaterial, getMaterialById, getLaqueById } from '../3d/Material'
 import MainScene from '../3d/MainScene';
 import { Room } from '../3d/Drag'
@@ -7,10 +8,12 @@ import { cameraTo } from '../3d/Animate';
 import { takePix } from '../3d/helpers/Capture';
 import { loadFbx } from '../3d/Loader'
 import { parseSKU } from '../3d/Sku'
+import { getCenterPoint, getSize } from '../3d/Utils'
 
 export const KinoEvent = {
     SELECT_MEUBLE: 'select_meuble',
     SCENE_CHANGE: 'scene_change',
+    SEND_MESSAGE: 'send_message',
 }
 export const BridgeEvent = {
     NEW_DRESSING: 'new_dressing',
@@ -27,6 +30,7 @@ export const BridgeEvent = {
     REMOVE_MEUBLE: 'remove_meuble',
     BRUSH_MODE: 'brush_mode',
     GENERATE_ALL_PIX: 'generateallpix',
+    GENERATE_ONE_PIX: 'generateonepix',
     SET_SCENE_MATERIAL: 'set_scene_material',
     LOAD_ALL_SKU: 'load_all_sku'
 }
@@ -69,6 +73,7 @@ export const Tools = {
     HAMMER: 'hammer',
     TRASH: 'trash',
     BRUSH: 'brush',
+    HAMMER_TRASH: 'hammer_trash',// to remove items
 }
 
 
@@ -209,7 +214,7 @@ const loadMeuble = (state) => {
         return null
     }
 
-    //meuble props are catalogue props + dressing props : no! => dressing props = state 
+    // meuble props are catalogue props + dressing props : no! => dressing props = state 
     // props.position = state.position;
 
     loadFbx(props.fbx.url, object => {
@@ -234,6 +239,8 @@ export const setSceneMaterial = (materialId) => {
                     meuble.applyMaterialOnMeuble(mtl)
                 })
                 MainScene.render()
+                sceneChange()
+
             })
         }
         else {
@@ -243,73 +250,94 @@ export const setSceneMaterial = (materialId) => {
         console.warn(`No material id ${materialId}`)
     }
 }
+
+/* pix */
 export const takePicture = () => {
     takePix("minet3d-scene-snapshopt")
 }
-export const generateAllPix = () => {
+export const generateAllPix = async (skus = []) => {
     // if meuble selected, take its center to put meubles for pix batching
 
-    var centerMeubleForPix = 2000
-    if (MainScene.selection) {// please on back wall !!
-        centerMeubleForPix = MainScene.selection.getCenterPoint().z//for back wall !
-    }
+    /*     let selectionCenter = new Vector3()
+        if (MainScene.selection) {// please on back wall !!
+            selectionCenter = MainScene.selection.getCenterPoint()//for back wall !
+        } */
 
     MainScene.update({
         name: "generation-scene",
-        xmax: 2000,
-        zmax: 8000
+        xmax: 4000,
+        zmax: 6000
+    }, false)
+    for (const skuProps of MainScene.catalogue.filter(props => (skus.length > 0 ? skus.includes(props.sku) : true))) {
+        await generatePix(skuProps)
+    }
+}
+window.generateAllPix = generateAllPix
+// ["NYC231H219PP", "NYC231H238PP", "NYC155H219PP", "NYANGH238", "NYH238P40RL057","NYC155H219PG"]
+export const generateOnePix = (sku) => {
+
+    MainScene.update({
+        name: "generation-scene",
+        xmax: 4000,
+        zmax: 6000
     }, false)
 
-    MainScene.catalogue.forEach(props => {
+    const props = MainScene.catalogue.find(f => f.sku === sku)
+    if (!props) {
+        console.error(`no meuble found for sku  ${sku}`)
+        return null
+    }
+    generatePix(props)
+}
+const generatePix = async (props) => {
+    return new Promise((resolve, reject) => {
         if (props.sku && props.sku != "" && props.fbx.url && props.fbx.url != "") {
             loadFbx(props.fbx.url, object => {
-                const state = {
-                    position: {
-                        wall: "back",
-                        x: centerMeubleForPix - object.getWidth() / 2
-                    }
-                }
-                const meuble = MainScene.createMeuble(props, object, state)
+                const skuInfo = parseSKU(props.sku)// put Item on scene as well
+                object.position.x = 0
+                object.position.y = 0
+                object.position.z = 0
+                if (MainScene.materialId) {
+                    const material = getMaterialById(MainScene.materialId)
+                    if (material) {
+                        loadMaterial(material.textures)
+                            .then(mtl => {
+                                applyMaterial(mtl, { object: object })
 
-                //test textures
-                /* var textu = {
-                    hori: {
-                        url: "chene-blanc-hori.jpg",
-                        label: "Chêne blanc",
-                        angle_fil: 0
-                    },
-                    vert: {
-                        url: "chene-blanc-vert.jpg",
-                        label: "Chêne blanc",
-                        angle_fil: 90
-                    },
-                    fond: {
-                        url: "cuir.jpg",
-                        label: "Chêne blanc",
-                        angle_fil: 0
-                    },
-                    portes: {
-                        url: "chene-charleston-vert.jpg",
-                        label: "Chêne charleston",
-                        angle_fil: 0
+                                MainScene.scene.add(object);
+
+                                // position camera
+                                if (skuInfo.type === "ANG") {
+                                    MainScene.camera.position.set(getSize(object, "x") * 2.5, 1200, getSize(object, "z") * 2.5)
+                                }
+                                else {
+                                    MainScene.camera.position.set(getSize(object, "x") / 2, 1200, 3000)
+                                }
+                                MainScene.orbitControls.target = getCenterPoint(object)
+                                MainScene.orbitControls.update();
+
+                                MainScene.render()
+                                takePix(`${props.sku}`)
+                                MainScene.scene.remove(object);
+                                MainScene.render()
+
+                                resolve()
+                            })
+                            .catch((e) => {
+                                reject(new Error(`loadMaterial`))
+                            })
+                    }
+                    else {
+                        reject(new Error(`no material`))
                     }
                 }
-                loadTextures(meuble.object, textu).then(response => {
-                    console.log(`textures loaded`, response)
-                    MainScene.add(meuble);
-                    MainScene.render()
-                    takePix(`${props.sku}`)// textures !!?
-                    MainScene.remove(meuble);
-                }) */
-                MainScene.add(meuble);
-                MainScene.render()
-                takePix(`${props.sku}`)// textures !!?
-                MainScene.remove(meuble);
-                MainScene.render()
+                else {
+                    reject(new Error(`no materialId`))
+                }
             })
         }
         else {
-            console.error(`Reference problem found in catalogue :`, props)
+            reject(new Error(`Reference problem found in catalogue :`))
         }
     })
 }
@@ -318,15 +346,18 @@ export const downloadScene = () => {
 
 }
 export const changeTool = (tool, arg) => {
-    MainScene.deselect()// deselection => camera to room center ?
+
     switch (tool) {
         case Tools.ARROW:
+            MainScene.deselect()// deselection => camera to room center ?
             MainScene.enableMeubleDragging(true)
             MainScene.enableMeubleClicking(false)
             MainScene.enableMeublePainting(false)
             MainScene.enableItemsDragging(false)
+            MainScene.enableItemsRemoving(false)
             break;
         case Tools.BRUSH:
+            MainScene.deselect()// ?
             const laqueId = arg
             if (laqueId) {
                 const material = getLaqueById(laqueId)
@@ -338,6 +369,7 @@ export const changeTool = (tool, arg) => {
                         MainScene.enableMeubleClicking(false)
                         MainScene.enableMeublePainting(true)
                         MainScene.enableItemsDragging(false)
+                        MainScene.enableItemsRemoving(false)
                     });
                 }
                 else {
@@ -349,22 +381,39 @@ export const changeTool = (tool, arg) => {
 
             break;
         case Tools.HAMMER:
+            // MainScene.deselect()// ?
             MainScene.enableMeubleDragging(false)
             MainScene.enableMeubleClicking(true)
             MainScene.enableMeublePainting(false)
             MainScene.enableItemsDragging(false)
+            MainScene.enableItemsRemoving(false)
             break;
         case Tools.TRASH:
-            MainScene.enableMeubleDragging(false)
-            MainScene.enableMeubleClicking(true)
-            MainScene.enableMeublePainting(false)
-            MainScene.enableItemsDragging(false)
+            if (MainScene.tool === Tools.HAMMER && MainScene.selection) {
+
+                MainScene.enableMeubleDragging(false)
+                MainScene.enableMeubleClicking(false)
+                MainScene.enableMeublePainting(false)
+                MainScene.enableItemsDragging(false)
+                MainScene.enableItemsRemoving(true)
+
+                tool = Tools.HAMMER_TRASH
+            }
+            else {
+                MainScene.enableMeubleDragging(false)
+                MainScene.enableMeubleClicking(true)
+                MainScene.enableMeublePainting(false)
+                MainScene.enableItemsDragging(false)
+                MainScene.enableItemsRemoving(false)
+            }
             break;
         default:
+            MainScene.deselect()// ?
             MainScene.enableMeubleDragging(false)
             MainScene.enableMeubleClicking(true)
             MainScene.enableMeublePainting(false)
             MainScene.enableItemsDragging(false)
+            MainScene.enableItemsRemoving(false)
             break;
     }
     MainScene.tool = tool;
@@ -399,9 +448,6 @@ export const select = (meuble, arg) => {
                 if (window.kino_bridge)
                     window.kino_bridge(KinoEvent.SELECT_MEUBLE, meuble.props.sku)
                 MainScene.selection = meuble
-                meuble.enableItemsDragging(true)
-
-                sceneChange()
             }
             else {
 
@@ -429,7 +475,6 @@ export const select = (meuble, arg) => {
         default:
             console.warn(`No tool selected`)
     }
-    sceneChange()
 }
 
 export const sceneChange = () => {
@@ -504,12 +549,16 @@ export const clickMeubleLine = (sku) => {
             return null
         }
         loadFbx(props.fbx.url, object => {
-            const selection = MainScene.createMeuble(props, object, null, skuInfo)
-            MainScene.add(selection);
-            MainScene.render()
+            const result = MainScene.createMeuble(props, object, null, skuInfo)
+            if (typeof result === "string") {// creation problem
+                window.kino_bridge(KinoEvent.SEND_MESSAGE, result)
+            }
+            else {
+                MainScene.add(result);
+                MainScene.render()
+            }
         })
     }
-    sceneChange()
 }
 
 /**

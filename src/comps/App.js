@@ -34,7 +34,8 @@ import { parseSKU } from '../3d/Sku'
 import sceneBridge from '../api/Bridge';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-import Room from './Scene';
+import Room from './Room';
+// import Plan from './Plan';
 import Loading from './Loading';
 import Dragging from './Logging';
 import { getGui } from './DataGui';
@@ -43,7 +44,7 @@ import { getGui } from './DataGui';
 import Toolbar from './bars/ToolbarProduction';// test main.bundle.js size
 
 class App extends Component {
-	constructor(props) {
+	constructor (props) {
 		super(props);
 		this.state = {
 			configLoaded: false,
@@ -105,7 +106,7 @@ class App extends Component {
 						// clickMeubleLine("NYH238P62L096")// autoput items
 						// clickMeubleLine("NYH219P40L096")// autoput items
 						// clickMeubleLine("NYC231H238PP")// autoput items
-						clickMeubleLine("NYANGH219")// has laquable
+						// clickMeubleLine("NYANGH219")// has laquable
 						// clickMeubleLine("NYCOIFH238SF")
 						/* 	.then(e => {
 							console.log("meuble loaded", e);
@@ -114,7 +115,7 @@ class App extends Component {
 						// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
 					}
 					this.setState({ catalogueLoaded: true })
-					setTimeout(changeTool, 1500, Tools.HAMMER)
+					// setTimeout(changeTool, 1500, Tools.HAMMER)
 					gui = getGui()
 				})
 		}
@@ -180,6 +181,18 @@ class App extends Component {
 						{localhost &&
 							<Toolbar />
 						}
+						{/* <div
+							style={{
+								bottom: '8px',
+								right: '8px',
+								display: 'block',
+								width: '400px',
+								height: '400px',
+								border: '1px solid white',
+								position: 'absolute'
+							}}>
+							<Plan />
+						</div> */}
 						<Loading />
 						<Dragging />
 						<Room />

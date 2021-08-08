@@ -176,7 +176,8 @@ export const apply = (materials, meuble) => {
             }
             else {
                 if (materialMatch) {
-                    console.warn(`No texture found "${materialMatch[1]}" for subobject "${child.name}" of ${meuble.props.sku}`)
+                    console.warn(`No texture found "${materialMatch[1]}" for subobject "${child.name}"`)
+                    // of ${meuble.props.sku} : meuble undefined if generating pix
                 }
                 else {
                 }
@@ -191,6 +192,7 @@ export const apply = (materials, meuble) => {
     const mirrorMeshes = meuble.object
         .children.filter(child => child.name.indexOf("miroir") > -1)// array of several mirrors?
         .forEach(child => {
+            if (!child.geometry.boundingBox) return// box is null when generating pix
             const box = new Box3().copy(child.geometry.boundingBox);
             box.applyMatrix4(child.matrix); // apply child scale & transforms to box
             const m_width = box.max.x - box.min.x
@@ -207,7 +209,7 @@ export const apply = (materials, meuble) => {
             mirror.position.set(box.min.x + m_width / 2, box.min.y + m_height / 2, box.min.z + m_depth / 2);
             child.parent.add(mirror);
             child.parent.remove(child);
-            // console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, child.name)
+            if (meuble.props) console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, child.name)
         })
 
     /* light */
@@ -232,7 +234,7 @@ export const apply = (materials, meuble) => {
         };
         material = new MeshLambertMaterial(material_args);
         lightMesh.material = material;
-        console.warn(`Led light found in meuble ${meuble.props.sku}`, lightMesh.name)
+        if (meuble.props) console.warn(`Led light found in meuble ${meuble.props.sku}`, lightMesh.name)
     }
 }
 

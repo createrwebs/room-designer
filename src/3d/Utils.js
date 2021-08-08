@@ -2,7 +2,7 @@ import {
     Box3,
     Vector3
 } from "three";
-/* get [min,max] for object on axis */
+/* get [min,max] for object on axis (if NaN...is axis defined ?) */
 export const getSegment = (object, axis) => {
     const box = new Box3().setFromObject(object);
     return { min: Math.round(box.min[axis]), max: Math.round(box.max[axis]) };
