@@ -16,7 +16,7 @@ import { getCenterPoint } from './Utils'
     textures loading manager keeps already loaded textures in Textures[]
 */
 const Textures = []
-window.tx = Textures//debug
+// window.tx = Textures//debug
 
 export const getLaqueById = (id) => {
     return window.laques.find(m => m.id === id)

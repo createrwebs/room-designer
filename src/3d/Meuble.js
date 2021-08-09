@@ -37,8 +37,9 @@ import AngAB from './items/AngAB'
 
 export default class Meuble extends Fbx {
     constructor (props, object, state, skuInfo) {
-        console.log('Meuble', props, object, state, skuInfo)
         super(props, object, state, skuInfo)
+        // console.log('Meuble', props, object, state, skuInfo)
+        console.log('Meuble', this)
         this.uid = this.getUid()
 
         this.items = []
@@ -109,7 +110,7 @@ export default class Meuble extends Fbx {
 
         // log meuble to console
         // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`)
-        console.log("accessoirescompatibles", this.props.accessoirescompatibles)
+        // console.log("accessoirescompatibles", this.props.accessoirescompatibles)
 
         // const front = this.getFrontPosition()
         // MainScene.camera.position.set(front.x, front.y, front.z)
@@ -286,13 +287,13 @@ export default class Meuble extends Fbx {
 
     /* items */
 
-    removeItem(item) {// TODO function remove on Item to clean listeners !
+    removeItem(item) {
+        item.remove()
         this.items = this.items.filter(i => item !== i)
         this.object.remove(item.object);
         MainScene.render()
     }
 
-    //localhost helper (getState() forbidden to use when updating)
     addItemBySku(sku, state) {
         const props = MainScene.catalogue.find(f => f.sku === sku)
         const skuInfo = parseSKU(sku)
@@ -480,13 +481,13 @@ export default class Meuble extends Fbx {
                 this.object.rotation.y = Math.PI / 4;
                 break;
             case Corners.RB:
-                this.object.position.x = Room.xmax - L1 + L2;
+                this.object.position.x = Room.xmax - L1 - L2;
                 this.object.position.z = L2;
                 this.object.rotation.y = -Math.PI / 4;
                 break;
             case Corners.BL:
                 this.object.position.x = Room.xmax - L2
-                this.object.position.z = Room.zmax - L1 + L2
+                this.object.position.z = Room.zmax - L1 - L2
                 this.object.rotation.y = 5 * Math.PI / 4;
                 break;
             case Corners.LF:
@@ -522,6 +523,17 @@ export default class Meuble extends Fbx {
             },
             items: items
         }
+    }
+
+    /* remove */
+
+    remove() {
+        MainScene.interactionManager.remove(this.object)
+        this.object.removeEventListener('click', this.click.bind(this))
+
+        this.items.forEach(i => {
+            this.removeItem(i)
+        })
     }
 
     /*

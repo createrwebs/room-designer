@@ -8,6 +8,10 @@ export const getSegment = (object, axis) => {
     return { min: Math.round(box.min[axis]), max: Math.round(box.max[axis]) };
 }
 
+export const segmentIntersect = (s1, s2) => {
+    return !(s1.min > s2.max || s1.max < s2.min)
+}
+
 /* real bounding box size along axis */
 export const getSize = (object, axis) => {
     const box = new Box3().setFromObject(object);

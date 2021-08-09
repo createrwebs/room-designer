@@ -175,7 +175,7 @@ export const parseSKU = (sku) => {
                 obj.trous = obj.H === 219 ? trous219Panneaux : trous238Panneaux
 
                 if (obj.PR === obj.PL) {// module de liaison not in corners
-                    obj.angABSku = {// TODO to use
+                    obj.angABSku = {// put in corners with 1/4 turn and triangles
                         "right": `NYANGABP${obj.P}R`,
                         "left": `NYANGABP${obj.P}L`,
                     }
@@ -186,7 +186,7 @@ export const parseSKU = (sku) => {
     if (obj.isModule) {
         obj.has2Doors = obj.L > 70 && obj.type != "ANG"
 
-        obj.paneSku = {// TODO to use
+        obj.paneSku = {
             "right": `NYH${obj.H}P${obj.PR}FD`,
             "left": `NYH${obj.H}P${obj.PR}FG`,
         }

@@ -12,20 +12,16 @@ import Meuble from './Meuble'
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { create as createCross } from './helpers/Cross';
+import { draw, draw as drawSegments } from './helpers/Segments';
 import { Space, Room, getWallChange, Walls, Corners } from './Drag';
 import { Measures } from './Utils'
 
 export default class Draggable extends Meuble {
 
-    // from scene walls config or app current settings
-    static WallConfig = Room;
-
-    static MeublesOnWall = []// meubles wall arrays sorted 
     static Dragged// current target dragged
-    static axis;// axis for current wall whare Draggable is dragged
-    // static Nowtime;// timer for selection click
+    static Segments// drag helper
+    static Cross = createCross(50)// drag helper
 
-    static Cross = createCross(50)
     get position() {
         return this.object.position[Room.getAxisForWall(this.wall)];
     }
@@ -41,15 +37,6 @@ export default class Draggable extends Meuble {
         // dragControls.addEventListener('hoveron', this.dragEnd.bind(this))
         // dragControls.addEventListener('hoveroff', this.dragEnd.bind(this))
         this.dragControls = dragControls;
-
-        /*
-
-        new meuble :
-
-        - set texture
-        - enable tool
-
-        */
 
         const tool = MainScene.tool;
         if (tool === Tools.HAMMER || tool === Tools.TRASH) {
@@ -113,9 +100,15 @@ export default class Draggable extends Meuble {
             default:
         }
     }
-    destroy() {
+    /* remove */
+
+    remove() {
+        super.remove()
         this.dragControls.dispose()
     }
+
+    /* events */
+
     dragStart(event) {
         // console.log("dragStart", this, event)
         if (Draggable.Dragged) {//|| tool != Tools.ARROW
@@ -123,61 +116,65 @@ export default class Draggable extends Meuble {
             return
         }
         Draggable.Dragged = this;
+        MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
-        if (event.altKey) {
+        /* if (event.altKey) {
             console.debug("alt+click has just happened!");
             return;
-        }
+        } */
 
-        MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
 
         Room.setWallsLength(MainScene.currentDressing, MainScene.config)
         Room.setupWallConstraints(this)
 
         if (!Object.values(Walls).includes(this.wall)) {// meuble in corner
         }
-        // Room.axis = Room.getAxisForWall(this.wall);
+        Room.axis = Room.getAxisForWall(this.wall);
         Room.populateMeublesOnWalls(MainScene.meubles)
         Room.populateSpacesOnWalls(this)
+        Room.populateMeublesOnCorners(MainScene.meubles)
 
         this.width = this.getWidth()
 
         // action to reducer for display info :
         store.dispatch(drag(this))
 
+        Draggable.Segments = drawSegments()
+        if (Draggable.Segments && !Draggable.Segments.parent) MainScene.scene.add(Draggable.Segments)
         if (Draggable.Cross && !Draggable.Cross.parent) MainScene.scene.add(Draggable.Cross)
     }
     dragging(event) {
-        // drag start delay to let selection click
-        /*         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
-                    return
-                } */
 
-        const wallLength = (this.wall === "left" || this.wall === "right") ? Room.xmax : Room.zmax
+        // cross dragging helper
         Draggable.Cross.position.x = event.object.position.x
         Draggable.Cross.position.z = event.object.position.z
-        Room.axis = Room.getAxisForWall(this.wall);
 
-        event.object.position.y = 0;
+        Room.axis = Room.getAxisForWall(this.wall);// no axis for corners !
+
+        event.object.position.y = 0;// meuble stick to floor
 
         //looking for change of destination
-        const newWall = getWallChange(this.wall, event.object.position)
+        const newPlace = getWallChange(this.wall, event.object.position)
 
-        if (this.wall != newWall) {
-            console.warn(`Moving from ${this.wall} to ${newWall}`)
+        if (this.wall != newPlace) {
+            console.warn(`Moving from ${this.wall} to ${newPlace}`)
 
-            // TODO is meuble ok to 1/4 turn in corner ?? => if not : newWall=this.wall !
-
-            if (this.isOnAWall() && Object.values(Corners).includes(newWall)) {// from wall to corner
+            if (this.isOnAWall()
+                && Object.values(Corners).includes(newPlace)
+                && !Room.MeublesOnCorners[newPlace]
+                && this.skuInfo.angABSku) {// from wall to corner
                 this.addAngAB()
+                this.wall = newPlace
             }
-            else if (!this.isOnAWall() && Object.values(Walls).includes(newWall)) {// from corner to wall
+            else if (!this.isOnAWall() && Object.values(Walls).includes(newPlace)) {// from corner to wall
                 this.removeAngAB()
+                this.wall = newPlace
+            }
+            else if (Object.values(Walls).includes(newPlace)) {// from wall to wall
+                this.removeAngAB()
+                this.wall = newPlace
             }
         }
-
-        this.wall = newWall
-        const widthInCorner = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
 
         // TODO corner occupied ?
 
@@ -226,20 +223,16 @@ export default class Draggable extends Meuble {
     dragEnd(event) {
         // console.log("dragEnd", this)
         MainScene.orbitControls.enabled = true;
-        /*         if (Draggable.Dragged === this && Date.now() - Draggable.Nowtime < Draggable.selectClickBeforeDragDelay) {
-                    select(this)
-                } */
         store.dispatch(drag(null))
         Draggable.Dragged = null
         if (Draggable.Cross && Draggable.Cross.parent) MainScene.scene.remove(Draggable.Cross)
+        if (Draggable.Segments && Draggable.Segments.parent) MainScene.scene.remove(Draggable.Segments)
+        MainScene.render()
 
         sceneChange()
 
-        MainScene.meubles.forEach(m => {
+        MainScene.meubles.forEach(m => {// reactivation of others
             if (m.dragControls) m.dragControls.enabled = true
-        })// reactivation of others
+        })
     }
-
-
-
 }

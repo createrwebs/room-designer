@@ -25,6 +25,7 @@ export default class AngAB extends Item {
         const L2 = this.parent.skuInfo.P * 10 * (1 - Math.cos(Math.PI / 4))
         const L3 = this.parent.skuInfo.P * 10 * Math.sin(Math.PI / 4)
 
+        // left triangles are wider !?
         const triangles = ["L0", "L1", "L2", "L3", "R0", "R1", "R2", "R3"].map(name => {
             const triangle = base.clone()
             const num = parseInt(name.substr(1, 2))
@@ -41,6 +42,7 @@ export default class AngAB extends Item {
             this.object.add(triangle)
             return triangle
         });
+        this.object.remove(this.object.children[0])
 
         // window.tt = triangles[7]
         // this.setTexture()

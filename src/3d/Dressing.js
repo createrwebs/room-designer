@@ -16,12 +16,13 @@ export const getCurrentDressing = (state) => {
 }
 
 /*
-    generate JSON dressing for devis (sku, materail, laques)  
+    generate JSON dressing for devis (sku, material, laques)  
 */
 export const getCurrentDressingForDevis = () => {
     let currentDressing = {}
     const meubles = [];
     const items = [];
+    const laqueOnMeshes = []
 
     MainScene.meubles.forEach(m => {
         const joins = Meuble.isJoined(m)
@@ -38,6 +39,11 @@ export const getCurrentDressingForDevis = () => {
         m.items.forEach(i => {
             items.push(i.props.sku)
         })
+
+        // laques only on Meuble subobjects ? (not items?)
+        for (const [key, value] of Object.entries(m.laqueOnMeshes)) {
+            laqueOnMeshes[key] = value
+        }
     })
     // console.log("Meuble.Joins", Meuble.Joins)
     Meuble.Joins.forEach(join => {
@@ -58,6 +64,7 @@ export const getCurrentDressingForDevis = () => {
 
     currentDressing.meubles = meubles
     currentDressing.items = items
+    currentDressing.laqueOnMeshes = laqueOnMeshes
     currentDressing.materialId = MainScene.materialId
     return currentDressing
 }

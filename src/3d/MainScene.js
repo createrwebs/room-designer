@@ -445,6 +445,7 @@ export default {
         sceneChange()
     },
     remove(meuble) {
+        meuble.remove()
         this.scene.remove(meuble.object);
         this.meubles = this.meubles.filter(item => item !== meuble)
         sceneChange()

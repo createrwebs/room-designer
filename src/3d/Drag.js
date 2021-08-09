@@ -1,5 +1,5 @@
 import Meuble from './Meuble';
-import { getSegment, getSize, Measures } from './Utils'
+import { getSegment, segmentIntersect, getSize, Measures } from './Utils'
 import { Vector3 } from "three";
 
 const insideRoomThreshold = 620// mm de drag contre le mur pour changer
@@ -67,6 +67,7 @@ export const Room = {
     back: {},
     axis: "x",
     MeublesOnWall: [],
+    MeublesOnCorners: [],
     meubleMagnet: 50,// magnetisme du meuble (mm)
 
     // set walls length
@@ -76,7 +77,7 @@ export const Room = {
         Room.zmax = scene ? scene.zmax : config && config.defaultdressing ? config.defaultdressing.zmax : Room.zmax;
         // console.log(`Room`, Room.xmax, Room.zmax)
     },
-    getRoofPosition(h = Math.max(Room.xmax, Room.zmax) + 2000) {
+    getRoofPosition(h = Math.max(Room.xmax, Room.zmax) + 4000) {
         return new Vector3(Room.xmax / 2, h, Room.zmax / 2)
     },
 
@@ -125,6 +126,10 @@ export const Room = {
                 return "z";
         }
     },
+    /* right and left walls along x-axis */
+    getWallLength(wall) {
+        return (wall === Walls.L || wall === Walls.R) ? Room.xmax : Room.zmax
+    },
 
     /* right & back walls has right hand direction when looking at */
     toRightDirection(wall) {
@@ -159,9 +164,20 @@ export const Room = {
         });
 
         //log
-        window.mow = Room.MeublesOnWall
-        window.Space = Space
+        // window.mow = Room.MeublesOnWall
+        // window.Space = Space
 
+    },
+
+    getSideWalls(wall) {
+        switch (wall) {
+            case Walls.R:
+            case Walls.L:
+                return [Walls.F, Walls.B];// first element is close to 0
+            case Walls.F:
+            case Walls.B:
+                return [Walls.R, Walls.L];// first element is close to 0
+        }
     },
 
     /* get spaces on a wall for meuble */
@@ -169,7 +185,57 @@ export const Room = {
         let lastMeuble = null;
         let lastPos = 0, segment;
         const axis = Room.getAxisForWall(wall)
-        const wallLength = (wall === Walls.L || wall === Walls.R) ? Room.xmax : Room.zmax
+        let wallLength = (wall === Walls.L || wall === Walls.R) ? Room.xmax : Room.zmax
+
+
+        // meuble on side wall forbid drag to corner :
+        // console.warn("Wall", wall)
+        let ax, inter, seg, meubleDepthSegment
+        if (Room.getSideWalls(wall) && Room.getSideWalls(wall).length == 2) {
+
+            const leftWall = Room.getSideWalls(wall)[0]
+            // console.log(leftWall)
+            if (wall === Walls.R || wall === Walls.F) {// close to origin
+                meubleDepthSegment = { min: 0, max: meuble.skuInfo.P * 10 }
+            }
+            else {
+                meubleDepthSegment = { min: Room.getWallLength(leftWall) - meuble.skuInfo.P * 10, max: Room.getWallLength(leftWall) }
+            }
+            ax = Room.getAxisForWall(leftWall)
+            Room.MeublesOnWall[leftWall].filter(m => m !== meuble).forEach(m => {
+                seg = getSegment(m.object, ax)
+                // console.log("+++", m.props.sku, meubleDepthSegment, seg)
+                inter = segmentIntersect(meubleDepthSegment, seg)
+                // console.log(inter)
+                if (inter) {
+                    lastPos = Math.max(lastPos, lastPos + m.skuInfo.P * 10)
+                }
+            })
+
+            const rightWall = Room.getSideWalls(wall)[1]
+            // console.log(rightWall)
+            if (wall === Walls.R || wall === Walls.F) {// close to origin
+                meubleDepthSegment = { min: 0, max: meuble.skuInfo.P * 10 }
+            }
+            else {
+                meubleDepthSegment = { min: Room.getWallLength(rightWall) - meuble.skuInfo.P * 10, max: Room.getWallLength(rightWall) }
+            }
+            ax = Room.getAxisForWall(rightWall)
+            Room.MeublesOnWall[rightWall].filter(m => m !== meuble).forEach(m => {
+                seg = getSegment(m.object, ax)
+                // console.log("---", m.props.sku, meubleDepthSegment, seg)
+                inter = segmentIntersect(meubleDepthSegment, seg)
+                // console.log(inter)
+                if (inter) {
+                    wallLength = Math.min(wallLength, wallLength - m.skuInfo.P * 10)
+                }
+            })
+        }
+        // console.warn(lastPos, wallLength)
+
+        // ------------------
+
+
         const mWidth = getSize(meuble.object, "x")
 
         // looks for spaces
@@ -184,7 +250,7 @@ export const Room = {
             lastPos = segment.max;//m.position;
         })
         if (wallLength - (segment ? segment.max : 0) >= mWidth) {
-            Space.onWall[wall].push(new Space((segment ? segment.max : 0), wallLength, lastMeuble, null))
+            Space.onWall[wall].push(new Space((segment ? segment.max : lastPos), wallLength, lastMeuble, null))
         }
         // console.warn(`Spaces on Wall ${wall} of ${wallLength}mm`, Space.onWall[wall],"/meuble seg" segment, mWidth)
         if (Space.onWall[wall].length == 0) {
@@ -203,14 +269,20 @@ export const Room = {
         });
     },
 
-    /* get all other meubles on a wall */
+    /* get all other meubles on a wall and its corners */
     getMeublesOnWall(meublesOnScene, wall, axis) {
         return meublesOnScene
-            .filter(m => m.wall.includes(wall))
+            .filter(m => m.wall.includes(wall))// test ok for corners & walls
             .sort((m1, m2) => m1.object.position[axis] - m2.object.position[axis])
+    },
 
-
-        //TODO... corner meuble !!
+    /* populate MeublesOnCorners list for all corners */
+    populateMeublesOnCorners(meublesOnScene) {
+        Room.MeublesOnCorners = []
+        meublesOnScene.forEach(m => {
+            if (!m.isOnAWall())
+                Room.MeublesOnCorners[m.wall] = m
+        });
     },
 
     /* given Space.onWall[meuble.wall], detect closestSpace for meuble */
@@ -289,7 +361,8 @@ export const Room = {
 
 }
 /*
-    test on floor to switch from walls and corners to walls and corners
+    dragging routine : position regions on floor (x,z) determine meuble locations
+    from walls and corners to walls and corners
 */
 export const getWallChange = (wall, position) => {
 

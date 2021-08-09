@@ -470,7 +470,7 @@
 		}
 
 		fetch("catalogue.json").then(response => response.json()).then(json => catalogue = json);
-		// fetch("dressings/dressing-collision.json").then(response => response.json()).then(json => loadedDressingAtStart = json);
+		fetch("dressings/dressing-collision.json").then(response => response.json()).then(json => loadedDressingAtStart = json);
 
 		kino_bridge = function (type, arg) {
 			console.log("kino_bridge", type, arg)

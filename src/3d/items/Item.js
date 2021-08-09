@@ -64,6 +64,11 @@ export default class Item extends Fbx {
             }
         }
     }
+    remove() {
+        if (this.dragControls) this.dragControls.dispose()
+        MainScene.interactionManager.remove(this.object)
+
+    }
 
     /* position */
 

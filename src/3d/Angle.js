@@ -5,8 +5,8 @@ import { Corners, Room } from './Drag';
 import {
     Group
 } from "three";
-export default class Angle extends Meuble {
-    constructor(props, object, state, skuInfo) {
+export default class Angle extends Meuble {// les meubles d'angles ne sont pas Draggables, mais se positionnent face caméra
+    constructor (props, object, state, skuInfo) {
         super(props, object, state, skuInfo)
 
 
