@@ -5,7 +5,7 @@ import Meuble from './Meuble';
     generate JSON dressing for saving  
 */
 export const getCurrentDressing = (state) => {
-    let currentDressing = state ? state : MainScene.currentDressing// || defaultdressing
+    let currentDressing = state ? state : MainScene.currentDressing
     const meubles = [];
     MainScene.meubles.forEach(m => {
         meubles.push(m.getJSON())

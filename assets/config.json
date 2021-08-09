@@ -1,12 +1,7 @@
 {
-	"walls": {
-		"right": 5000,
-		"back": 14000,
-		"left": 2000
-	},
-	"defaultdressing":{
-		"xmax":6000,
-		"zmax":8000
+	"defaultdressing": {
+		"xmax": 3600,
+		"zmax": 3200
 	},
 	"scene_params": {
 		"backgroundColor": "#D2D2D2",

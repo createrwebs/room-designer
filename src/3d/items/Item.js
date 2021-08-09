@@ -50,12 +50,14 @@ export default class Item extends Fbx {
         // console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.depth, state, this.parent, this)
 
         /* textures */
-
+        this.setTexture()
+    }
+    setTexture() {
         if (MainScene.materialId) {
             const material = getMaterialById(MainScene.materialId)
             if (material) {
                 loadMaterial(material.textures).then(m => {
-                    // console.log(`material loaded`, m)
+                    // console.log(`material loaded`, m, this)
                     applyMaterial(m, this)
                     MainScene.render()
                 })

@@ -26,7 +26,7 @@ import {
     CameraHelper,
 } from "three";
 import Stats from 'three/examples/jsm/libs/stats.module'
-import { localhost } from '../api/Config';
+import { localhost } from '../api/Utils';
 import store from '../api/store';
 
 // Controls

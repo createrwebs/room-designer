@@ -199,24 +199,10 @@ export default class Draggable extends Meuble {
                 event.object.rotation.y = -Math.PI / 2;
                 break;
             case Corners.FR:
-                event.object.position.x = 0;
-                event.object.position.z = widthInCorner;
-                event.object.rotation.y = Math.PI / 4;
-                break;
             case Corners.RB:
-                event.object.position.x = Room.xmax - widthInCorner;
-                event.object.position.z = 0;
-                event.object.rotation.y = -Math.PI / 4;
-                break;
             case Corners.BL:
-                event.object.position.x = Room.xmax
-                event.object.position.z = Room.zmax - widthInCorner
-                event.object.rotation.y = 5 * Math.PI / 4;
-                break;
             case Corners.LF:
-                event.object.position.x = widthInCorner;
-                event.object.position.z = Room.zmax
-                event.object.rotation.y = 3 * Math.PI / 4;
+                this.sendToCorner(this.wall)
                 break;
             default:
                 console.error("no wall for draggable")

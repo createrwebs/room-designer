@@ -463,43 +463,14 @@
 			}
 		]
 
-		var laques = [
-			{
-				"label": "laque 2",
-				"name": "laque-2",
-				"id": 1236,
-				"url": "https:\/\/kinotools.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/07\/Capture-de\u0301cran-2017-12-05-a\u0300-18.26.31-1024x572-1.png",
-				"texture_args": {
-					"repeatX": 0.005,
-					"repeatY": 0.005,
-					"offsetX": 0.5,
-					"offsetY": 0.5
-				}
-			},
-			{
-				"label": "laque test",
-				"name": "laque-test",
-				"id": 1234,
-				"url": "https:\/\/kinotools.kinoki.fr\/minet3d\/wp-content\/uploads\/2021\/07\/portrait_Raoult.png",
-				"texture_args": {
-					"repeatX": 0.005,
-					"repeatY": 0.005,
-					"offsetX": 0.5,
-					"offsetY": 0.5
-				}
-			}
-		]
-
-		var defaultdressing, dressingCorners, material1, laque01
+		var loadedDressingAtStart, catalogue
 
 		load_dressing = function (url) {
 			fetch(url).then(response => response.json()).then(json => local_scene_bridge('load_dressing', json));
 		}
-		fetch("dressings/defaultdressing.json").then(response => response.json()).then(json => defaultdressing = json);
-		fetch("material-chene-blanc.json").then(response => response.json()).then(json => material1 = json);
-		fetch("dressings/dressing-corners.json").then(response => response.json()).then(json => dressingCorners = json);
-		fetch("material-laque01.json").then(response => response.json()).then(json => laque01 = json);
 
+		fetch("catalogue.json").then(response => response.json()).then(json => catalogue = json);
+		// fetch("dressings/dressing-collision.json").then(response => response.json()).then(json => loadedDressingAtStart = json);
 
 		kino_bridge = function (type, arg) {
 			console.log("kino_bridge", type, arg)
@@ -515,6 +486,19 @@
 				case 'take_picture':
 					break;
 
+				case 'add_meuble_to_scene':
+					var sku = arg
+					var selectItemList = document.getElementById("add-item-to-scene")
+					var props = catalogue.find(f => f.sku === sku)
+					if (props.accessoirescompatibles)
+						props.accessoirescompatibles.forEach(element => {
+							var opt = document.createElement('option');
+							opt.value = element;
+							opt.innerHTML = element;
+							selectItemList.appendChild(opt);
+						});
+					break;
+
 				case 'select_meuble':
 					break;
 				case 'edit_meuble':
@@ -527,7 +511,6 @@
 				case 'brush_mode':
 					break;
 			}
-
 			console.log("scene_bridge returns :", window.scene_bridge(type, arg))
 		}
 	</script>
@@ -535,7 +518,7 @@
 
 <body style="margin: 0;height: 100vh;">
 
-	<button class="btn" onclick="local_scene_bridge('new_dressing', defaultdressing)">
+	<button class="btn" onclick="local_scene_bridge('new_dressing')">
 		<i class="fa fa-file"></i>
 	</button>
 
@@ -544,11 +527,11 @@
 	</button>
 
 	<select id="load-dressing" onchange="load_dressing(this.value)">
-		<option value="dressings/defaultdressing.json">default</option>
 		<option value="dressings/dressing-blot.json">Blots</option>
 		<option value="dressings/dressing-corners.json">Corners</option>
 		<option value="dressings/dressing-C231.json">C231</option>
 		<option value="dressings/dressing-ang.json">Angles</option>
+		<option value="dressings/dressing-collision.json">Collision</option>
 	</select>
 
 	<button class="btn" onclick="local_scene_bridge('download_dressing')" style="margin-right: 1em;">
@@ -588,29 +571,56 @@
 		<i class="fa fa-palette"></i>
 	</button>
 
-	<button class="btn" onclick="local_scene_bridge('set_scene_material', 1281)" style="margin-right: 1em;">
-		<i class="fa fa-palette"></i>
-	</button>
+	<select id="set-scene-material" onchange="local_scene_bridge('set_scene_material',parseInt(this.value))">
+		<option value=1301>1301</option>
+		<option value=1304>1304</option>
+		<option value=1293>1293</option>
+		<option value=1297>1297</option>
+		<option value=517>517</option>
+	</select>
 
 	<button class="btn" onclick="local_scene_bridge('remove_meuble')" style="margin-right: 1em;">
 		<i class="fa fa-trash"></i>
 	</button>
 
-	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYH238P62P40')">
-		<i class="fa fa-plus-circle"></i>
-	</button>
+	<select id="add-meuble-to-scene" onchange="local_scene_bridge('add_meuble_to_scene',this.value)">
 
-	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYC155H219PG')">
-		<i class="fa fa-plus-circle"></i>
-	</button>
+		<option value="NYH238P62P40">NYH238P62P40</option>
+		<option value="NYH238P62L096">NYH238P62L096</option>
+		<option value="NYH238P62L081">NYH238P62L081</option>
+		<option value="NYH238P62L059">NYH238P62L059</option>
+		<option value="NYH238P62L048">NYH238P62L048</option>
+		<option value="NYH238P62L040">NYH238P62L040</option>
+		<option value="NYH238P40RL057">NYH238P40RL057</option>
+		<option value="NYH238P40P62">NYH238P40P62</option>
+		<option value="NYH238P40L119">NYH238P40L119</option>
+		<option value="NYH238P40L096">NYH238P40L096</option>
+		<option value="NYH238P40L081">NYH238P40L081</option>
+		<option value="NYH238P40L059">NYH238P40L059</option>
+		<option value="NYH238P40L048">NYH238P40L048</option>
+		<option value="NYH238P40L040">NYH238P40L040</option>
 
-	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYC155H219PG')">
-		<i class="fa fa-plus-circle"></i>
-	</button>
+		<option value="NYH219P62P40">NYH219P62P40</option>
+		<option value="NYH219P62L096">NYH219P62L096</option>
+		<option value="NYH219P62L081">NYH219P62L081</option>
+		<option value="NYH219P62L059">NYH219P62L059</option>
+		<option value="NYH219P62L048">NYH219P62L048</option>
+		<option value="NYH219P62L040">NYH219P62L040</option>
+		<option value="NYH219P40RL057">NYH219P40RL057</option>
+		<option value="NYH219P40P62">NYH219P40P62</option>
+		<option value="NYH219P40L119">NYH219P40L119</option>
+		<option value="NYH219P40L096">NYH219P40L096</option>
+		<option value="NYH219P40L081">NYH219P40L081</option>
+		<option value="NYH219P40L059">NYH219P40L059</option>
+		<option value="NYH219P40L048">NYH219P40L048</option>
+		<option value="NYH219P40L040">NYH219P40L040</option>
+	</select>
 
-	<button class="btn" onclick="local_scene_bridge('add_meuble_to_scene','NYANGH219')" style="margin-right: 1em;">
-		<i class="fa fa-plus-circle"></i>
-	</button>
+
+	<select id="add-item-to-scene" onchange="local_scene_bridge('add_meuble_to_scene',this.value)">
+
+	</select>
+
 	<!-- <div style="position:absolute;margin: 0;width: 600px;height: 400px;overflow: hidden;left:10px;top:30px; border:1px solid blue"
 		id="view1" tabindex="1"></div>
 	<div style="position:absolute;margin: 0;width: 600px;height: 400px;overflow: hidden;left:10px;top:500px; border:1px solid red"

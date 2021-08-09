@@ -1,5 +1,5 @@
 import { Vector3, Box3 } from "three";
-import { localhost } from '../api/Config';
+import { localhost } from '../api/Utils';
 
 import MainScene from './MainScene';
 import {

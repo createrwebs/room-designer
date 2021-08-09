@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { localhost } from '../api/Config';
+import { localhost } from '../../api/Utils';
 
 const rightBottomDiv = {
 	color: '#222222',
@@ -13,7 +13,7 @@ const rightBottomDiv = {
 };
 
 export class Dragging extends Component {
-	constructor(props) {
+	constructor (props) {
 		super(props);
 	}
 	render() {

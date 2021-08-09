@@ -23,7 +23,7 @@ import { Vector3 } from "three";
 // import { Interaction } from 'three.interaction';
 
 import { create as createRuler } from './helpers/Ruler';
-import { localhost } from '../api/Config';
+import { localhost } from '../api/Utils';
 
 import Item from './items/Item'
 import Porte from './items/Porte'
@@ -99,6 +99,8 @@ export default class Meuble extends Fbx {
         this.height = getSize(this.object, "y")
         this.depth = getSize(this.object, "z")
 
+        this.hasAngAB = false;
+
         /* ruler (modifies box size) */
 
         this.setupRuler();
@@ -107,7 +109,7 @@ export default class Meuble extends Fbx {
 
         // log meuble to console
         // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`)
-        console.log(this.props.accessoirescompatibles)
+        console.log("accessoirescompatibles", this.props.accessoirescompatibles)
 
         // const front = this.getFrontPosition()
         // MainScene.camera.position.set(front.x, front.y, front.z)
@@ -365,14 +367,16 @@ export default class Meuble extends Fbx {
     /* angab */
 
     addAngAB() {
-        if (this.skuInfo.angABSku) {
+        if (this.skuInfo.angABSku && !this.hasAngAB) {
             this.addItemBySku(this.skuInfo.angABSku.left)
-            this.addItemBySku(this.skuInfo.angABSku.right)
+            // this.addItemBySku(this.skuInfo.angABSku.right)
+            this.hasAngAB = true
         }
     }
     removeAngAB() {
         if (this.skuInfo.angABSku) {
             this.items.filter(i => Object.values(this.skuInfo.angABSku).includes(i.props.sku)).forEach(i => this.removeItem(i))
+            this.hasAngAB = false
         }
     }
 
@@ -429,8 +433,7 @@ export default class Meuble extends Fbx {
         only from scene loading !?
     */
     setPosition(position) {
-        // console.log(position, MainScene);
-        const widthInCorner = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
+        // console.log("setPosition",position, MainScene);
         switch (position.wall) {
             case Walls.R:
                 this.object.rotation.y = 0;// natural wall for fbx
@@ -459,27 +462,36 @@ export default class Meuble extends Fbx {
                 this.object.position.y = 0;
                 this.object.position.z = position.x;
                 break;
-
-
-            // copied from Draggable.dragging :
             case Corners.FR:
-                this.object.position.x = 0;
-                this.object.position.z = widthInCorner;
+            case Corners.RB:
+            case Corners.BL:
+            case Corners.LF:
+                this.sendToCorner(position.wall)
+                break;
+        }
+    }
+    sendToCorner(corner) {
+        const L1 = (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4)
+        const L2 = this.skuInfo.P * 10 * (1 - Math.cos(Math.PI / 4))
+        switch (corner) {
+            case Corners.FR:
+                this.object.position.x = L2;
+                this.object.position.z = L1 + L2;
                 this.object.rotation.y = Math.PI / 4;
                 break;
             case Corners.RB:
-                this.object.position.x = Room.xmax - widthInCorner;
-                this.object.position.z = 0;
+                this.object.position.x = Room.xmax - L1 + L2;
+                this.object.position.z = L2;
                 this.object.rotation.y = -Math.PI / 4;
                 break;
             case Corners.BL:
-                this.object.position.x = Room.xmax
-                this.object.position.z = Room.zmax - widthInCorner
+                this.object.position.x = Room.xmax - L2
+                this.object.position.z = Room.zmax - L1 + L2
                 this.object.rotation.y = 5 * Math.PI / 4;
                 break;
             case Corners.LF:
-                this.object.position.x = widthInCorner;
-                this.object.position.z = Room.zmax
+                this.object.position.x = L1 + L2;
+                this.object.position.z = Room.zmax - L2
                 this.object.rotation.y = 3 * Math.PI / 4;
                 break;
             default:

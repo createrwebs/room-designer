@@ -1,5 +1,5 @@
 import * as dat from 'dat.gui';
-import MainScene from '../3d/MainScene';
+import MainScene from '../../3d/MainScene';
 
 let gui;
 export const getGui = (stat) => {

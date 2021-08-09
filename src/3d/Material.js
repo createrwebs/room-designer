@@ -154,6 +154,8 @@ export const apply = (materials, meuble) => {
 
     meuble.object.children.forEach(child => {
         const materialMatch = child.name.match(/-mtl-(.*)/)
+
+        // console.log('Material : apply', materials, 'on', materialMatch, child.name)
         // child object name that contains -mtl- should be textured with materialMatch[1]
         if (materialMatch && materialMatch.length > 0) {
             mtl = materials.find(m => m.part.includes(materialMatch[1]))
@@ -170,6 +172,7 @@ export const apply = (materials, meuble) => {
                 else {
                     material = new MeshStandardMaterial(material_args);
                 }
+                // console.log('Material : applssssy', material, 'on', mtl, child.name)
                 child.material = material;
                 child.castShadow = true;
                 child.receiveShadow = true;

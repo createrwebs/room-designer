@@ -1,29 +1,18 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 import config from '../../assets/config.json';
-import defaultdressing from '../../assets/dressings/defaultdressing.json';
 
 import { getJson } from '../api/request';
-import { localhost } from '../api/Config';
+import { localhost } from '../api/Utils';
 import {
-	BridgeEvent,
 	Tools,
 	setConfig,
 	resizeScene,
 	newScene,
 	loadScene,
-	setScenes,
-	loadAllSku,
 	setCatalogue,
 	clickMeubleLine,
-	select,
-	dragMeubleOverScene,
-	dropMeubleOnScene,
-	animeSelectedMeuble,
 	changeTool,
-	generateAllPix,
-	setSceneMaterial,
 }
 	from '../api/actions'
 import { parseSKU } from '../3d/Sku'
@@ -31,13 +20,9 @@ import sceneBridge from '../api/Bridge';
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 import Room from './Room';
-// import Plan from './Plan';
-import Loading from './Loading';
-import Dragging from './Logging';
-import { getGui } from './DataGui';
-
-// import Toolbar from './bars/Toolbar';
-import Toolbar from './bars/ToolbarProduction';// test main.bundle.js size
+import Loading from './printing/Loading';
+import Logging from './printing/Logging';
+import { getGui } from './printing/DataGui';
 
 class App extends Component {
 	constructor (props) {
@@ -50,16 +35,6 @@ class App extends Component {
 			webgl: WEBGL.isWebGLAvailable() ? "WEBGL is available" : "WEBGL is UNAVAILABLE"
 		};
 		window.scene_bridge = sceneBridge.bind(this)
-
-		/* 		getJson("scenes")
-					.then(c => setScenes(c))
-					.catch(e => {
-						console.log("load scenes error", e);
-					})
-					.then(setScenesAction => {
-						const loadFirstScene = false;
-						if (setScenesAction.scenes.length > 0 && loadFirstScene) loadScene(setScenesAction.scenes[0].name)
-					}) */
 
 		let gui
 		if (localhost) {
@@ -80,41 +55,16 @@ class App extends Component {
 					console.log("sku of type module :", modules) */
 
 					setConfig(config)// creation scene
-					// loadScene(dressing2)
-					// generateAllPix()
-					// this.props.loadAllSku();
 
-					if (typeof composition !== 'undefined') {
-						loadScene(composition)
-					} else {
-						newScene(defaultdressing);
-						// clickMeubleLine("NYC155H219P0")
-						// clickMeubleLine("NYC155H219PG")
-						// clickMeubleLine("NYH219P40FD")
-						// clickMeubleLine("NYH219P62FD")
-						// clickMeubleLine("NYH238P62FD")
-						// clickMeubleLine("NYH238P62L040")
-						// clickMeubleLine("NYH238P62L040")
-						// clickMeubleLine("NYH238P62L040")
-
-						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
-						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
-						// clickMeubleLine("NYH219P62L040")//ID 248 autoput items
-						// clickMeubleLine("NYH238P62L119")//ID 248 autoput items
-						// clickMeubleLine("NYH238P62L096")// autoput items
-						// clickMeubleLine("NYH219P40L096")// autoput items
-						// clickMeubleLine("NYC231H238PP")// autoput items
-						// clickMeubleLine("NYANGH219")// has laquable
-						// clickMeubleLine("NYCOIFH238SF")
-						/* 	.then(e => {
-							console.log("meuble loaded", e);
-						}) */
-
-						// this.props.select(MainScene.meubles[0])// undefined => to mapStateToProps ?
+					if (loadedDressingAtStart) {
+						loadScene(loadedDressingAtStart)// from index
+					}
+					else {
+						newScene()
 					}
 					this.setState({ catalogueLoaded: true })
-					setTimeout(changeTool, 1500, Tools.HAMMER)
-					gui = getGui()
+					// setTimeout(changeTool, 1500, Tools.HAMMER)
+					// gui = getGui()
 				})
 		}
 		else {
@@ -131,11 +81,7 @@ class App extends Component {
 							/* 
 							gui = getGui()
 							gui.hide() */
-							if (typeof composition !== 'undefined') {
-								loadScene(composition)
-							} else {
-								newScene(defaultdressing);
-							}
+							newScene();
 							this.setState({ catalogueLoaded: true })
 
 						})
@@ -146,9 +92,7 @@ class App extends Component {
 				.catch(e => {
 					console.log("load config error", e);
 				})
-
 		}
-
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.onWindowResize.bind(this));
@@ -176,23 +120,8 @@ class App extends Component {
 				{
 					this.state.catalogueLoaded &&
 					<div>
-						{localhost &&
-							<Toolbar />
-						}
-						{/* <div
-							style={{
-								bottom: '8px',
-								right: '8px',
-								display: 'block',
-								width: '400px',
-								height: '400px',
-								border: '1px solid white',
-								position: 'absolute'
-							}}>
-							<Plan />
-						</div> */}
 						<Loading />
-						<Dragging />
+						<Logging />
 						<Room />
 					</div>
 				}
@@ -200,15 +129,4 @@ class App extends Component {
 		)
 	}
 }
-const mapDispatchToProps = {
-	BridgeEvent,
-	setScenes,
-	loadAllSku,
-	clickMeubleLine,
-	select,
-	dragMeubleOverScene,
-	dropMeubleOnScene,
-	animeSelectedMeuble,
-	generateAllPix,
-};
-export default connect(null, mapDispatchToProps)(App)
+export default App

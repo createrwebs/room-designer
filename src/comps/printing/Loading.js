@@ -10,9 +10,6 @@ const leftBottomDiv = {
 };
 
 export class Loading extends Component {
-	constructor(props) {
-		super(props);
-	}
 	render() {
 		return (
 			<div style={leftBottomDiv}>
@@ -21,8 +18,7 @@ export class Loading extends Component {
 				}
 				{this.props.items.map((element, key) => {
 					return (
-						<div key={key} style={{
-						}}>
+						<div key={key}>
 							<span>{element}</span>
 						</div>
 					);

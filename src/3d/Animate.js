@@ -1,4 +1,4 @@
-import { localhost } from '../api/Config';
+import { localhost } from '../api/Utils';
 import MainScene from '../3d/MainScene';
 
 // https://github.com/tweenjs/tween.js

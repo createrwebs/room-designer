@@ -164,8 +164,8 @@ export const saveSceneToFile = () => {
 
 export const newScene = (dressing) => {
     if (!dressing) {
-        console.error("New scene failed : no config object passed")
-        return
+        console.warn("New scene with no config object passed > load default dressing from Config")
+        dressing = MainScene.config.defaultdressing
     }
     MainScene.update(dressing)
     MainScene.render()
@@ -588,14 +588,5 @@ export const dropMeubleOnScene = (sku) => {
 export const printRaycast = (raycast) => {
     return {
         type: SceneEvent.PRINTRAYCAST, raycast
-    }
-}
-
-/**
- * parsing de catalogue
- */
-export const loadAllSku = () => {
-    return {
-        type: MeubleEvent.LOAD_ALL_SKU
     }
 }
