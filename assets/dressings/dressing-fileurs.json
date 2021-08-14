@@ -1,23 +1,14 @@
 {
     "xmax": 2000,
     "zmax": 4000,
-    "name": "dressing pour test de collision",
+    "name": "test fileurs",
     "meubles": [
         {
-            "sku": "NYFILH238",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "front",
-                "x": 150
-            },
-            "items": []
-        },
-        {
-            "sku": "NYFILH219",
+            "sku": "NYH238P62L081",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "back",
-                "x": 2250
+                "x": 2520
             },
             "items": []
         },
@@ -26,16 +17,25 @@
             "laqueOnMeshes": [],
             "position": {
                 "wall": "back",
-                "x": 2650
+                "x": 440
             },
             "items": []
         },
         {
-            "sku": "NYH238P62L081",
+            "sku": "NYFILH219",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 2050
+            },
+            "items": []
+        },
+        {
+            "sku": "NYFILH238",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "front",
-                "x": 3330
+                "x": 300
             },
             "items": []
         }

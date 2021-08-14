@@ -1,0 +1,26 @@
+{
+    "name": "les coiffeuses",
+    "xmax": 6000,
+    "zmax": 4000,
+    "materialId": 1301,
+    "meubles": [
+        {
+            "sku": "NYCOIFH219",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 400
+            },
+            "items": []
+        },
+        {
+            "sku": "NYCOIFH238",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 2400
+            },
+            "items": []
+        }
+    ]
+}

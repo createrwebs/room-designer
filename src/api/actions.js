@@ -1,19 +1,45 @@
 import store from './store';
 import { Vector3 } from "three";
-import { loadOne as loadOneMaterial, load as loadMaterial, apply as applyMaterial, getMaterialById, getLaqueById } from '../3d/Material'
+import {
+    loadOne as loadOneMaterial,
+    load as loadMaterial, apply as applyMaterial,
+    getMaterialById,
+    getLaqueById,
+    setId as setMaterialId,
+    getId as getMaterialId,
+} from '../3d/Material'
 import MainScene from '../3d/MainScene';
-import { Room } from '../3d/Drag'
 import { getCurrentDressing, getCurrentDressingForDevis } from '../3d/Dressing';
 import { cameraTo } from '../3d/Animate';
 import { takePix } from '../3d/helpers/Capture';
 import { loadFbx } from '../3d/Loader'
 import { parseSKU } from '../3d/Sku'
+import Room from '../3d/Room'
 import { getCenterPoint, getSize } from '../3d/Utils'
+import { getProps, getMultipleProps } from './Catalogue'
+import defaultconfig from '../../assets/config.json';
 
+export const Errors = {
+    NOT_A_MODULE: 'not_a_module',
+    IS_A_MODULE: 'is_a_module',
+    NO_MODULE_FOUND: 'no_module_found',
+    NO_SCENE: 'no_scene',
+    NO_ROOM: 'no_room',
+    ITEM_NON_COMPATIBLE: 'item_non_compatible',
+    TOO_MANY_DOORS: 'too_many_doors',
+    TOO_MANY_DRAWERS: 'too_many_drawers'
+}
 export const KinoEvent = {
     SELECT_MEUBLE: 'select_meuble',
     SCENE_CHANGE: 'scene_change',
     SEND_MESSAGE: 'send_message',
+    MOUSEOVER_ITEM: 'mouseover_item',
+    MOUSEOUT_ITEM: 'mouseout_item',
+    LOADING_MEUBLE: 'loading_meuble',
+    MEUBLE_LOADED: 'meuble_loaded',
+    ERROR_LOADING_MEUBLE: 'error_loading_meuble',
+    NO_CONFIG_FILE: 'no_config_file',
+    NO_DRESSING_FILE: 'no_dressing_file',
 }
 export const BridgeEvent = {
     NEW_DRESSING: 'new_dressing',
@@ -37,7 +63,6 @@ export const BridgeEvent = {
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
     RESIZE: 'RESIZE',
-    SETCATALOGUE: 'setcatalogue',
     SETSCENES: 'setscenes',
     NEWSCENE: 'newscene',
     LOADSCENE: 'loadscene',
@@ -104,15 +129,8 @@ export const loadManagerError = (url) => {
     }
 }
 
-
-export const setConfig = (config) => {
-    MainScene.setup(config)
-}
 export const resizeScene = () => {
     MainScene.resize()
-}
-export const setCatalogue = (catalogue) => {
-    MainScene.catalogue = catalogue
 }
 export const setScenes = (scenes) => {
     localScenes = localStorage && localStorage.getItem('scenes');
@@ -123,37 +141,37 @@ export const setScenes = (scenes) => {
 }
 
 export const saveSceneToLocalStorage = () => {
-    if (MainScene.currentDressing) {
-        const scenes = []
-        const localScenes = localStorage && localStorage.getItem('scenes');
-        if (localScenes) scenes.push(...JSON.parse(localScenes))
+    const scenes = []
+    const localScenes = localStorage && localStorage.getItem('scenes');
+    if (localScenes) scenes.push(...JSON.parse(localScenes))
 
-        const item = scenes.find(s => s.name === MainScene.currentDressing.name)
-        const idx = scenes.indexOf(item)
-        if (idx >= 0)
-            scenes[idx] = MainScene.currentDressing
+    const item = scenes.find(s => s.name === Room.name)
+    const idx = scenes.indexOf(item)
+    if (idx >= 0)
+        scenes[idx] = getCurrentDressing()
 
-        localStorage.setItem('scenes', JSON.stringify(scenes));
-    }
+    localStorage.setItem('scenes', JSON.stringify(scenes));
 }
 export const saveSceneToFile = () => {
-    if (MainScene.currentDressing) {
-        const uriContent = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(getCurrentDressing()));
-
-        var pom = document.createElement('a');
-        pom.setAttribute('href', uriContent);
-        pom.setAttribute('download', `${MainScene.currentDressing.name}.minet`);
-        if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pom.dispatchEvent(event);
-        }
-        else {
-            pom.click();
-        }
-    } else {
-        console.warn(`No dressing on scene to save`)
+    const uriContent = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(getCurrentDressing()));
+    var pom = document.createElement('a');
+    pom.setAttribute('href', uriContent);
+    pom.setAttribute('download', `${Room.name}.minet3d`);
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
     }
+    else {
+        pom.click();
+    }
+}
+
+export const setConfig = (c) => {
+    if (!c) window.kino_bridge(KinoEvent.NO_CONFIG_FILE)
+    const config = c ? c : defaultconfig
+    Room.setup(config.defaultdressing)
+    MainScene.setup(config.scene_params)
 }
 
 /* scenes 
@@ -163,27 +181,26 @@ export const saveSceneToFile = () => {
 */
 
 export const newScene = (dressing) => {
-    if (!dressing) {
-        console.warn("New scene with no config object passed > load default dressing from Config")
-        dressing = MainScene.config.defaultdressing
-    }
-    MainScene.update(dressing)
+    if (!dressing) window.kino_bridge(KinoEvent.NO_DRESSING_FILE)
+    Room.setup(dressing)
+    if (dressing) setMaterialId(dressing.materialId)
+    MainScene.update()
     MainScene.render()
 }
 export const loadScene = (dressing) => {
     if (!dressing) {
-        console.error("load scene failed : no config object passed")
+        window.kino_bridge(KinoEvent.NO_DRESSING_FILE)
         return
     }
-    console.log("loadScene ", dressing)
-    MainScene.update(dressing)
-
+    Room.setup(dressing)
+    setMaterialId(dressing.materialId)
+    MainScene.update()
     /*
     1/ load scene material
     2/ load fbx
     */
 
-    const material = getMaterialById(MainScene.materialId)
+    const material = getMaterialById(getMaterialId())
     if (material) {
         loadMaterial(material.textures).then(mtl => {
             loadMeubles(dressing)
@@ -198,7 +215,7 @@ const loadMeubles = (dressing) => {
     dressing.meubles.forEach(state => loadMeuble(state))
 }
 const loadMeuble = (state) => {
-    const props = MainScene.catalogue.find(f => f.sku === state.sku)
+    const props = getProps(state.sku)
     if (!props) {
         console.error(`no meuble found for sku  ${state.sku}`)
         return null
@@ -217,6 +234,7 @@ const loadMeuble = (state) => {
     // meuble props are catalogue props + dressing props : no! => dressing props = state 
     // props.position = state.position;
 
+    window.kino_bridge(KinoEvent.LOADING_MEUBLE, state.sku)
     loadFbx(props.fbx.url, object => {
         const meuble = MainScene.createMeuble(props, object, state, skuInfo)
         MainScene.add(meuble);
@@ -229,25 +247,24 @@ const loadMeuble = (state) => {
  * window.scene_bridge('set_scene_material',materialId) *
  * @return {Object} material object
  */
-export const setSceneMaterial = (materialId) => {
-    if (materialId) {
-        const material = getMaterialById(materialId)
+export const setSceneMaterial = (id) => {
+    if (id) {
+        const material = getMaterialById(id)
         if (material) {
-            MainScene.materialId = materialId
+            setMaterialId(id)
             loadMaterial(material.textures).then(mtl => {
                 MainScene.meubles.forEach(meuble => {
                     meuble.applyMaterialOnMeuble(mtl)
                 })
                 MainScene.render()
                 sceneChange()
-
             })
         }
         else {
-            console.warn(`No material found with id ${materialId}`)
+            console.warn(`No material found with id ${id}`)
         }
     } else {
-        console.warn(`No material id ${materialId}`)
+        console.warn(`No material id ${id}`)
     }
 }
 
@@ -262,27 +279,27 @@ export const generateAllPix = async (skus = []) => {
         if (MainScene.selection) {// please on back wall !!
             selectionCenter = MainScene.selection.getCenterPoint()//for back wall !
         } */
-
-    MainScene.update({
+    Room.setup({
         name: "generation-scene",
         xmax: 4000,
         zmax: 6000
-    }, false)
-    for (const skuProps of MainScene.catalogue.filter(props => (skus.length > 0 ? skus.includes(props.sku) : true))) {
+    })
+    MainScene.update(false)
+    for (const skuProps of getMultipleProps(skus)) {
         await generatePix(skuProps)
     }
 }
 window.generateAllPix = generateAllPix
 // ["NYC231H219PP", "NYC231H238PP", "NYC155H219PP", "NYANGH238", "NYH238P40RL057","NYC155H219PG"]
 export const generateOnePix = (sku) => {
-
-    MainScene.update({
+    Room.setup({
         name: "generation-scene",
         xmax: 4000,
         zmax: 6000
-    }, false)
+    })
+    MainScene.update(false)
 
-    const props = MainScene.catalogue.find(f => f.sku === sku)
+    const props = getProps(sku)
     if (!props) {
         console.error(`no meuble found for sku  ${sku}`)
         return null
@@ -297,8 +314,9 @@ const generatePix = async (props) => {
                 object.position.x = 0
                 object.position.y = 0
                 object.position.z = 0
-                if (MainScene.materialId) {
-                    const material = getMaterialById(MainScene.materialId)
+                const materialId = getMaterialId()
+                if (materialId) {
+                    const material = getMaterialById(materialId)
                     if (material) {
                         loadMaterial(material.textures)
                             .then(mtl => {
@@ -342,8 +360,8 @@ const generatePix = async (props) => {
     })
 }
 export const downloadScene = () => {
-    console.warn(`what to do here ? downloadScene`)
-
+    // console.warn(`what to do here ? downloadScene`)
+    saveSceneToFile()
 }
 export const changeTool = (tool, arg) => {
 
@@ -521,37 +539,35 @@ export const drop = (meuble) => {
  */
 export const clickMeubleLine = (sku) => {
 
-    if (!MainScene.currentDressing) {
-        console.error("No scene : please add a scene before meuble")
-        return null
-    }
-
-    const props = MainScene.catalogue.find(f => f.sku === sku)
+    const props = getProps(sku)
     if (!props) {
-        console.error(`No meuble found for sku ${sku}`)
-        return null
+        return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NO_MODULE_FOUND, `Pas de meuble ${sku}`)
     }
     const skuInfo = parseSKU(sku)
     if (MainScene.selection) {
         if (skuInfo.isModule) {
-            console.error(`${sku} is a module`)
-            return null
+            return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.IS_A_MODULE, `${sku} n'est pas un accessoire`)
         }
         if (MainScene.selection.props.accessoirescompatibles.indexOf(sku) === -1) {
-            console.warn(`${sku} non compatible avec ${MainScene.selection.props.sku} sélectionné`)
+            return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.ITEM_NON_COMPATIBLE, `${sku} non compatible avec ${MainScene.selection.props.sku} sélectionné`)
         }
         else {
             MainScene.selection.addItem(props, {}, skuInfo);
         }
     } else {
         if (!skuInfo.isModule) {
-            console.error(`${sku} is not a module`)
-            return null
+            return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
         }
+        window.kino_bridge(KinoEvent.LOADING_MEUBLE, sku)
         loadFbx(props.fbx.url, object => {
             const result = MainScene.createMeuble(props, object, null, skuInfo)
             if (typeof result === "string") {// creation problem
-                window.kino_bridge(KinoEvent.SEND_MESSAGE, result)
+                switch (result) {
+                    case Errors.NOT_A_MODULE:
+                        return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
+                    case Errors.NO_ROOM:
+                        return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
+                }
             }
             else {
                 MainScene.add(result);
@@ -579,11 +595,11 @@ export const dragMeubleOverScene = (sku) => {
  * @param {String} sku Stock Keeping Unit of clicked meuble
  * @return {Object} Action object with type and sku
  */
-export const dropMeubleOnScene = (sku) => {
+/* export const dropMeubleOnScene = (sku) => {
     return {
         type: MeubleEvent.DROP_MEUBLE_TO_SCENE, sku
     }
-}
+} */
 
 export const printRaycast = (raycast) => {
     return {

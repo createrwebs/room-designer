@@ -1,7 +1,9 @@
 import Meuble from './Meuble'
-import { getSize, Measures } from './Utils'
-import { create as createRuler } from './helpers/Ruler';
-import { Corners, Room } from './Drag';
+import { getSize, Measures } from '../Utils'
+import { create as createRuler } from '../helpers/Ruler';
+import { Corners } from '../Constants';
+import Room from '../Room';
+
 import {
     Group
 } from "three";

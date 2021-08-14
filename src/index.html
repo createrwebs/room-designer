@@ -469,11 +469,93 @@
 			fetch(url).then(response => response.json()).then(json => local_scene_bridge('load_dressing', json));
 		}
 
-		fetch("catalogue.json").then(response => response.json()).then(json => catalogue = json);
-		fetch("dressings/dressing-collision.json").then(response => response.json()).then(json => loadedDressingAtStart = json);
+		fetch("catalogue.json").then(response => response.json()).then(json => {
+			catalogue = json
+			populate_module_list()
+		});
+		fetch("dressings/dressing-fileurs.json").then(response => response.json()).then(json => loadedDressingAtStart = json);
 
-		kino_bridge = function (type, arg) {
-			console.log("kino_bridge", type, arg)
+		upload_dressing = function () {
+			var readFile = function (e) {
+				var file = e.target.files[0];
+				if (!file) {
+					return;
+				}
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					var contents = e.target.result;
+					fileInput.func(contents)
+					document.body.removeChild(fileInput)
+				}
+				reader.readAsText(file)
+			}
+			fileInput = document.createElement("input")
+			fileInput.type = 'file'
+			fileInput.style.display = 'none'
+			fileInput.onchange = readFile
+			fileInput.func = function (contents) {
+				local_scene_bridge('load_dressing', JSON.parse(contents))
+			}
+			document.body.appendChild(fileInput)
+			var eventMouse = document.createEvent("MouseEvents")
+			eventMouse.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+			fileInput.dispatchEvent(eventMouse)
+		}
+
+		populate_module_list = function () {
+			var selectModuleList = document.getElementById("add-meuble-to-scene")
+			selectModuleList.innerHTML = ""
+			catalogue.filter(m => m.type[0].slug === "modules" || m.type[0].slug === "coulissantes")
+				.sort((a, b) => a.sku.localeCompare(b.sku))
+				.forEach(p => {
+					var opt = document.createElement('option');
+					opt.value = p.sku;
+					opt.innerHTML = p.sku;
+					selectModuleList.appendChild(opt);
+				});
+		}
+
+		populate_items_list = function (sku) {
+			var props = catalogue.find(f => f.sku === sku)
+			if (props.type[0].slug !== "modules" && props.type[0].slug !== "coulissantes") return
+			var selectItemList = document.getElementById("add-item-to-scene")
+			selectItemList.innerHTML = ""
+			if (props && props.accessoirescompatibles)
+				props.accessoirescompatibles.forEach(element => {
+					var opt = document.createElement('option');
+					opt.value = element;
+					opt.innerHTML = element;
+					selectItemList.appendChild(opt);
+				});
+		}
+
+		const KinoEvent = {
+			SELECT_MEUBLE: 'select_meuble',
+			SCENE_CHANGE: 'scene_change',
+			SEND_MESSAGE: 'send_message',
+			MOUSEOVER_ITEM: 'mouseover_item',
+			MOUSEOUT_ITEM: 'mouseout_item',
+			LOADING_MEUBLE: 'loading_meuble',
+			MEUBLE_LOADED: 'meuble_loaded',
+			ERROR_LOADING_MEUBLE: 'error_loading_meuble',
+		}
+
+		kino_bridge = function (type, arg1, arg2) {
+			switch (type) {
+				case KinoEvent.LOADING_MEUBLE:
+				case KinoEvent.MEUBLE_LOADED:
+				case KinoEvent.ERROR_LOADING_MEUBLE:
+					break;
+				case KinoEvent.SELECT_MEUBLE:
+					populate_items_list(arg1)
+					break;
+				case KinoEvent.SCENE_CHANGE:
+				case KinoEvent.SEND_MESSAGE:
+				case KinoEvent.MOUSEOVER_ITEM:
+				case KinoEvent.MOUSEOUT_ITEM:
+				default:
+					console.log("kino_bridge", type, arg1 ? arg1 : "", arg2 ? arg2 : "")
+			}
 		}
 		local_scene_bridge = function (type, arg) {
 			console.log("local_scene_bridge", type)
@@ -487,16 +569,7 @@
 					break;
 
 				case 'add_meuble_to_scene':
-					var sku = arg
-					var selectItemList = document.getElementById("add-item-to-scene")
-					var props = catalogue.find(f => f.sku === sku)
-					if (props.accessoirescompatibles)
-						props.accessoirescompatibles.forEach(element => {
-							var opt = document.createElement('option');
-							opt.value = element;
-							opt.innerHTML = element;
-							selectItemList.appendChild(opt);
-						});
+					populate_items_list(arg)
 					break;
 
 				case 'select_meuble':
@@ -526,16 +599,23 @@
 		<i class="fa fa-save"></i>
 	</button>
 
-	<select id="load-dressing" onchange="load_dressing(this.value)">
-		<option value="dressings/dressing-blot.json">Blots</option>
-		<option value="dressings/dressing-corners.json">Corners</option>
+	<select id="load-dressing" onchange="load_dressing(this.value)" style="margin-right: 1em;">
+		<option value="dressings/dressing-angles.json">Angles</option>
+		<option value="dressings/dressing-armoire.json">Armoire</option>
+		<option value="dressings/dressing-blots.json">Blots</option>
 		<option value="dressings/dressing-C231.json">C231</option>
-		<option value="dressings/dressing-ang.json">Angles</option>
+		<option value="dressings/dressing-coiffeuses.json">Coiffeuses</option>
 		<option value="dressings/dressing-collision.json">Collision</option>
+		<option value="dressings/dressing-corners.json">Corners</option>
+		<option value="dressings/dressing-fileurs.json">Fileurs</option>
+		<option value="dressings/dressing-test1meuble.json">Test 1 meuble</option>
 	</select>
 
-	<button class="btn" onclick="local_scene_bridge('download_dressing')" style="margin-right: 1em;">
+	<button class="btn" onclick="local_scene_bridge('download_dressing')">
 		<i class="fa fa-download"></i>
+	</button>
+	<button class="btn" onclick="upload_dressing()" style="margin-right: 1em;">
+		<i class="fa fa-upload"></i>
 	</button>
 
 
@@ -583,43 +663,8 @@
 		<i class="fa fa-trash"></i>
 	</button>
 
-	<select id="add-meuble-to-scene" onchange="local_scene_bridge('add_meuble_to_scene',this.value)">
-
-		<option value="NYH238P62P40">NYH238P62P40</option>
-		<option value="NYH238P62L096">NYH238P62L096</option>
-		<option value="NYH238P62L081">NYH238P62L081</option>
-		<option value="NYH238P62L059">NYH238P62L059</option>
-		<option value="NYH238P62L048">NYH238P62L048</option>
-		<option value="NYH238P62L040">NYH238P62L040</option>
-		<option value="NYH238P40RL057">NYH238P40RL057</option>
-		<option value="NYH238P40P62">NYH238P40P62</option>
-		<option value="NYH238P40L119">NYH238P40L119</option>
-		<option value="NYH238P40L096">NYH238P40L096</option>
-		<option value="NYH238P40L081">NYH238P40L081</option>
-		<option value="NYH238P40L059">NYH238P40L059</option>
-		<option value="NYH238P40L048">NYH238P40L048</option>
-		<option value="NYH238P40L040">NYH238P40L040</option>
-
-		<option value="NYH219P62P40">NYH219P62P40</option>
-		<option value="NYH219P62L096">NYH219P62L096</option>
-		<option value="NYH219P62L081">NYH219P62L081</option>
-		<option value="NYH219P62L059">NYH219P62L059</option>
-		<option value="NYH219P62L048">NYH219P62L048</option>
-		<option value="NYH219P62L040">NYH219P62L040</option>
-		<option value="NYH219P40RL057">NYH219P40RL057</option>
-		<option value="NYH219P40P62">NYH219P40P62</option>
-		<option value="NYH219P40L119">NYH219P40L119</option>
-		<option value="NYH219P40L096">NYH219P40L096</option>
-		<option value="NYH219P40L081">NYH219P40L081</option>
-		<option value="NYH219P40L059">NYH219P40L059</option>
-		<option value="NYH219P40L048">NYH219P40L048</option>
-		<option value="NYH219P40L040">NYH219P40L040</option>
-	</select>
-
-
-	<select id="add-item-to-scene" onchange="local_scene_bridge('add_meuble_to_scene',this.value)">
-
-	</select>
+	<select id="add-meuble-to-scene" onchange="local_scene_bridge('add_meuble_to_scene',this.value)"></select>
+	<select id="add-item-to-scene" onchange="local_scene_bridge('add_meuble_to_scene',this.value)"></select>
 
 	<!-- <div style="position:absolute;margin: 0;width: 600px;height: 400px;overflow: hidden;left:10px;top:30px; border:1px solid blue"
 		id="view1" tabindex="1"></div>

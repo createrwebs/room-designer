@@ -3,7 +3,8 @@ import {
     // loadManagerLoad,
     loadManagerProgress,
     loadManagerQueueFinished,
-    loadManagerError
+    loadManagerError,
+    KinoEvent
 }
     from '../api/actions'
 import store from '../api/store';
@@ -50,6 +51,7 @@ export const loadFbx = (url, callback) => {
             object.userData.filename = filename
             if (undefined == Fbxs.find(fbx => fbx.userData.filename === filename))
                 Fbxs.push(object)
+            window.kino_bridge(KinoEvent.MEUBLE_LOADED, filename)
             callback(object.clone())
         },
         (xhr) => {
@@ -63,5 +65,6 @@ export const loadFbx = (url, callback) => {
         (error) => {
             // console.log(error)
             store.dispatch(loadManagerError(filename))
+            window.kino_bridge(KinoEvent.ERROR_LOADING_MEUBLE, filename)
         })
 }

@@ -33,3 +33,24 @@ export const Measures = {
     thick: 25,// epaisseur de planche
     arrondi: 2,// rayon du champfrein arrondi
 }
+
+/*
+    rendering engine
+    https://stackoverflow.com/questions/9677985/uncaught-typeerror-illegal-invocation-in-chrome
+*/
+const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+const cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+let engineId = null
+let engineFunc = null
+const engine = (time) => {
+    if (engineFunc) engineFunc()
+    engineId = requestAnimationFrame(engine);
+}
+export const startEngine = (func) => {
+    engineFunc = func
+    engineId = requestAnimationFrame(engine);
+}
+export const stopEngine = () => {
+    cancelAnimationFrame(engineId)
+}

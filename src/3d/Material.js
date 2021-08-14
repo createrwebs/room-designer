@@ -10,13 +10,21 @@ import {
 } from "three";
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
 import { loadTexture } from './Loader'
-import { getCenterPoint } from './Utils'
 
 /*
     textures loading manager keeps already loaded textures in Textures[]
 */
 const Textures = []
 // window.tx = Textures//debug
+
+
+let mId = 0
+export const getId = () => {
+    return mId
+}
+export const setId = (id) => {
+    mId = id
+}
 
 export const getLaqueById = (id) => {
     return window.laques.find(m => m.id === id)

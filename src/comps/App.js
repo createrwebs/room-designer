@@ -10,16 +10,18 @@ import {
 	resizeScene,
 	newScene,
 	loadScene,
-	setCatalogue,
 	clickMeubleLine,
 	changeTool,
 }
 	from '../api/actions'
+import { set as setCatalogue } from '../api/Catalogue'
+
 import { parseSKU } from '../3d/Sku'
 import sceneBridge from '../api/Bridge';
+import { setId as setMaterialId } from '../3d/Material'
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
-import Room from './Room';
+import ThreeScene from './ThreeScene';
 import Loading from './printing/Loading';
 import Logging from './printing/Logging';
 import { getGui } from './printing/DataGui';
@@ -36,6 +38,8 @@ class App extends Component {
 		};
 		window.scene_bridge = sceneBridge.bind(this)
 
+		setMaterialId(window.materials[0].id)
+
 		let gui
 		if (localhost) {
 
@@ -44,17 +48,8 @@ class App extends Component {
 			})
 				.then(response => response.json())
 				.then(catalogue => {
-					setCatalogue(catalogue)
-
-					/* catalogue.forEach(element => {
-						console.log(element.sku)
-					}); */
-
-					/* print all sku and skuinfo fmor catalogue */
-					/* const modules = catalogue.filter(i => parseSKU(i.sku).type === "module")
-					console.log("sku of type module :", modules) */
-
 					setConfig(config)// creation scene
+					setCatalogue(catalogue)
 
 					if (loadedDressingAtStart) {
 						loadScene(loadedDressingAtStart)// from index
@@ -70,7 +65,7 @@ class App extends Component {
 		else {
 			getJson("config")
 				.then(c => {
-					setConfig(c)
+					setConfig(c ? c : config)
 
 					fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
 						method: 'GET',
@@ -122,7 +117,7 @@ class App extends Component {
 					<div>
 						<Loading />
 						<Logging />
-						<Room />
+						<ThreeScene />
 					</div>
 				}
 			</div >

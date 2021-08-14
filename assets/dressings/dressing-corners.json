@@ -5,11 +5,20 @@
     "materialId": 1301,
     "meubles": [
         {
-            "sku": "NYH238P40L119",
+            "sku": "NYH238P40L040",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "front-right",
                 "x": 0
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40L119",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 1300
             },
             "items": []
         },
@@ -23,7 +32,7 @@
             "items": []
         },
         {
-            "sku": "NYH238P40L059",
+            "sku": "NYH238P62L059",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "back-left",
@@ -32,7 +41,7 @@
             "items": []
         },
         {
-            "sku": "NYH238P40L040",
+            "sku": "NYH238P62L040",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "left-front",

@@ -15,9 +15,12 @@ import {
     setSceneMaterial,
 }
     from './actions'
-import store from './store';// localhost tests
 
 import { getCurrentDressing } from '../3d/Dressing';
+
+/*
+    all actions coming from front end site are treated here
+*/
 
 export default function (event, param1, param2) {
     console.log("scene_bridge :", event, param1, param2)
@@ -49,9 +52,9 @@ export default function (event, param1, param2) {
         case BridgeEvent.DRAG_MEUBLE_OVER_SCENE:
             dragMeubleOverScene(param1, param2)
             break;
-        case BridgeEvent.DROP_MEUBLE_TO_SCENE:
-            store.dispatch(dropMeubleOnScene(param1, param2))
-            break;
+        /*         case BridgeEvent.DROP_MEUBLE_TO_SCENE:
+                    store.dispatch(dropMeubleOnScene(param1, param2))
+                    break; */
         case BridgeEvent.SET_SCENE_MATERIAL:
             setSceneMaterial(param1)
             break;
@@ -73,7 +76,7 @@ export default function (event, param1, param2) {
             animeSelectedMeuble()
             break;
         default:
-            console.log("no case found for event ", event)
+            console.log("Bridge : no case found for event ", event)
             break;
     }
 }

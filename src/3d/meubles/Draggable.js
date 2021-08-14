@@ -4,17 +4,20 @@ import {
     sceneChange,
     Tools
 }
-    from '../api/actions'
-import store from '../api/store';
+    from '../../api/actions'
+import store from '../../api/store';
 
-import MainScene from './MainScene';
+import MainScene from '../MainScene';
 import Meuble from './Meuble'
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-import { create as createCross } from './helpers/Cross';
-import { draw, draw as drawSegments } from './helpers/Segments';
-import { Space, Room, getWallChange, Walls, Corners } from './Drag';
-import { Measures } from './Utils'
+import { create as createCross } from '../helpers/Cross';
+import { draw, draw as drawSegments } from '../helpers/Segments';
+import { Space, getWallChange } from '../Drag';
+import { Walls, Corners, Sides } from '../Constants';
+import Room from '../Room';
+
+import { Measures } from '../Utils'
 
 export default class Draggable extends Meuble {
 
@@ -52,31 +55,31 @@ export default class Draggable extends Meuble {
         switch (this.skuInfo.type) {
             case "P40RL057____":// TODO 1/4 turn range chaussure
                 switch (stickTo) {
-                    case "right":
+                    case Sides.R:
                         if (target && target.skuInfo.PL != 62) return;
                         this.object.children.forEach(child => {
                             child.position.set(!inside ? 0 : 579, 0, 0)
                             child.rotation.set(0, !inside ? 0 : -Math.PI / 2, 0)
                         })
-                        this.panneaux["right"].object.position.x = 579
-                        this.panneaux["right"].object.position.y = 0;
-                        this.panneaux["right"].object.position.z = 579
-                        this.panneaux["left"].object.position.x = 579
-                        this.panneaux["left"].object.position.y = 0
-                        this.panneaux["left"].object.position.z = 0
+                        this.panneaux[Sides.R].object.position.x = 579
+                        this.panneaux[Sides.R].object.position.y = 0;
+                        this.panneaux[Sides.R].object.position.z = 579
+                        this.panneaux[Sides.L].object.position.x = 579
+                        this.panneaux[Sides.L].object.position.y = 0
+                        this.panneaux[Sides.L].object.position.z = 0
                         break;
-                    case "left":// 1/4 turn to right
+                    case Sides.L:// 1/4 turn to right
                         if (target && target.skuInfo.PR != 62) return;
                         this.object.children.forEach(child => {
                             child.position.set(0, 0, !inside ? 0 : 579)
                             child.rotation.set(0, !inside ? 0 : Math.PI / 2, 0)
                         })
-                        this.panneaux["right"].object.position.x = 0;
-                        this.panneaux["right"].object.position.y = 0;
-                        this.panneaux["right"].object.position.z = Measures.thick;
-                        this.panneaux["left"].object.position.x = 0
-                        this.panneaux["left"].object.position.y = 0
-                        this.panneaux["left"].object.position.z = 579 + Measures.thick;
+                        this.panneaux[Sides.R].object.position.x = 0;
+                        this.panneaux[Sides.R].object.position.y = 0;
+                        this.panneaux[Sides.R].object.position.z = Measures.thick;
+                        this.panneaux[Sides.L].object.position.x = 0
+                        this.panneaux[Sides.L].object.position.y = 0
+                        this.panneaux[Sides.L].object.position.z = 579 + Measures.thick;
                         break;
                     default:
                         this.object.children.forEach(child => {
@@ -84,15 +87,15 @@ export default class Draggable extends Meuble {
                             child.position.set(Measures.thick, 0, 0)
                         })
                         if (this.panneaux) {
-                            if (this.panneaux["right"] && this.panneaux["right"].object) {
-                                this.panneaux["right"].object.position.x = this.skuInfo.L * 10
-                                this.panneaux["right"].object.position.y = 0;
-                                this.panneaux["right"].object.position.z = 0
+                            if (this.panneaux[Sides.R] && this.panneaux[Sides.R].object) {
+                                this.panneaux[Sides.R].object.position.x = this.skuInfo.L * 10
+                                this.panneaux[Sides.R].object.position.y = 0;
+                                this.panneaux[Sides.R].object.position.z = 0
                             }
-                            if (this.panneaux["left"] && this.panneaux["left"].object) {
-                                this.panneaux["left"].object.position.x = 0
-                                this.panneaux["left"].object.position.y = 0
-                                this.panneaux["left"].object.position.z = 0;
+                            if (this.panneaux[Sides.L] && this.panneaux[Sides.L].object) {
+                                this.panneaux[Sides.L].object.position.x = 0
+                                this.panneaux[Sides.L].object.position.y = 0
+                                this.panneaux[Sides.L].object.position.z = 0;
                             }
                         }
                 }
@@ -124,7 +127,6 @@ export default class Draggable extends Meuble {
         } */
 
 
-        Room.setWallsLength(MainScene.currentDressing, MainScene.config)
         Room.setupWallConstraints(this)
 
         if (!Object.values(Walls).includes(this.wall)) {// meuble in corner
@@ -132,7 +134,7 @@ export default class Draggable extends Meuble {
         Room.axis = Room.getAxisForWall(this.wall);
         Room.populateMeublesOnWalls(MainScene.meubles)
         Room.populateSpacesOnWalls(this)
-        Room.populateMeublesOnCorners(MainScene.meubles)
+        Room.populateMeublesOnCorners(MainScene.meubles, this)
 
         this.width = this.getWidth()
 
@@ -160,9 +162,10 @@ export default class Draggable extends Meuble {
             console.warn(`Moving from ${this.wall} to ${newPlace}`)
 
             if (this.isOnAWall()
+                && this.skuInfo.angABSku
                 && Object.values(Corners).includes(newPlace)
-                && !Room.MeublesOnCorners[newPlace]
-                && this.skuInfo.angABSku) {// from wall to corner
+                && Room.isCornerFreeForMeuble(newPlace, this)
+            ) {// from wall to corner
                 this.addAngAB()
                 this.wall = newPlace
             }

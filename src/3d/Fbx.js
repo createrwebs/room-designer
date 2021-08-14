@@ -7,7 +7,11 @@ import {
     applyOnMesh,
     getLaqueById
 } from './Material'
-import { Corners, Walls } from './Drag';
+import { Walls, Corners } from "./Constants";
+import {
+    sceneChange,
+}
+    from '../api/actions'
 
 export default class Fbx {
     constructor (props, object, state, skuInfo) {
@@ -40,6 +44,17 @@ export default class Fbx {
             })
         }
     }
+
+    getUid() {
+        return this.object.uuid.substring(0, 8)// identifies uniquely
+    }
+    info() {
+        return `${this.getUid()} | ${this.props.sku}`
+    }
+    sizeInfo() {
+        return `${this.info()} (L ${this.width / 10}cm H ${this.height / 10}cm P ${this.depth / 10}cm)`
+    }
+
     getFrontPosition() {
         const d = localhost ? 2000 : 3000// distance de recul pour observer le meuble selectionné
         const center = this.getCenterPoint()
@@ -85,9 +100,10 @@ export default class Fbx {
 
         //memorize :
         this.laqueOnMeshes[interactiveEvent.target.name] = MainScene.laqueId
-        // console.log("clickLaquable", this.laqueOnMeshes)
+        console.log("clickLaquable", this, this.laqueOnMeshes)
 
         MainScene.render()
+        sceneChange()
     }
 
     getLaqueOnMeshesJson() {

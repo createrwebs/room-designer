@@ -1,7 +1,9 @@
 import {
+    Errors,
     printRaycast,
     Tools,
-    sceneChange
+    sceneChange,
+    KinoEvent
 }
     from '../api/actions'
 import {
@@ -25,32 +27,31 @@ import {
     DoubleSide,
     CameraHelper,
 } from "three";
-import Stats from 'three/examples/jsm/libs/stats.module'
-import { localhost } from '../api/Utils';
-import store from '../api/store';
-
-// Controls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-// import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+// import Stats from 'three/examples/jsm/libs/stats.module'
 
 /* 3d mouse interaction */
 // import { Interaction } from 'three.interaction';// fails to use
 // import { InteractionManager } from "three.interactive";// ok but 500kB re-imports all three !
 import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
-import { Room, Corners } from './Drag'
-import Draggable from './Draggable'
-import Angle from './Angle'
+
+import store from '../api/store';
+import { localhost } from '../api/Utils';
+import { startEngine, stopEngine } from './Utils';
+
+import { Walls, Corners } from "./Constants";
+import Room from './Room';
+import Draggable from './meubles/Draggable'
+import Angle from './meubles/Angle'
+import Fileur from './meubles/Fileur'
 import { setupLights } from './helpers/Lights'
 import { create as createSolGrid } from './helpers/Sol';
-
-const wallHeight = 2380;
 
 export default {
     meubles: [],
     laque: null,
     laqueId: null,
     selection: null,
-    currentDressing: null,
 
     /*  clickOnScene(event) {// do not work
          // console.log("clickOnScene", event)
@@ -71,17 +72,11 @@ export default {
     getStatNodeElement() {
         return this.frame_stats.dom
     },
-    setup(config) {
+    setup(scene_params) {
         window.ts = this// f12 helper
 
         this.tool = Tools.ARROW
-
-        this.config = config
-        this.xmax = 4000
-        this.zmax = 2000
-        this.setupSize(config)
-
-        const scene_params = this.scene_params = config.scene_params;
+        this.scene_params = scene_params;
         let camera, scene, renderer, orbitControls, stats, manager;
 
         this.clear()
@@ -138,8 +133,9 @@ export default {
         // renderer.setClearColor(0xFFFFFF);
 
 
+        /* stats */
 
-        this.frame_stats = stats = new Stats();
+        // this.frame_stats = stats = new Stats();
 
         /* raycaster */
 
@@ -149,22 +145,8 @@ export default {
 
         // +Z is up in Blender, whereas + Y is up in three.js
         this.camera = camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 100, 15000);
-        camera.position.set(this.xmax / 2, 1700, this.zmax / 2)
+        camera.position.set(Room.xmax / 2, Room.ymax / 2, Room.zmax / 2)
         this.cameraHelper = new CameraHelper(this.camera);
-
-        /* orthographic camera for 2d plan */
-
-        /*         const left = -this.xmax / 2;
-                const right = this.xmax / 2;  // default canvas size
-                const top = -this.zmax / 2;
-                const bottom = this.zmax / 2;  // default canvas size
-                const near = 10;
-                const far = 6000;
-                this.orthoCamera = new OrthographicCamera(left, right, top, bottom, near, far);
-                this.orthoCamera.position.set(this.xmax / 2, 6000, this.zmax / 2)
-                this.orthoCamera.lookAt(this.xmax / 2, 0, this.zmax / 2);
-                this.orthoCamera.zoom = 1;
-                this.orthoCameraHelper = new CameraHelper(this.orthoCamera); */
 
         /* controls */
 
@@ -194,56 +176,13 @@ export default {
         mesh.receiveShadow = true;
         scene.add(mesh);
 
-
         this.setupLights()
-
-        /* ground */
-
-        /*         const groundMaterial = new MeshStandardMaterial({
-                    color: scene_params.groundColor,
-                    emissive: 0x2C2C2C,
-                });
-        
-                const geometryGround = new PlaneGeometry(55000, 55000, 12);
-                this.ground = new Mesh(geometryGround, groundMaterial);
-                this.ground.rotateX(Math.PI / -2);
-                //this.ground.castShadow = true;
-                //this.ground.receiveShadow = true;
-                //if(this.ground.material.map) this.ground.material.map.anisotropy = 5;		
-                scene.add(this.ground); */
-
-        /* walls */
-        this.setupWalls(config)
+        this.buildWalls()
         this.resize()
         // console.log("MainScene setup", this)
-
-        /* material */
-        this.materialId = window.materials[0].id
-
     },
-    /*     setScissorForElement(elem) {
-            const canvas = document.getElementById("canvas-wrapper")
-            const canvasRect = canvas.getBoundingClientRect();
-            const elemRect = elem.getBoundingClientRect();
-    
-            // compute a canvas relative rectangle
-            const right = Math.min(elemRect.right, canvasRect.right) - canvasRect.left;
-            const left = Math.max(0, elemRect.left - canvasRect.left);
-            const bottom = Math.min(elemRect.bottom, canvasRect.bottom) - canvasRect.top;
-            const top = Math.max(0, elemRect.top - canvasRect.top);
-    
-            const width = Math.min(canvasRect.width, right - left);
-            const height = Math.min(canvasRect.height, bottom - top);
-    
-            // setup the scissor to only render to that part of the canvas
-            const positiveYUpBottom = canvasRect.height - bottom;
-            this.renderer.setScissor(left, positiveYUpBottom, 5000, 5000);
-            this.renderer.setViewport(left, positiveYUpBottom, 5000, 5000);
-    
-            // return the aspect
-            return width / height;
-        }, */
     render() {
+        // console.log("render")
         if (this.interactionManager) this.interactionManager.update();
 
         this.getRaycasterIntersect()
@@ -252,55 +191,14 @@ export default {
         // this.cameraHelper.visible = true;
 
         const renderer = this.renderer
-        // renderer.setScissorTest(true);
-        // const view1Elem = document.getElementById('view1')
-        // const view2Elem = document.getElementById('view2')
-
-        this.frame_stats.update();
-        // this.renderer.render(this.scene, this.camera);
-        // this.cameraHelper.update();
-        // this.orthoCameraHelper.update();
-        // this.orthoCamera.updateProjectionMatrix();
-
-        // renderer.clear();
-        // const aspect1 = this.setScissorForElement(view1Elem);
-
-        // adjust the camera for this aspect
-        // this.camera.aspect = aspect1;
-        // this.camera.updateProjectionMatrix();
-        // this.cameraHelper.update();
-        // renderer.setScissor(0, 600, 500, 500);
-        // renderer.setViewport(0, 600, 500, 500);
+        // this.frame_stats.update();
         this.renderer.render(this.scene, this.camera);
-
-
-        // const camera = this.orthoCamera
-        // camera.near = -1;
-        // camera.far = 1;
-        // camera.zoom = 1;
-        /*         renderer.setScissorTest(true);
-                const aspect = this.setScissorForElement(view2Elem);
-                this.orthoCamera.aspect = aspect;
-                this.orthoCamera.updateProjectionMatrix();
-                this.orthoCameraHelper.update(); */
-
-        // renderer.clearDepth(); // important! clear the depth buffer
-        // renderer.setViewport(0, 0, 500, 500);
-        // renderer.render(this.scene, this.orthoCamera);
     },
 
-    setupSize(config) {
-        if (config) {
-            this.xmax = config.xmax > 0 ? config.xmax :
-                (config.defaultdressing && config.defaultdressing.xmax ? config.defaultdressing.xmax : this.xmax)
-            this.zmax = config.zmax > 0 ? config.zmax :
-                (config.defaultdressing && config.defaultdressing.zmax ? config.defaultdressing.zmax : this.zmax)
-        }
-    },
     setupLights() {
         setupLights(this.scene, this.scene_params)
     },
-    setupWalls(config, visible = true) {
+    buildWalls(visible = true) {
 
         if (localhost) {
 
@@ -332,49 +230,49 @@ export default {
             side: DoubleSide
         });
 
-        if (config.xmax > 0) {
-            const geometryRight = new PlaneGeometry(config.xmax, wallHeight, 10, 10);
+        if (Room.xmax > 0) {
+            const geometryRight = new PlaneGeometry(Room.xmax, Room.ymax, 10, 10);
             this.wallRight = new Mesh(geometryRight, wallMaterial);
             this.wallRight.name = "wall-right";
-            this.wallRight.position.x = config.xmax / 2;
-            this.wallRight.position.y = wallHeight / 2;
+            this.wallRight.position.x = Room.xmax / 2;
+            this.wallRight.position.y = Room.ymax / 2;
             this.wallRight.castShadow = this.wallRight.receiveShadow = false;
             this.scene.add(this.wallRight);
 
             this.wallLeft = new Mesh(geometryRight, wallMaterial);
             this.wallLeft.name = "wall-left";
-            this.wallLeft.position.x = config.xmax / 2;
-            this.wallLeft.position.y = wallHeight / 2;
-            this.wallLeft.position.z = config.zmax;
+            this.wallLeft.position.x = Room.xmax / 2;
+            this.wallLeft.position.y = Room.ymax / 2;
+            this.wallLeft.position.z = Room.zmax;
             this.wallLeft.rotateY(Math.PI);
             this.wallLeft.castShadow = this.wallLeft.receiveShadow = false;
             this.scene.add(this.wallLeft);
         }
 
-        if (config.zmax > 0) {
-            const geometryBack = new PlaneGeometry(config.zmax, wallHeight, 10, 10);
+        if (Room.zmax > 0) {
+            const geometryBack = new PlaneGeometry(Room.zmax, Room.ymax, 10, 10);
             this.wallFront = new Mesh(geometryBack, wallMaterial);
             this.wallFront.name = "wall-front";
             this.wallFront.rotateY(Math.PI / 2)
             this.wallFront.position.x = 0;
-            this.wallFront.position.y = wallHeight / 2;
-            this.wallFront.position.z = config.zmax / 2;
+            this.wallFront.position.y = Room.ymax / 2;
+            this.wallFront.position.z = Room.zmax / 2;
             this.wallFront.castShadow = this.wallFront.receiveShadow = false;
             this.scene.add(this.wallFront);
 
             this.wallBack = new Mesh(geometryBack, wallMaterial);
             this.wallBack.name = "wall-back";
             this.wallBack.rotateY(Math.PI / 2)
-            this.wallBack.position.x = config.xmax;
-            this.wallBack.position.y = wallHeight / 2;
-            this.wallBack.position.z = config.zmax / 2;
+            this.wallBack.position.x = Room.xmax;
+            this.wallBack.position.y = Room.ymax / 2;
+            this.wallBack.position.z = Room.zmax / 2;
             this.wallBack.castShadow = this.wallBack.receiveShadow = false;
             this.scene.add(this.wallBack);
         }
 
         if (visible) {
             if (this.sol && this.sol.parent == this.scene) this.scene.remove(this.sol);
-            this.sol = createSolGrid(config.xmax, config.zmax)
+            this.sol = createSolGrid(Room.xmax, Room.zmax)
             this.scene.add(this.sol);
         }
     },
@@ -406,23 +304,10 @@ export default {
 
         //TODO clean all...search for threejs clean scene
     },
-    update(config, wallVisible = true) {
+    update(wallVisible = true) {
         this.clear();
         this.setupLights();
-        this.setupWalls(config, wallVisible)
-
-        /*         this.scene.add(this.cameraHelper);
-                this.scene.add(this.orthoCameraHelper); */
-
-        // this.setup(config)
-        if (config) {
-            if (config.materialId) {
-                this.materialId = config.materialId
-                sceneChange()
-            }
-            this.currentDressing = config
-        }
-        Room.setWallsLength(this.currentDressing, this.config)
+        this.buildWalls(wallVisible)
     },
     resize() {
         const canvasWrapper = document.getElementById("canvas-wrapper")
@@ -495,34 +380,62 @@ export default {
                         } */
         })
     },
+
+    /*
+    roll over works if interactionManager updates
+    */
+    itemMouseOver(fbx, interactiveEvent) {
+        interactiveEvent.stopPropagation()
+        window.kino_bridge(KinoEvent.MOUSEOVER_ITEM, `${fbx.props.sku}|${fbx.getUid()}`, interactiveEvent.target ? interactiveEvent.target.name : "no-name")
+
+    },
+    itemMouseOut(fbx, interactiveEvent) {
+        interactiveEvent.stopPropagation()
+        window.kino_bridge(KinoEvent.MOUSEOUT_ITEM, `${fbx.props.sku}|${fbx.getUid()}`, interactiveEvent.target ? interactiveEvent.target.name : "no-name")
+    },
     enableMeublePainting(enabled) {
         this.meubles.forEach(m => {
-            m.object.children.filter(c => m.props.laquables.includes(c.name)).forEach(c => {
-                if (enabled) {
-                    this.interactionManager.add(c)
-                    c.addEventListener('click', m.clickLaquable.bind(m))
+            m.object.children
+                .filter(c => m.props.laquables.includes(c.name))
+                .forEach(c => {
+                    if (enabled) {
+                        this.interactionManager.add(c)
+                        c.addEventListener('click', m.clickLaquable.bind(m))
+                        c.addEventListener('mouseover', this.itemMouseOver.bind(this, m))
+                        c.addEventListener('mouseout', this.itemMouseOut.bind(this, m))
 
-                    // console.log("interactionManager", c.hasEventListener('click'), this.interactionManager)
-
-
-                } else {
-                    this.interactionManager.remove(c)
-                    c.removeEventListener('click', m.clickLaquable.bind(m))
-                }
-            })
+                    } else {
+                        this.interactionManager.remove(c)
+                        c.removeEventListener('click', m.clickLaquable.bind(m))
+                        c.removeEventListener('mouseover', this.itemMouseOver.bind(this, m))
+                        c.removeEventListener('mouseout', this.itemMouseOut.bind(this, m))
+                    }
+                })
             m.items.forEach(i => {
                 i.object.children.filter(c => i.props.laquables.includes(c.name)).forEach(c => {
                     if (enabled) {
                         this.interactionManager.add(c)
                         c.addEventListener('click', i.clickLaquable.bind(i))
+                        c.addEventListener('mouseover', this.itemMouseOver.bind(this, i))
+                        c.addEventListener('mouseout', this.itemMouseOut.bind(this, i))
                     } else {
                         this.interactionManager.remove(c)
                         c.removeEventListener('click', i.clickLaquable.bind(i))
+                        c.removeEventListener('mouseover', this.itemMouseOver.bind(this, i))
+                        c.removeEventListener('mouseout', this.itemMouseOut.bind(this, i))
                     }
                 })
             })
         })
+        if (enabled) {
+            startEngine(this.render.bind(this))
+        }
+        else {
+            stopEngine()
+        }
     },
+
+
     enableItemsRemoving(enabled) {
         this.meubles.forEach(m => {
             m.items.forEach(i => {
@@ -563,16 +476,15 @@ export default {
         state from saved dressing (user modifications)
     */
     createMeuble(props, object, state, skuInfo) {
+        // console.log("createMeuble", props, object, state, skuInfo)
 
         if (!skuInfo.isModule) {
-            console.error(`${sku} is not a module`)
-            return null
+            return Errors.NOT_A_MODULE
         }
 
         let pState, wall = "right", corner = Corners.FR
         if (!state) {
             // find front wall, best location for new Meuble
-            // let wall = Object.keys(MainScene.currentDressing.walls)[0] || "right"
             const intersects = this.getRaycasterIntersect()
             const intersect = intersects.find(i => i.object.name.includes("wall-"))
             if (intersect) {
@@ -596,6 +508,9 @@ export default {
             case "ANG":
                 meuble = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;
+            case "FIL":
+                meuble = new Fileur(props, object, pState, skuInfo)
+                break;
             default:
                 meuble = new Draggable(props, object, pState, skuInfo)
 
@@ -604,22 +519,59 @@ export default {
                     // place on front wall ? ..Draggable routines ! //TODO
                     // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
                     const axis = Room.getAxisForWall(wall);
-                    Room.setWallsLength(this.currentDressing, this.config)
                     const x = Room.getSpaceOnWall(meuble, this.meubles)
 
                     if (x === false) {// destroy Meuble?
-                        console.warn(`no space for on wall ${wall}`)
-                        return "Il n'y a pas assez de place pour ce meuble"
+                        return Errors.NO_ROOM
                     }
                     else {
                         meuble.object.position[axis] = x
-                        // console.log(meuble.wall, x)
+                        console.log(meuble.wall, x)
 
 
                     }
                 }
         }
-
         return meuble
     }
+
+
+
+
+    /* orthographic camera for 2d plan */
+
+    /*      const left = -Room.xmax / 2;
+            const right = Room.xmax / 2;  // default canvas size
+            const top = -Room.zmax / 2;
+            const bottom = Room.zmax / 2;  // default canvas size
+            const near = 10;
+            const far = 6000;
+            this.orthoCamera = new OrthographicCamera(left, right, top, bottom, near, far);
+            this.orthoCamera.position.set(Room.xmax / 2, 6000, Room.zmax / 2)
+            this.orthoCamera.lookAt(Room.xmax / 2, 0, Room.zmax / 2);
+            this.orthoCamera.zoom = 1;
+            this.orthoCameraHelper = new CameraHelper(this.orthoCamera); */
+
+    /*     setScissorForElement(elem) {
+            const canvas = document.getElementById("canvas-wrapper")
+            const canvasRect = canvas.getBoundingClientRect();
+            const elemRect = elem.getBoundingClientRect();
+    
+            // compute a canvas relative rectangle
+            const right = Math.min(elemRect.right, canvasRect.right) - canvasRect.left;
+            const left = Math.max(0, elemRect.left - canvasRect.left);
+            const bottom = Math.min(elemRect.bottom, canvasRect.bottom) - canvasRect.top;
+            const top = Math.max(0, elemRect.top - canvasRect.top);
+    
+            const width = Math.min(canvasRect.width, right - left);
+            const height = Math.min(canvasRect.height, bottom - top);
+    
+            // setup the scissor to only render to that part of the canvas
+            const positiveYUpBottom = canvasRect.height - bottom;
+            this.renderer.setScissor(left, positiveYUpBottom, 5000, 5000);
+            this.renderer.setViewport(left, positiveYUpBottom, 5000, 5000);
+    
+            // return the aspect
+            return width / height;
+        }, */
 }

@@ -1,3 +1,6 @@
+/*
+    get infos from sku
+*/
 
 // perçages sur panneaux amovibles :
 const trous219Panneaux = [372, 431, 599, 663, 727, 815, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815, 1879, 1943, 2007, 2071]
@@ -57,13 +60,16 @@ const types = [
     "PVG4",
     "PVG-",
     "RGCH",// Range Chaussure accessoire
+    "RP1",// Range Pulls
+    "RP2",// Range Pulls Led
     "P40RL057",// Range Chaussure pivotable
     "TABREP",// table repasser
     "TIR2",// Module 2 Tiroirs
     "TIR4",
+    "SEPV"// separateur vertical
 ]
 
-export const panneaux = [
+/*
     "NYH238P62FG",// Finition gauche
     "NYH238P62FD",// Finition droite
     "NYH238P62SE",// separateur
@@ -76,7 +82,7 @@ export const panneaux = [
     "NYH219P40FG",
     "NYH219P40FD",
     "NYH219P40SE",
-]
+*/
 
 export const parseSKU = (sku) => {
     const obj = {}
@@ -86,6 +92,7 @@ export const parseSKU = (sku) => {
         obj.H = parseInt(HMatch[0].substring(1))
     }
 
+    /* profondeur 40 | 62 */
     const PMatch = sku.match(/P\d{2,}/g)
     if (PMatch && PMatch.length > 0 && PMatch[0] != "P") {
         obj.PR = obj.PL = parseInt(PMatch[0].substring(1))
@@ -142,8 +149,14 @@ export const parseSKU = (sku) => {
     /* alignement en applique */
     obj.frontAlign = obj.isEtagere//etagere
         || obj.isTiroir// tiroir en applique
+        || obj.type.substr(0, 2) === "RP"
+        || obj.type.substr(0, 4) === "SEPV"
 
     switch (obj.type) {
+        case "FIL":
+            obj.P = obj.PR = obj.PL = 40
+            obj.L = 15
+            break;
         case "ANG":
             obj.P = obj.PR = obj.PL = 62// angle module has fixed depth of 62
             obj.L = 106
@@ -174,7 +187,7 @@ export const parseSKU = (sku) => {
             if (obj.isModule) {
                 obj.trous = obj.H === 219 ? trous219Panneaux : trous238Panneaux
 
-                if (obj.PR === obj.PL) {// module de liaison not in corners
+                if (obj.PR === obj.PL && obj.type != "FIL") {// module de liaison not in corners
                     obj.angABSku = {// put in corners with 1/4 turn and triangles
                         "right": `NYANGABP${obj.P}R`,
                         "left": `NYANGABP${obj.P}L`,
@@ -182,6 +195,21 @@ export const parseSKU = (sku) => {
                 }
             }
     }
+
+    switch (obj.L) {
+        case 48:
+            obj.l = 475
+            break;
+        case 59:
+            obj.l = 587
+            break;
+        case 119:
+            obj.l = 1184
+            break;
+        default:
+            if (obj.L) obj.l = obj.L * 10
+    }
+    obj.p = obj.P === 62 ? 622 : 396
 
     if (obj.isModule) {
         obj.has2Doors = obj.L > 70 && obj.type != "ANG"
@@ -192,9 +220,11 @@ export const parseSKU = (sku) => {
         }
     }
     else {
+        obj.occupyPlace = obj.type !== "SEPV"// occupies a place when vertical dragging items
+
         obj.draggable = obj.type !== "ANG90"
             && obj.type !== "ANGAB"
-            && obj.type !== "FIL"
+        // && obj.type !== "FIL"
     }
 
     console.info(sku, obj)

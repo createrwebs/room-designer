@@ -1,5 +1,8 @@
 import { LineBasicMaterial, Vector3, LineSegments, BufferGeometry } from "three";
-import { Space, Room, Walls, Corners } from '../Drag';
+import { Walls } from '../Constants';
+import { Space } from '../Drag';
+import Room from '../Room';
+
 
 export const draw = () => {
     const material = new LineBasicMaterial({ color: 0x44EE33, linewidth: 3, opacity: 1 });
@@ -18,5 +21,7 @@ export const draw = () => {
             }
         })
     });
-    return new LineSegments(new BufferGeometry().setFromPoints(points), material);
+    const geometry = new BufferGeometry().setFromPoints(points)
+    geometry.name = "segments-geometry"
+    return new LineSegments(geometry, material);
 }

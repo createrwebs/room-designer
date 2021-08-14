@@ -48,6 +48,7 @@ export const create = (sku, largeur, hauteur) => {
         k += division2;
     }
     const geometry = new BufferGeometry().setFromPoints(pointsV);
+    geometry.name = "ruler-vertical"
     const rulerV = new LineSegments(geometry, material);
     k = 0
     while (k <= hauteur) {
@@ -72,7 +73,9 @@ export const create = (sku, largeur, hauteur) => {
         pointsH.push(new Vector3(k, division2Width, 0));
         k += division2;
     }
-    const rulerH = new LineSegments(new BufferGeometry().setFromPoints(pointsH), material);
+    const geoH = new BufferGeometry().setFromPoints(pointsH)
+    geoH.name = "ruler-horizontal"
+    const rulerH = new LineSegments(geoH, material);
     k = 0
     while (k <= largeur) {
         const label = new TextGeometry((k / 10).toString(), textParam);

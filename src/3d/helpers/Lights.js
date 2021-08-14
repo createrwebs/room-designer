@@ -4,26 +4,28 @@ import {
     PointLight,
     PointLightHelper
 } from "three";
+import Room from '../Room';
+import { localhost } from '../../api/Utils';
 
 export const setupLights = (scene, scene_params) => {
 
     /* lumière moyenne ambiance */
 
     const light = new HemisphereLight(0xFFFDF4, 0x000000, .6);
-    light.position.set(2500, 1200, 2500);
-
-    const helper = new HemisphereLightHelper(light, 100);
+    light.position.set(Room.xmax / 2, Room.ymax, Room.zmax / 2);
 
     scene.add(light);
-    //scene.add( helper );
+
+    const helper = new HemisphereLightHelper(light, 100);
+    if (localhost) scene.add(helper);
 
     /* plafonnier */
 
     const pointLight = new PointLight(0xffffff, .55, 0, 1);
     pointLight.position.set(2500, 3000, 2500);
+    pointLight.position.set(Room.xmax / 2, Room.ymax * 2, Room.zmax / 2);
+
     pointLight.castShadow = true; // default false
-
-
     pointLight.shadow.mapSize.width = scene_params.lightsShadowMapSize.width; //2048; // default
     pointLight.shadow.mapSize.height = scene_params.lightsShadowMapSize.height; //2048 // default
     pointLight.shadow.camera.near = 0.5; // default
@@ -31,6 +33,6 @@ export const setupLights = (scene, scene_params) => {
 
     scene.add(pointLight);
 
-    // const pointLightHelper = new PointLightHelper(pointLight, 100);
-    // scene.add(pointLightHelper);
+    const pointLightHelper = new PointLightHelper(pointLight, 100);
+    if (localhost) scene.add(pointLightHelper);
 }

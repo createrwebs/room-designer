@@ -1,5 +1,6 @@
 import { localhost } from '../api/Utils';
 import MainScene from '../3d/MainScene';
+import { startEngine, stopEngine } from './Utils';
 
 // https://github.com/tweenjs/tween.js
 // import TWEEN from '@tweenjs/tween.js';
@@ -18,13 +19,6 @@ let animationFrameId
     renderer.render(scene, camera);
 }); */
 
-
-
-const animate = () => {
-    animationFrameId = requestAnimationFrame(animate);
-    TWEEN.update();
-    // console.log("animate")
-}
 export const cameraTo = (cameraPosition, cameraTarget, duration) => {
     var position = MainScene.camera.position
     var tween = new TWEEN.Tween({
@@ -42,11 +36,10 @@ export const cameraTo = (cameraPosition, cameraTarget, duration) => {
         MainScene.orbitControls.update();
     });
     tween.onComplete(function () {
-        cancelAnimationFrame(animationFrameId);
-        // console.log("onComplete")
+        stopEngine()
     });
     tween.start();
-    animationFrameId = requestAnimationFrame(animate);
+    startEngine(TWEEN.update)
 }
 export const tweenTo = (start, end, duration) => {
     var tween = new TWEEN.Tween(start).to(end, duration);
@@ -58,9 +51,8 @@ export const tweenTo = (start, end, duration) => {
         MainScene.render()
     });
     tween.onComplete(function () {
-        cancelAnimationFrame(animationFrameId);
-        // console.log("onComplete")
+        stopEngine()
     });
     tween.start();
-    animationFrameId = requestAnimationFrame(animate);
+    startEngine(TWEEN.update)
 }

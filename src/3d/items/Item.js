@@ -10,10 +10,12 @@ import {
     load as loadMaterial,
     apply as applyMaterial,
     getMaterialById,
+    getId as getMaterialId,
 } from '../Material'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { Measures, getSize } from '../Utils'
-import { getClosestInArray, Slots } from '../Drag'
+import { getClosestInArray } from '../Drag'
+import { Slots } from '../Constants'
 
 export default class Item extends Fbx {
 
@@ -53,21 +55,24 @@ export default class Item extends Fbx {
         this.setTexture()
     }
     setTexture() {
-        if (MainScene.materialId) {
-            const material = getMaterialById(MainScene.materialId)
-            if (material) {
-                loadMaterial(material.textures).then(m => {
-                    // console.log(`material loaded`, m, this)
-                    applyMaterial(m, this)
-                    MainScene.render()
-                })
-            }
+        const material = getMaterialById(getMaterialId())
+        if (material) {
+            loadMaterial(material.textures).then(m => {
+                // console.log(`material loaded`, m, this)
+                applyMaterial(m, this)
+                MainScene.render()
+            })
         }
     }
     remove() {
         if (this.dragControls) this.dragControls.dispose()
         MainScene.interactionManager.remove(this.object)
 
+        // what about places ?
+        let places = this.parent.places[this.place]
+        if (this.skuInfo.occupyPlace && this.positionY && places.includes(this.positionY)) {
+            places.push(this.positionY)
+        }
     }
 
     /* position */
@@ -136,9 +141,14 @@ export default class Item extends Fbx {
         else {// new Item by user click
             this.positionY = closest
         }
-        places = places.filter(function (item) {
-            return item !== closest
-        })
+        if (this.skuInfo.occupyPlace) {
+            places = places.filter(function (item) {
+                return item !== closest
+            })
+        }
+        else {
+
+        }
         this.object.position.y = this.positionY - Measures.thick / 2
         this.parent.places[this.place] = places
         // console.log("---setPositionY", this.parent.places[this.place])
@@ -187,9 +197,6 @@ export default class Item extends Fbx {
 
     /* info */
 
-    info() {
-        return `${this.object.uuid.substring(0, 8)} | ${this.props.sku}`
-    }
     getJSON() {
         return {
             sku: this.props.sku,
