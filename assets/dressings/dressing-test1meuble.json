@@ -1,25 +1,26 @@
 {
-    "name": "dressing pour tester un meuble et ses items",
-    "xmax": 6000,
+    "xmax": 5000,
     "zmax": 4000,
-    "materialId": 1301,
+    "name": "test RL",
     "meubles": [
         {
-            "sku": "NYH219P62L096",
+            "sku": "NYH238P40RL057",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "right",
-                "x": 400
+                "wall": "back",
+                "x": 600
             },
-            "items": [
-                {
-                    "sku": "NYSEPVP62",
-                    "position": {
-                        "place": "left",
-                        "x": 400
-                    }
-                }
-            ]
+            "items": []
+        },
+        {
+            "sku": "NYH238P62L096",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 1600
+            },
+            "items": []
         }
-    ]
+    ],
+    "materialId": 1301
 }

@@ -29,7 +29,7 @@ export const getCurrentDressingForDevis = () => {
     let dressing = {}
     const meubles = [];
     const items = [];
-    const laqueOnMeshes = []
+    // const laqueOnMeshes = []
 
     MainScene.meubles.forEach(m => {
         const joins = Meuble.isJoined(m)
@@ -44,21 +44,26 @@ export const getCurrentDressingForDevis = () => {
             }
         }
         m.items.forEach(i => {
+            let sku
             if (i.skuInfo.type == "ANGAB") {
                 if (i.props.sku.substr(-1) === "R") {// le L est zappé
-                    items.push(i.props.sku.substr(0, i.props.sku.length - 1))
+                    sku = i.props.sku.substr(0, i.props.sku.length - 1)
                 }
             }
             else {
-                items.push(i.props.sku)
+                sku = i.props.sku
             }
-            for (const [key, value] of Object.entries(i.laqueOnMeshes)) {// laques in item
-                laqueOnMeshes[key] = value
-            }
+            /*             for (const [key, value] of Object.entries(i.laqueOnMeshes)) {// laques in item
+                            laqueOnMeshes[key] = value
+                        } */
+            items.push({
+                sku,
+                laqueOnMeshes: i.laqueOnMeshes
+            })
         })
-        for (const [key, value] of Object.entries(m.laqueOnMeshes)) {// laques in meuble
-            laqueOnMeshes[key] = value
-        }
+        /*         for (const [key, value] of Object.entries(m.laqueOnMeshes)) {// laques in meuble
+                    laqueOnMeshes[key] = value
+                } */
     })
     // console.log("Meuble.Joins", Meuble.Joins)
     Meuble.Joins.forEach(join => {
@@ -75,7 +80,7 @@ export const getCurrentDressingForDevis = () => {
 
     dressing.meubles = meubles
     dressing.items = items
-    dressing.laqueOnMeshes = laqueOnMeshes
+    // dressing.laqueOnMeshes = laqueOnMeshes
     dressing.materialId = getMaterialId()
     return dressing
 }

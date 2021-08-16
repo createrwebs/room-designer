@@ -50,59 +50,7 @@ export default class Draggable extends Meuble {
             this.dragControls.activate()
         }
     }
-    insideDrag(inside, stickTo, target) {
-        // console.log("insideDrag", inside, stickTo, this.width)
-        switch (this.skuInfo.type) {
-            case "P40RL057____":// TODO 1/4 turn range chaussure
-                switch (stickTo) {
-                    case Sides.R:
-                        if (target && target.skuInfo.PL != 62) return;
-                        this.object.children.forEach(child => {
-                            child.position.set(!inside ? 0 : 579, 0, 0)
-                            child.rotation.set(0, !inside ? 0 : -Math.PI / 2, 0)
-                        })
-                        this.panneaux[Sides.R].object.position.x = 579
-                        this.panneaux[Sides.R].object.position.y = 0;
-                        this.panneaux[Sides.R].object.position.z = 579
-                        this.panneaux[Sides.L].object.position.x = 579
-                        this.panneaux[Sides.L].object.position.y = 0
-                        this.panneaux[Sides.L].object.position.z = 0
-                        break;
-                    case Sides.L:// 1/4 turn to right
-                        if (target && target.skuInfo.PR != 62) return;
-                        this.object.children.forEach(child => {
-                            child.position.set(0, 0, !inside ? 0 : 579)
-                            child.rotation.set(0, !inside ? 0 : Math.PI / 2, 0)
-                        })
-                        this.panneaux[Sides.R].object.position.x = 0;
-                        this.panneaux[Sides.R].object.position.y = 0;
-                        this.panneaux[Sides.R].object.position.z = Measures.thick;
-                        this.panneaux[Sides.L].object.position.x = 0
-                        this.panneaux[Sides.L].object.position.y = 0
-                        this.panneaux[Sides.L].object.position.z = 579 + Measures.thick;
-                        break;
-                    default:
-                        this.object.children.forEach(child => {
-                            child.rotation.set(0, 0, 0)
-                            child.position.set(Measures.thick, 0, 0)
-                        })
-                        if (this.panneaux) {
-                            if (this.panneaux[Sides.R] && this.panneaux[Sides.R].object) {
-                                this.panneaux[Sides.R].object.position.x = this.skuInfo.L * 10
-                                this.panneaux[Sides.R].object.position.y = 0;
-                                this.panneaux[Sides.R].object.position.z = 0
-                            }
-                            if (this.panneaux[Sides.L] && this.panneaux[Sides.L].object) {
-                                this.panneaux[Sides.L].object.position.x = 0
-                                this.panneaux[Sides.L].object.position.y = 0
-                                this.panneaux[Sides.L].object.position.z = 0;
-                            }
-                        }
-                }
-                break;
-            default:
-        }
-    }
+
     /* remove */
 
     remove() {

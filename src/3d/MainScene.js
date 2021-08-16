@@ -36,16 +36,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
 
 import store from '../api/store';
-import { localhost } from '../api/Utils';
-import { startEngine, stopEngine } from './Utils';
-
-import { Walls, Corners } from "./Constants";
-import Room from './Room';
-import Draggable from './meubles/Draggable'
-import Angle from './meubles/Angle'
-import Fileur from './meubles/Fileur'
 import { setupLights } from './helpers/Lights'
 import { create as createSolGrid } from './helpers/Sol';
+import { localhost } from '../api/Utils';
+import { startEngine, stopEngine } from './Utils';
+import { Walls, Corners } from "./Constants";
+import Room from './Room';
+
+import Draggable from './meubles/Draggable'
+import Angle from './meubles/Angle'
+import RL057 from './meubles/RL057'
 
 export default {
     meubles: [],
@@ -510,6 +510,9 @@ export default {
                 break;
             case "FIL":
                 meuble = new Fileur(props, object, pState, skuInfo)
+                break;
+            case "P40RL057":
+                meuble = new RL057(props, object, pState, skuInfo)
                 break;
             default:
                 meuble = new Draggable(props, object, pState, skuInfo)

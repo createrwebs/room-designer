@@ -56,7 +56,7 @@ export default class Fbx {
     }
 
     getFrontPosition() {
-        const d = localhost ? 2000 : 3000// distance de recul pour observer le meuble selectionné
+        const d = localhost ? 3000 : 3000// distance de recul pour observer le meuble selectionné
         const center = this.getCenterPoint()
         switch (this.wall) {
             case Walls.F:
@@ -64,7 +64,7 @@ export default class Fbx {
             case Walls.R:
                 return center.add(new Vector3(0, 0, d))
             case Walls.B:
-                return center.add(new Vector3(d, 0, 0))
+                return center.add(new Vector3(-d, 0, 0))
             case Walls.L:
                 return center.add(new Vector3(0, 0, -d))
 

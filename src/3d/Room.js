@@ -2,6 +2,7 @@ import { Walls, Corners, Sides } from "./Constants";
 import { Space } from "./Drag";
 import { getSegment, segmentIntersect, getSize, Measures } from './Utils'
 import Meuble from './meubles/Meuble';
+import { Vector3 } from "three";
 
 export default {
     name: "untitled",
@@ -23,7 +24,8 @@ export default {
         this.zmax = dressing && dressing.zmax ? dressing.zmax : this.zmax
     },
 
-    getRoofPosition(h = Math.max(this.xmax, this.zmax) + 4000) {
+    getRoofPosition(h) {
+        if (!h) h = Math.max(this.xmax, this.zmax) + 4000
         return new Vector3(this.xmax / 2, h, this.zmax / 2)
     },
 
@@ -265,7 +267,13 @@ export default {
     collisionSolver(meuble) {
         const axis = this.axis
         const segment = getSegment(meuble.object, axis)
-        const mWidth = getSize(meuble.object, axis)
+        let mWidth
+        if (meuble.skuInfo.type == "P40RL057") {
+            mWidth = meuble.skuInfo.l + 2 * Measures.thick
+        }
+        else {
+            mWidth = getSize(meuble.object, axis)
+        }
 
         if (Space.onWall[meuble.wall] && Space.onWall[meuble.wall].length == 0) {
             console.warn(`no space on wall ${meuble.wall}`)
@@ -275,7 +283,7 @@ export default {
         const toRight = this.toRightDirection(meuble.wall);
         const closestSpace = Space.getClosest(meuble.wall, segment);
 
-        let stickTo = null, fusion = false, insideDrag = false;
+        let stickTo = null, fusion = false, insideDrag = 0;
         Meuble.detach(meuble)
         if (closestSpace.include(segment)) {
             if (closestSpace.max - segment.max <= this.meubleMagnet) {// stick to right, still in space
@@ -286,9 +294,9 @@ export default {
             }
         } else if (closestSpace.max <= segment.max) {// stick to right, inside drag
             stickTo = Sides.R
-            insideDrag = true
+            insideDrag = segment.max - closestSpace.max
         } else if (closestSpace.min >= segment.min) {// stick to left, inside drag
-            insideDrag = true
+            insideDrag = closestSpace.min - segment.min
             stickTo = Sides.L
         } else {
             console.error("collisionSolver fails", closestSpace, segment)
@@ -333,6 +341,7 @@ export default {
                 if (next && meuble.skuInfo.type === "FIL") {
                     meuble.setDepth(next.skuInfo.P)
                 }
+                console.log(mWidth)
                 return toRight ? closestSpace.max - mWidth + (fusion ? Measures.thick : 0) :
                     closestSpace.min + mWidth + (fusion ? -Measures.thick : 0)
             default:

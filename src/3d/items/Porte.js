@@ -1,5 +1,5 @@
 import Item from './Item'
-import { Measures } from '../Utils'
+import { Measures, getSize } from '../Utils'
 
 export default class Porte extends Item {
 
@@ -9,10 +9,17 @@ export default class Porte extends Item {
         // Measures.thick - Measures.arrondi
         // center the door :
         // this.deport = ((this.parent.skuInfo.L*10 + 2 * Measures.thick) - getSize(this.object, "x")) / 2
-        this.deport = Measures.thick - Measures.arrondi
 
         this.isLeftDoor = this.skuInfo.type.substr(2, 1) == "G"
+        this.heightType = this.skuInfo.type.substr(3, 1)
 
+        this.deport = Measures.thick - Measures.arrondi
+
+        // doors of heightType of 2 or 4 (not "-") go with TIR2 & TIR4 drawers
+        this.posY =
+            this.heightType != "-" ?
+                this.parent.skuInfo.H * 10 - getSize(this.object, "y") - 19
+                : Measures.thick - Measures.arrondi
 
         if (this.parent.skuInfo.type === "ANG") {
             this.object.rotation.y = Math.PI / 4;
@@ -28,7 +35,7 @@ export default class Porte extends Item {
         }
     }
     setPositionY(y) {
-        this.object.position.y = this.deport
+        this.object.position.y = this.posY
     }
     setPositionZ(z) {
         if (this.parent.skuInfo.type === "ANG") {
