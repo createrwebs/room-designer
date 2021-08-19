@@ -48,6 +48,17 @@ export const getCurrentDressingForDevis = () => {
             if (i.skuInfo.type == "ANGAB") {
                 if (i.props.sku.substr(-1) === "R") {// le L est zappé
                     sku = i.props.sku.substr(0, i.props.sku.length - 1)
+
+                    // add panels
+                    items.push({
+                        sku: m.getPanneauName(Sides.L),
+                        laqueOnMeshes: []
+                    })
+                    items.push({
+                        sku: m.getPanneauName(Sides.R),
+                        laqueOnMeshes: []
+                    })
+
                 }
             }
             else {
@@ -56,10 +67,12 @@ export const getCurrentDressingForDevis = () => {
             /*             for (const [key, value] of Object.entries(i.laqueOnMeshes)) {// laques in item
                             laqueOnMeshes[key] = value
                         } */
-            items.push({
-                sku,
-                laqueOnMeshes: i.laqueOnMeshes
-            })
+            if (sku) {
+                items.push({
+                    sku,
+                    laqueOnMeshes: i.laqueOnMeshes
+                })
+            }
         })
         /*         for (const [key, value] of Object.entries(m.laqueOnMeshes)) {// laques in meuble
                     laqueOnMeshes[key] = value

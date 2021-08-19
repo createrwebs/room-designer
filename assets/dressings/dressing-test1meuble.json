@@ -4,22 +4,22 @@
     "name": "test RL",
     "meubles": [
         {
-            "sku": "NYH238P40RL057",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "back",
-                "x": 600
-            },
-            "items": []
-        },
-        {
             "sku": "NYH238P62L096",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "back",
                 "x": 1600
             },
-            "items": []
+            "items": [
+                {
+                    "sku": "NYTIR4P62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 50
+                    }
+                }
+            ]
         }
     ],
     "materialId": 1301

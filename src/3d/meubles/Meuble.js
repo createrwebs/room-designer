@@ -119,12 +119,14 @@ export default class Meuble extends Fbx {
         const front = this.getFrontPosition()
         const roof = Room.getRoofPosition()
         const center = this.getCenterPoint()
-
-        // MainScene.camera.position.set(front.x, front.y, front.z)
-        // MainScene.orbitControls.target = center
-
-        MainScene.camera.position.set(roof.x, roof.y, roof.z)
-        MainScene.orbitControls.target = new Vector3(roof.x, 0, roof.z)
+        if (!localhost) {
+            MainScene.camera.position.set(front.x, front.y, front.z)
+            MainScene.orbitControls.target = center
+        }
+        else {
+            MainScene.camera.position.set(roof.x, roof.y, roof.z)
+            MainScene.orbitControls.target = new Vector3(roof.x, 0, roof.z)
+        }
 
         MainScene.orbitControls.update();
         // const front = this.getFrontPosition()
