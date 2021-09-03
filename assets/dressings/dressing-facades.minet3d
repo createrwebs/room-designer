@@ -1,0 +1,80 @@
+{
+    "xmax": 4000,
+    "zmax": 5000,
+    "name": "test fileurs",
+    "meubles": [
+        {
+            "sku": "NYH238P40L040",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1425
+            },
+            "items": [
+                {
+                    "sku": "NYPGD2H238L40",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 423
+                    }
+                }
+            ]
+        },
+        {
+            "sku": "NYH219P40L040",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1000
+            },
+            "items": [
+                {
+                    "sku": "NYPPD2H219L40",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 425
+                    }
+                }
+            ]
+        },
+        {
+            "sku": "NYC191H219PG",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 540
+            },
+            "items": []
+        },
+        {
+            "sku": "NYC155H238PP",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 3100
+            },
+            "items": []
+        },
+        {
+            "sku": "NYC155H219PP",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 2450
+            },
+            "items": []
+        },
+        {
+            "sku": "NYC155H219P0",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 1550
+            },
+            "items": []
+        }
+    ],
+    "materialId": 1301
+}

@@ -15,7 +15,6 @@ import { loadTexture } from './Loader'
     textures loading manager keeps already loaded textures in Textures[]
 */
 const Textures = []
-// window.tx = Textures//debug
 
 
 let mId = 0
@@ -36,8 +35,13 @@ export const setTransparent = (meuble, opacity, parts) => {
     meuble.object.children//c.type === "Mesh"
         .filter(c => c.material && (parts ? parts.some(element => c.name.includes(element)) : true))
         .forEach(c => {
-            c.material.transparent = true;
-            c.material.opacity = opacity;
+            if (c.name === "mirror") {// Reflector not handling opacity
+                c.visible = opacity == 1
+            }
+            else {
+                c.material.transparent = true;
+                c.material.opacity = opacity;
+            }
         });
 }
 export const setVisible = (meuble, visible, parts) => {
@@ -180,7 +184,7 @@ export const apply = (materials, meuble) => {
                 else {
                     material = new MeshStandardMaterial(material_args);
                 }
-                // console.log('Material : applssssy', material, 'on', mtl, child.name)
+                // console.log('Apply Material ', material, 'on', mtl, child.name)
                 child.material = material;
                 child.castShadow = true;
                 child.receiveShadow = true;

@@ -1,11 +1,11 @@
 import {
-    Errors,
     printRaycast,
     Tools,
     sceneChange,
     KinoEvent
 }
     from '../api/actions'
+import { Errors } from '../api/Errors'
 import {
     Scene,
     Color,
@@ -46,6 +46,8 @@ import Room from './Room';
 import Draggable from './meubles/Draggable'
 import Angle from './meubles/Angle'
 import RL057 from './meubles/RL057'
+import Fileur from './meubles/Fileur'
+import FileurAng90 from './meubles/FileurAng90'
 
 export default {
     meubles: [],
@@ -348,7 +350,6 @@ export default {
         })
     },
     enableItemsDragging(enabled) {
-        // console.log("enableItemsDragging", enabled)
         this.meubles.forEach(m => {
             m.items.forEach(i => {
                 if (i.dragControls) {
@@ -359,7 +360,6 @@ export default {
         })
     },
     enableMeubleClicking(enabled) {
-        // console.log("enableMeubleClicking", enabled)
         this.meubles.forEach(m => {
             /*             m.items.forEach(i => {
                             if (enabled) {
@@ -474,6 +474,8 @@ export default {
         props from catalogue (infos)
         object from fbx (3d)
         state from saved dressing (user modifications)
+
+        2 origins : click meuble line or load meuble from dressing => confusion
     */
     createMeuble(props, object, state, skuInfo) {
         // console.log("createMeuble", props, object, state, skuInfo)
@@ -481,6 +483,8 @@ export default {
         if (!skuInfo.isModule) {
             return Errors.NOT_A_MODULE
         }
+
+        // distinction clickMeubleLine vs. loadMeubleFromDressing : state == null ?
 
         let pState, wall = "right", corner = Corners.FR
         if (!state) {
@@ -504,14 +508,30 @@ export default {
             pState = state
         }
         let meuble
+        /* 
+            better find a place for future meuble before creation, only using skuInfo dimensions, and send error if no room !
+        */
         switch (skuInfo.type) {
-            case "ANG":
+            case "ANG":// not draggable, only located in angles
                 meuble = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;
-            case "FIL":
+            case "ANG90":// not draggable, only located in angles
+
+                // distingo creation : state
+                // preparation de la pose comme sur le dragStart : à sortir plus haut ?
+                Room.setupWallConstraints(skuInfo.l)
+                Room.axis = Room.getAxisForWall(wall);
+                Room.populateMeublesOnWalls(this.meubles)
+                Room.populateSpacesOnWalls(null, skuInfo)
+                Room.populateMeublesOnCorners(this.meubles)
+                if (!state && !Room.isCornerFreeForMeuble(corner, skuInfo)) return Errors.CORNER_FULL
+
+                meuble = new FileurAng90(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
+                break;
+            case "FIL":// a draggable with depth adjustement
                 meuble = new Fileur(props, object, pState, skuInfo)
                 break;
-            case "P40RL057":
+            case "P40RL057":// range chaussure, pivotable à 90
                 meuble = new RL057(props, object, pState, skuInfo)
                 break;
             default:

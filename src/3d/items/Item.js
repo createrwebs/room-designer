@@ -34,6 +34,7 @@ export default class Item extends Fbx {
             console.warn(`Accessoire ${this.props.sku} says : No percage for parent Meuble ${this.parent.props.sku}`)
         }
 
+        this.dragControls = undefined
         if (skuInfo.draggable) {
             const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
             dragControls.transformGroup = true;
@@ -51,7 +52,6 @@ export default class Item extends Fbx {
         this.depth = getSize(this.object, "z")
         // console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.depth, state, this.parent, this)
 
-        /* textures */
         this.setTexture()
     }
     setTexture() {
@@ -69,9 +69,11 @@ export default class Item extends Fbx {
         MainScene.interactionManager.remove(this.object)
 
         // what about places ?
-        let places = this.parent.places[this.place]
-        if (this.skuInfo.occupyPlace && this.positionY && places.includes(this.positionY)) {
-            places.push(this.positionY)
+        if (this.parent.places) {
+            let places = this.parent.places[this.place]
+            if (this.skuInfo.occupyPlace && this.positionY && places.includes(this.positionY)) {
+                places.push(this.positionY)
+            }
         }
     }
 
@@ -154,11 +156,11 @@ export default class Item extends Fbx {
         // console.log("---setPositionY", this.parent.places[this.place])
     }
     setPositionZ(z) {
-        if (this.skuInfo.frontAlign) {
+        if (this.skuInfo.frontAlign && !this.parent.skuInfo.isCoulissante) {
             this.object.position.z = this.parent.depth - this.depth - 11//recul des etageres
         }
         else {
-            this.object.position.z = 0;
+            this.object.position.z = this.parent.skuInfo.zback;
         }
     }
 

@@ -1,0 +1,35 @@
+{
+    "xmax": 4000,
+    "zmax": 4000,
+    "name": "4 meubles en coin avec leurs triangles",
+    "meubles": [
+        {
+            "sku": "NYC155H219P0",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1010
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P62L096",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 0
+            },
+            "items": [
+                {
+                    "sku": "NYTIR2P62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 50
+                    }
+                }
+            ]
+        }
+    ],
+    "materialId": 1301
+}

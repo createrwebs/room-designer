@@ -46,7 +46,7 @@ export default class Fbx {
     }
 
     getUid() {
-        return this.object.uuid.substring(0, 8)// identifies uniquely
+        return this.object ? this.object.uuid.substring(0, 8) : "no-uuid"// identifies uniquely
     }
     info() {
         return `${this.getUid()} | ${this.props.sku}`
@@ -100,12 +100,14 @@ export default class Fbx {
 
         //memorize :
         this.laqueOnMeshes[interactiveEvent.target.name] = MainScene.laqueId
-        console.log("clickLaquable", this, this.laqueOnMeshes)
+        // console.log("clickLaquable", this, this.laqueOnMeshes)
 
         MainScene.render()
         sceneChange()
     }
-
+    removeLaqueOnMeshes() {
+        this.laqueOnMeshes = []
+    }
     getLaqueOnMeshesJson() {
         const laqueOnMeshes = []
         Object.entries(this.laqueOnMeshes).forEach(
@@ -118,5 +120,16 @@ export default class Fbx {
             }
         )
         return laqueOnMeshes
+    }
+
+    // laques on meshes information lost
+    getFirstLaqueId() {
+        let laqueId
+        Object.entries(this.laqueOnMeshes).forEach(
+            ([mesh, laque]) => {
+                laqueId = laque
+            }
+        )
+        return laqueId
     }
 }

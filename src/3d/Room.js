@@ -50,13 +50,13 @@ export default {
      */
     getSpaceOnWall(meuble, meublesOnScene) {
 
-        this.setupWallConstraints(meuble)
+        this.setupWallConstraints(meuble.getWidth())
 
         // this.Nowtime = Date.now();
         this.axis = this.getAxisForWall(meuble.wall);
         this.populateMeublesOnWalls(meublesOnScene)
         // this.populateSpacesOnWalls(meuble)
-        const hasSpace = this.getSpacesOnWall(meuble.wall, meuble)
+        const hasSpace = this.getSpacesOnWall(meuble.wall, meuble, meuble.skuInfo)
         if (!hasSpace) return false
         return this.collisionSolver(meuble)
     },
@@ -82,8 +82,7 @@ export default {
         return wall === Walls.R || wall === Walls.B
     },
 
-    setupWallConstraints(meuble) {
-        const mWidth = meuble.getWidth()
+    setupWallConstraints(mWidth) {
         if (this.right) {
             this.right.min = 0
             this.right.max = this.xmax - mWidth
@@ -103,10 +102,10 @@ export default {
     },
 
     /* populate Space.onWall list of spaces for meuble on all walls */
-    populateSpacesOnWalls(meuble) {
+    populateSpacesOnWalls(meuble, skuInfo) {
         // Object.keys(this).forEach(w => {// right,back,left if exists
         [Walls.R, Walls.B, Walls.L, Walls.F].forEach(w => {// right,back,left if exists
-            this.getSpacesOnWall(w, meuble)
+            this.getSpacesOnWall(w, meuble, skuInfo)
         });
 
         //log
@@ -126,8 +125,8 @@ export default {
         }
     },
 
-    /* get spaces on a wall for meuble */
-    getSpacesOnWall(wall, meuble) {
+    /* get spaces on a wall for meuble. skuInfo param added in case meuble=null */
+    getSpacesOnWall(wall, meuble, skuInfo) {
         let lastMeuble = null;
         let lastPos = 0, segment;
         const axis = this.getAxisForWall(wall)
@@ -142,10 +141,10 @@ export default {
             const leftWall = this.getSideWalls(wall)[0]
             // console.log(leftWall)
             if (wall === Walls.R || wall === Walls.F) {// close to origin
-                meubleDepthSegment = { min: 0, max: meuble.skuInfo.P * 10 }
+                meubleDepthSegment = { min: 0, max: skuInfo.P * 10 }
             }
             else {
-                meubleDepthSegment = { min: this.getWallLength(leftWall) - meuble.skuInfo.P * 10, max: this.getWallLength(leftWall) }
+                meubleDepthSegment = { min: this.getWallLength(leftWall) - skuInfo.P * 10, max: this.getWallLength(leftWall) }
             }
             ax = this.getAxisForWall(leftWall)
             this.MeublesOnWall[leftWall].filter(m => m !== meuble).forEach(m => {
@@ -161,10 +160,10 @@ export default {
             const rightWall = this.getSideWalls(wall)[1]
             // console.log(rightWall)
             if (wall === Walls.R || wall === Walls.F) {// close to origin
-                meubleDepthSegment = { min: 0, max: meuble.skuInfo.P * 10 }
+                meubleDepthSegment = { min: 0, max: skuInfo.P * 10 }
             }
             else {
-                meubleDepthSegment = { min: this.getWallLength(rightWall) - meuble.skuInfo.P * 10, max: this.getWallLength(rightWall) }
+                meubleDepthSegment = { min: this.getWallLength(rightWall) - skuInfo.P * 10, max: this.getWallLength(rightWall) }
             }
             ax = this.getAxisForWall(rightWall)
             this.MeublesOnWall[rightWall].filter(m => m !== meuble).forEach(m => {
@@ -181,8 +180,7 @@ export default {
 
         // ------------------
 
-
-        const mWidth = getSize(meuble.object, "x")
+        const mWidth = meuble ? getSize(meuble.object, "x") : skuInfo.l
 
         // looks for spaces
         Space.onWall[wall] = []
@@ -230,12 +228,12 @@ export default {
             .forEach(m => this.MeublesOnCorners[m.wall] = m);
     },
 
-    isCornerFreeForMeuble(corner, meuble) {
+    isCornerFreeForMeuble(corner, skuInfo) {
         //  if (!Object.values(Corners).includes(corner) return false
         if (this.MeublesOnCorners[corner]) return false
 
         // calculation of width when in corners + angab :
-        const mWidth = Math.round((meuble.skuInfo.l + (2 * Measures.thick)) * Math.cos(Math.PI / 4) + meuble.skuInfo.p)
+        const mWidth = Math.round((skuInfo.l + (2 * Measures.thick)) * Math.cos(Math.PI / 4) + skuInfo.p)
 
         let segment;
         const walls = corner.split("-")
@@ -326,7 +324,10 @@ export default {
                     Meuble.attach(prev, meuble)
                 }
                 if (prev && meuble.skuInfo.type === "FIL") {
-                    meuble.setDepth(prev.skuInfo.P)
+                    meuble.setDepth(prev.skuInfo.PR)
+                }
+                if (prev && prev.skuInfo.type === "ANG90") {// ANG90 corner fileur pushing
+                    prev.setDepth(Sides.R, meuble.skuInfo.PL)
                 }
                 return toRight ? closestSpace.min + (fusion ? -Measures.thick : 0) :
                     closestSpace.max + (fusion ? Measures.thick : 0)
@@ -339,9 +340,12 @@ export default {
                     Meuble.attach(meuble, next)
                 }
                 if (next && meuble.skuInfo.type === "FIL") {
-                    meuble.setDepth(next.skuInfo.P)
+                    meuble.setDepth(next.skuInfo.PL)
                 }
-                console.log(mWidth)
+                if (next && next.skuInfo.type === "ANG90") {// ANG90 corner fileur pushing
+                    next.setDepth(Sides.L, meuble.skuInfo.PR)
+                }
+                // console.log(mWidth)
                 return toRight ? closestSpace.max - mWidth + (fusion ? Measures.thick : 0) :
                     closestSpace.min + mWidth + (fusion ? -Measures.thick : 0)
             default:

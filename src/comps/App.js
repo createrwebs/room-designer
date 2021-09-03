@@ -58,7 +58,10 @@ class App extends Component {
 						newScene()
 					}
 					this.setState({ catalogueLoaded: true })
-					setTimeout(changeTool, 1500, Tools.HAMMER)
+					setTimeout(function () {
+						changeTool(Tools.HAMMER)
+						window.ts.meubles[0].click()
+					}, 2500)
 					// gui = getGui()
 				})
 		}

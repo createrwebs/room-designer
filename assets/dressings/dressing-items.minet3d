@@ -1,0 +1,49 @@
+{
+    "xmax": 6000,
+    "zmax": 4000,
+    "name": "NYH238P62L119 items test",
+    "meubles": [
+        {
+            "sku": "NYH238P62L119",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front-right"
+            },
+            "items": [
+                {
+                    "sku": "NYETAP62L119",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 372
+                    }
+                },
+                {
+                    "sku": "NYETLP62L119",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 431
+                    }
+                },
+                {
+                    "sku": "BC84000D",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 599
+                    }
+                },
+                {
+                    "sku": "BC84000G",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 599
+                    }
+                }
+            ]
+        }
+    ],
+    "materialId": 1301
+}

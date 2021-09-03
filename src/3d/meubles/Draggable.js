@@ -74,14 +74,13 @@ export default class Draggable extends Meuble {
             return;
         } */
 
-
-        Room.setupWallConstraints(this)
+        Room.setupWallConstraints(this.getWidth())
 
         if (!Object.values(Walls).includes(this.wall)) {// meuble in corner
         }
         Room.axis = Room.getAxisForWall(this.wall);
         Room.populateMeublesOnWalls(MainScene.meubles)
-        Room.populateSpacesOnWalls(this)
+        Room.populateSpacesOnWalls(this, this.skuInfo)
         Room.populateMeublesOnCorners(MainScene.meubles, this)
 
         this.width = this.getWidth()
@@ -112,7 +111,7 @@ export default class Draggable extends Meuble {
             if (this.isOnAWall()
                 && this.skuInfo.angABSku
                 && Object.values(Corners).includes(newPlace)
-                && Room.isCornerFreeForMeuble(newPlace, this)
+                && Room.isCornerFreeForMeuble(newPlace, this.skuInfo)
             ) {// from wall to corner
                 this.addAngAB()
                 this.wall = newPlace

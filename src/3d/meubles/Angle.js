@@ -59,7 +59,7 @@ export default class Angle extends Meuble {// les meubles d'angles ne sont pas D
                 this.object.position.z = Room.zmax;
                 break;
             default:
-                console.warn("Meube Angle with NO corner");
+                console.warn("Meuble Angle with NO corner!?");
         }
     }
 }

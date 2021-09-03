@@ -18,17 +18,8 @@ import Room from '../3d/Room'
 import { getCenterPoint, getSize } from '../3d/Utils'
 import { getProps, getMultipleProps } from './Catalogue'
 import defaultconfig from '../../assets/config.json';
+import { Errors } from './Errors'
 
-export const Errors = {
-    NOT_A_MODULE: 'not_a_module',
-    IS_A_MODULE: 'is_a_module',
-    NO_MODULE_FOUND: 'no_module_found',
-    NO_SCENE: 'no_scene',
-    NO_ROOM: 'no_room',
-    ITEM_NON_COMPATIBLE: 'item_non_compatible',
-    TOO_MANY_DOORS: 'too_many_doors',
-    TOO_MANY_DRAWERS: 'too_many_drawers'
-}
 export const KinoEvent = {
     SELECT_MEUBLE: 'select_meuble',
     SCENE_CHANGE: 'scene_change',
@@ -58,7 +49,8 @@ export const BridgeEvent = {
     GENERATE_ALL_PIX: 'generateallpix',
     GENERATE_ONE_PIX: 'generateonepix',
     SET_SCENE_MATERIAL: 'set_scene_material',
-    LOAD_ALL_SKU: 'load_all_sku'
+    LOAD_ALL_SKU: 'load_all_sku',
+    SHOW_HIDE_FACADES: 'showhideFacades'
 }
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
@@ -236,9 +228,25 @@ const loadMeuble = (state) => {
 
     window.kino_bridge(KinoEvent.LOADING_MEUBLE, state.sku)
     loadFbx(props.fbx.url, object => {
-        const meuble = MainScene.createMeuble(props, object, state, skuInfo)
-        MainScene.add(meuble);
-        MainScene.render()
+
+        // duplicate of clickMeuble plus bas :
+        const result = MainScene.createMeuble(props, object, state, skuInfo)
+        if (typeof result === "string") {// creation problem
+            console.warn(`creation error : ${result}`)
+            switch (result) {
+
+                // TODO extraire gestion Errors
+
+                case Errors.NOT_A_MODULE:
+                    return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
+                case Errors.NO_ROOM:
+                    return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
+            }
+        }
+        else {
+            MainScene.add(result);
+            MainScene.render()
+        }
     })
 }
 
@@ -435,6 +443,7 @@ export const changeTool = (tool, arg) => {
             break;
     }
     MainScene.tool = tool;
+    console.warn(`ending change tool`)
 }
 
 export const drag = (meuble) => {
@@ -464,7 +473,7 @@ export const select = (meuble, arg) => {
                 // MainScene.render()
                 cameraTo(front, center, 800)
                 if (window.kino_bridge)
-                    window.kino_bridge(KinoEvent.SELECT_MEUBLE, meuble.props.sku)
+                    window.kino_bridge(KinoEvent.SELECT_MEUBLE, meuble.props.sku, meuble.getJSON())
                 MainScene.selection = meuble
             }
             else {
@@ -499,6 +508,14 @@ export const sceneChange = () => {
     if (window.kino_bridge)
         window.kino_bridge(KinoEvent.SCENE_CHANGE, getCurrentDressingForDevis())
 }
+
+export const showhideFacades = (show) => {
+    MainScene.meubles.forEach(meuble => {
+        meuble.showFacades(show)
+    })
+    MainScene.render()
+}
+
 
 export const animeSelectedMeuble = () => {
     const selectedMeuble = MainScene.selection
@@ -566,7 +583,11 @@ export const clickMeubleLine = (sku) => {
                     case Errors.NOT_A_MODULE:
                         return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
                     case Errors.NO_ROOM:
-                        return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
+                        return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ${sku}`)
+                    case Errors.CORNER_FULL:
+                        return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Il n'y a pas assez de place pour ${sku} dans ce coin`)
+                    default:
+                        console.warn(`error ${result} not handled`)
                 }
             }
             else {

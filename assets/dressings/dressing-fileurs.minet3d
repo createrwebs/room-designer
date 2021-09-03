@@ -1,0 +1,76 @@
+{
+    "xmax": 3000,
+    "zmax": 4000,
+    "name": "test fileurs",
+    "meubles": [
+        {
+            "sku": "NYFILH238",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 1940
+            },
+            "items": []
+        },
+        {
+            "sku": "NYFILH219",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 2370
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P40L119",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1120
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P62L081",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 872
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANG90H219",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "left-front"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANG90H219",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back-left"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANG90H238",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right-back"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANG90H219",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front-right"
+            },
+            "items": []
+        }
+    ],
+    "materialId": 1301
+}

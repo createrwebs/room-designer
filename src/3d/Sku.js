@@ -6,6 +6,11 @@
 const trous219Panneaux = [372, 431, 599, 663, 727, 815, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815, 1879, 1943, 2007, 2071]
 const trous238Panneaux = trous219Panneaux.concat([2135, 2199, 2263])
 
+// [983,1623,2263]//charnieres des portes on H238
+// [983,1623,2071]//charnieres des portes on H219
+// [372, 431]// 2 tiroirs encombrement on H238 & H219
+// [372, 431, 599, 663, 727, 815]// 4 tiroirs encombrement on H238 & H219
+
 // perçages sur armoire coulissante :
 const trous219COL = [343, 407, 471, 535, 599, 663, 727, 791, 855, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815]
 const trous238COL = [372, 436, 500, 564, 628, 692, 756, 820, 884, 948, 1012, 1076, 1140, 1204, 1268, 1332, 1396, 1460, 1524, 1588, 1652, 1716, 1780, 1844, 1908, 1972, 2036]
@@ -13,7 +18,7 @@ const trous238COL = [372, 436, 500, 564, 628, 692, 756, 820, 884, 948, 1012, 107
 export const trousTIR = [80, 290, 480, 640]// trous du bas pour les tiroirs
 
 const types = [
-    "ANG90",
+    "ANG90",// fileur d'angle
     "ANGAB",// Gabarit montage d'angles 45° 40 & 62
     "ANGETAL",
     "ANGETAP",
@@ -24,15 +29,16 @@ const types = [
     "BLOTMM",
     "BLOTMP",
     "BLOTPP",
+    "BUR",
     "C155",// armoire coulissante
     "C191",
     "C231",
-    "CHACAS",//chassis
+    "CHACAS",//chassis, à l'intérieur des NYTIR
     "CHACHAUSS",
     "CHALINGE",
     "CHAPANF",
     "CHAPANT",
-    "CAS",// parsed after chacas!!!
+    "CAS",// chassis général, parsed after chacas!!!
     "COIF",// coiffeuse
     "ETA",// étagère
     "ETL",// étagère tringle led
@@ -117,6 +123,8 @@ export const parseSKU = (sku) => {
     /* module to put on scene */
     obj.isModule = obj.type === "module"
         || obj.type === "ANG"
+        || obj.type === "ANG90"
+        || obj.type === "BUR"
         || obj.type === "COIF"
         || obj.type === "C155"
         || obj.type === "C191"
@@ -125,11 +133,16 @@ export const parseSKU = (sku) => {
         || obj.type === "FIL"
 
     /* modules with panneaux inamovibles */
-    obj.hasSides = obj.type === "ANG"
+    obj.hasSides = obj.type === "ANG90"
+        || obj.type === "ANG"
         || obj.type === "C155"
         || obj.type === "C191"
         || obj.type === "C231"
         || obj.type === "FIL"
+
+    obj.isCoulissante = obj.type === "C155"
+        || obj.type === "C191"
+        || obj.type === "C231"
 
     /* etagere */
     obj.isEtagere = obj.type.substr(0, 2) === "ET"
@@ -157,10 +170,15 @@ export const parseSKU = (sku) => {
             obj.P = obj.PR = obj.PL = 40
             obj.L = 15
             break;
+        case "ANG90":
+            obj.P = obj.PR = obj.PL = 40
+            obj.L = 24
+            break;
         case "ANG":
             obj.P = obj.PR = obj.PL = 62// angle module has fixed depth of 62
             obj.L = 106
             break;
+        case "BUR":
         case "COIF":
             obj.P = obj.PR = obj.PL = 62// coif module has fixed depth of 62
             obj.L = 81
@@ -218,6 +236,8 @@ export const parseSKU = (sku) => {
             "right": `NYH${obj.H}P${obj.PR}FD`,
             "left": `NYH${obj.H}P${obj.PR}FG`,
         }
+
+        obj.zback = obj.isCoulissante ? 20 : 26// profondeur du fond
     }
     else {
         obj.occupyPlace = obj.type !== "SEPV"// occupies a place when vertical dragging items

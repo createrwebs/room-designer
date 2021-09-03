@@ -2,9 +2,9 @@ import {
     select,
     sceneChange,
     KinoEvent,
-    Errors
 }
     from '../../api/actions'
+import { Errors } from '../../api/Errors'
 import { getProps } from '../../api/Catalogue'
 
 import MainScene from '../MainScene';
@@ -52,6 +52,16 @@ export default class Meuble extends Fbx {
 
         this.items = []
 
+        // encombrements
+
+        this.hasAngABLeft = false;
+        this.hasAngABRight = false;
+        this.angABPanes = []
+
+
+        //or get real-time info parsing items ?
+        this.hasLight = false
+
         if (skuInfo.trous) {
             this.places = {}// clonage des plans de perçage
             this.places.left = skuInfo.trous.slice();
@@ -61,12 +71,6 @@ export default class Meuble extends Fbx {
         this.trousTIR = trousTIR.slice();
 
         this.wall = state.position.wall;
-
-        if (props.subGroups) {
-            this.object.subGroups = props.subGroups;
-        } else {
-            this.object.subGroups = [];
-        }
 
         /* apply props transforms to all subobjects : no
         choice :
@@ -78,9 +82,11 @@ export default class Meuble extends Fbx {
         /* add sub objects */
 
         if (state && state.items)
-            state.items.forEach(i => {
-                this.addItemBySku(i.sku, i)
-            })
+            state.items
+                .filter(i => i.sku.indexOf("ANGAB") == -1)// angab auto-added later, with panels
+                .forEach(i => {
+                    this.addItemBySku(i.sku, i)
+                })
 
         /* panneaux */
 
@@ -102,9 +108,6 @@ export default class Meuble extends Fbx {
         this.width = getSize(this.object, "x")// store width for performance collision
         this.height = getSize(this.object, "y")
         this.depth = getSize(this.object, "z")
-
-        this.hasAngABLeft = false;
-        this.hasAngABRight = false;
 
         /* ruler (modifies box size) */
 
@@ -159,8 +162,10 @@ export default class Meuble extends Fbx {
     /* material */
 
     applyMaterialOnMeuble(mtl) {
+        this.removeLaqueOnMeshes()
         applyMaterial(mtl, this)
         this.items.forEach(item => {
+            item.removeLaqueOnMeshes()
             applyMaterial(mtl, item)
         })
         if (this.panneaux && this.panneaux[Sides.R]) applyMaterial(mtl, this.panneaux[Sides.R])
@@ -181,7 +186,6 @@ export default class Meuble extends Fbx {
     /* click & select */
 
     enableItemsDragging(enabled) {
-        // console.log("meuble.enableItemsDragging", enabled)
         this.items.forEach(i => {
             if (i.dragControls) {
                 if (enabled) {
@@ -208,40 +212,51 @@ export default class Meuble extends Fbx {
         }
     }
     click(interactiveEvent) {
-        console.warn(`click Meuble ${this.info()}`, interactiveEvent.target == this.object)
-        interactiveEvent.stopPropagation()
+        // console.warn(`click Meuble ${this.info()}`)
+        if (interactiveEvent) {
+            // console.warn(`click equality`, interactiveEvent.target == this.object)
+            interactiveEvent.stopPropagation()
+        }
         select(this, interactiveEvent)// actions select, NOT this.select() !!
 
-        if (interactiveEvent.target != this.object) {
-
-        }
-        else {
-
-        }
+        /*         if (interactiveEvent.target != this.object) {
+        
+                }
+                else {
+        
+                } */
     }
 
+    showFacades(show) {
+        if (!show) {
+            setTransparent(this, .25, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
+            this.items.filter(i => i.skuInfo.isPorte || i.skuInfo.isTiroir)
+                .forEach(p => {
+                    setTransparent(p, .25, ["porte", "miroir", "mirror", "poignee", "laquable"])
+                });
+        }
+        else {
+            setTransparent(this, 1, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
+            this.items.filter(i => i.skuInfo.isPorte || i.skuInfo.isTiroir)
+                .forEach(p => {
+                    setTransparent(p, 1, ["porte", "mirror", "miroir", "poignee", "laquable"])
+                });
+        }
+    }
     select() {
         if (this.ruler) this.object.add(this.ruler);
-        setVisible(this, false, ["porte", "mirror", "poignee"])
-        this.items.filter(i => i.skuInfo.isPorte)
-            .forEach(p => {
-                setVisible(p, false, ["porte", "mirror", "poignee"])
-            });
+        this.showFacades(false)
         this.enableItemsDragging(true) // activate items drag controls
         MainScene.render();
-        console.warn(`select Meuble ${this.info()}`, this)
+        // console.warn(`select Meuble ${this.info()}`, this)
     }
     deselect() {
         if (this.ruler)
             this.object.remove(this.ruler);
-        setVisible(this, true, ["porte", "mirror", "poignee"])
-        this.items.filter(i => i.skuInfo.isPorte)
-            .forEach(p => {
-                setVisible(p, true, ["porte", "mirror", "poignee"])
-            });
+        this.showFacades(true)
         this.enableItemsDragging(false)
         MainScene.render();
-        console.warn(`deselect Meuble ${this.info()}`)
+        // console.warn(`deselect Meuble ${this.info()}`)// bug
     }
     isOnAWall() {
         return Object.values(Walls).includes(this.wall)
@@ -249,7 +264,9 @@ export default class Meuble extends Fbx {
 
     /* items */
 
-    removeItem(item) {
+    removeItem(item, event) {
+        // console.warn(`removeIem ${item.skuInfo}`, event)
+        if (event) event.stopPropagation()
         item.remove()
         this.items = this.items.filter(i => item !== i)
         this.object.remove(item.object);
@@ -268,13 +285,19 @@ export default class Meuble extends Fbx {
     }
     addItem(props, state, skuInfo) {
 
-        if (skuInfo.isPorte) {// portes number
+        // portes number
+        if (skuInfo.isPorte) {
             const portes = this.items.filter(i => i.skuInfo.isPorte)
             if (this.skuInfo.has2Doors && portes.length >= 2) {
                 return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DOORS, `Trop de portes pour ce meuble`)
             }
             if (!this.skuInfo.has2Doors && portes.length >= 1) {
                 return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DOORS, `Trop de portes pour ce meuble`)
+            }
+
+            const tiroir = this.items.find(i => i.skuInfo.isTiroir)
+            if (tiroir && tiroir.skuInfo.type.substr(3, 4) !== skuInfo.type.substr(3, 4)) {// "-","2","4"
+                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.BAD_DOOR_FOR_DRAWER, `Porte non compatible avec le tiroir`)
             }
         }
 
@@ -285,11 +308,25 @@ export default class Meuble extends Fbx {
             if (slots <= tiroirs.length) {
                 return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DRAWERS, `Trop de tiroirs pour ce meuble`)
             }
+
+            const porte = this.items.find(i => i.skuInfo.isPorte)
+            if (porte && porte.skuInfo.type.substr(3, 4) !== skuInfo.type.substr(3, 4)) {
+                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.BAD_DRAWER_FOR_DOOR, `Tiroir non compatible avec la porte`)
+            }
         }
 
-        // accessoires compatible ? (triangles not in compatibles)
-        if (this.props.accessoirescompatibles.indexOf(props.sku) === -1 && skuInfo.type !== "ANGAB") {
+        // accessoires compatible ? (triangles and panes not in compatibles)
+        if (this.props.accessoirescompatibles.indexOf(props.sku) === -1
+            && skuInfo.type !== "ANGAB"
+            && props.sku !== this.skuInfo.paneSku[Sides.R]// for panes of AngAB
+            && props.sku !== this.skuInfo.paneSku[Sides.L]// for panes of AngAB
+        ) {
             return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.ITEM_NON_COMPATIBLE, `${props.sku} non compatible avec ${this.props.sku} sélectionné`)
+        }
+
+        // light already on top
+        if (this.hasLight && ["BC77000", "BC78000"].includes(props.sku)) {
+            return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_LIGHTS, `Trop de lampes sur le meuble`)
         }
 
         window.kino_bridge(KinoEvent.LOADING_MEUBLE, props.sku)
@@ -334,7 +371,7 @@ export default class Meuble extends Fbx {
 
         item.setPosition(null, state && state.position ? state.position.x : null, null)// y=x yes it is
         // console.log(item)
-
+        if (state && state.callback) state.callback(item)// for positionning
         // TODO
         /*         this.items.filter(i => i !== item).forEach(i => {
                     segment = getSegment(i.object)
@@ -353,14 +390,32 @@ export default class Meuble extends Fbx {
 
     /* angab */
 
-    addAngAB() {
+    positionPaneForAngAB(side, item) {
+        // console.log("positionPaneForAngAB", item, side)
+        const PDX = ((side === Sides.L ? Measures.thick : 0) + this.skuInfo.p) * Math.sin(Math.PI / 4)
+        const PDZ = ((side === Sides.L ? 2 * Measures.thick : 0) + this.skuInfo.p) * (1 - Math.cos(Math.PI / 4))
+        item.object.position.y = 0
+        item.object.position.z = PDZ
+        if (side === Sides.L) {
+            item.object.rotation.y = Math.PI / 4
+            item.object.position.x = -PDX
+        }
+        if (side === Sides.R) {
+            item.object.rotation.y = -Math.PI / 4
+            item.object.position.x = this.skuInfo.l + 2 * Measures.thick + PDX
+        }
+        this.angABPanes[side] = item// for removal
+    }
+    addAngAB(side) {
         if (this.skuInfo.angABSku) {
-            if (!this.hasAngABLeft) {
+            if ((!side || side == Sides.L) && !this.hasAngABLeft) {
                 this.addItemBySku(this.skuInfo.angABSku[Sides.L])
+                this.addItemBySku(this.getPanneauName(Sides.L), { callback: this.positionPaneForAngAB.bind(this, Sides.L) })
                 this.hasAngABLeft = true
             }
-            if (!this.hasAngABRight) {
+            if ((!side || side == Sides.R) && !this.hasAngABRight) {
                 this.addItemBySku(this.skuInfo.angABSku[Sides.R])
+                this.addItemBySku(this.getPanneauName(Sides.R), { callback: this.positionPaneForAngAB.bind(this, Sides.R) })
                 this.hasAngABRight = true
             }
         }
@@ -368,6 +423,8 @@ export default class Meuble extends Fbx {
     removeAngAB() {
         if (this.skuInfo.angABSku) {
             this.items.filter(i => Object.values(this.skuInfo.angABSku).includes(i.props.sku)).forEach(i => this.removeItem(i))
+            if (this.angABPanes[Sides.L]) this.removeItem(this.angABPanes[Sides.L])
+            if (this.angABPanes[Sides.R]) this.removeItem(this.angABPanes[Sides.R])
             this.hasAngABLeft = false
             this.hasAngABRight = false
         }
@@ -396,8 +453,7 @@ export default class Meuble extends Fbx {
                 panneau.object.position.z = 0
                 this.object.add(panneau.object);
                 if (!this.isOnAWall() && this.skuInfo.angABSku && !this.hasAngABLeft) {// angab to be loaded after panneaux
-                    this.addItemBySku(this.skuInfo.angABSku[Sides.L])
-                    this.hasAngABLeft = true
+                    this.addAngAB(Sides.L)
                 }
                 break;
             case Sides.R:
@@ -407,8 +463,7 @@ export default class Meuble extends Fbx {
                 panneau.object.position.z = 0;
                 this.object.add(panneau.object);
                 if (!this.isOnAWall() && this.skuInfo.angABSku && !this.hasAngABRight) {// angab to be loaded after panneaux
-                    this.addItemBySku(this.skuInfo.angABSku[Sides.R])
-                    this.hasAngABRight = true
+                    this.addAngAB(Sides.R)
                 }
                 break;
             /*             case "separateur":
@@ -506,9 +561,12 @@ export default class Meuble extends Fbx {
 
     getJSON() {
         const items = []
-        this.items.forEach(i => {
-            items.push(i.getJSON())
-        })
+        this.items
+            .filter(i => this.skuInfo.angABSku == undefined || !Object.values(this.skuInfo.angABSku).includes(i.props.sku))// remove ANGAB triangles
+            .filter(i => !Object.values(this.angABPanes).includes(i))// remove ANGAB auto-added panels
+            .forEach(i => {
+                items.push(i.getJSON())
+            })
         return {
             sku: this.props.sku,
             laqueOnMeshes: this.getLaqueOnMeshesJson(),

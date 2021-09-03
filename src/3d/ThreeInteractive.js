@@ -5,7 +5,7 @@ to avoid re-import of three
 import { Raycaster, Vector2 } from 'three';
 
 export class InteractiveObject {
-  constructor(target, name) {
+  constructor (target, name) {
     this.target = target;
     this.name = name;
     this.intersected = false;
@@ -14,7 +14,7 @@ export class InteractiveObject {
 }
 
 export class InteractiveEvent {
-  constructor(type, originalEvent = null) {
+  constructor (type, originalEvent = null) {
     this.cancelBubble = false;
     this.type = type;
     this.originalEvent = originalEvent;
@@ -25,7 +25,7 @@ export class InteractiveEvent {
 }
 
 export class InteractionManager {
-  constructor(renderer, camera, domElement) {
+  constructor (renderer, camera, domElement) {
     this.renderer = renderer;
     this.camera = camera;
     this.domElement = domElement;
@@ -93,6 +93,7 @@ export class InteractionManager {
 
   add = (object, childNames = []) => {
     if (object) {
+      if (!object.name || object.name == "") object.name = object.uuid//fab
       if (childNames.length > 0) {
         childNames.forEach((name) => {
           const o = object.getObjectByName(name);
@@ -135,9 +136,6 @@ export class InteractionManager {
 
   update = () => {
     this.raycaster.setFromCamera(this.mouse, this.camera);
-
-    // console.log( scene.children );
-
     this.interactiveObjects.forEach((object) => {
       if (object.target) this.checkIntersection(object);
     });

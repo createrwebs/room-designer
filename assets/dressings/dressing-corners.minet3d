@@ -1,0 +1,49 @@
+{
+    "xmax": 4000,
+    "zmax": 4000,
+    "name": "4 meubles en coin avec leurs triangles",
+    "meubles": [
+        {
+            "sku": "NYH238P40L119",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 2330
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40L040",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front-right"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P62L040",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "left-front"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P62L059",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back-left"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40RL057",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right-back"
+            },
+            "items": []
+        }
+    ],
+    "materialId": 1301
+}

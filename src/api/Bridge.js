@@ -13,6 +13,7 @@ import {
     generateAllPix,
     generateOnePix,
     setSceneMaterial,
+    showhideFacades
 }
     from './actions'
 
@@ -74,6 +75,9 @@ export default function (event, param1, param2) {
             break;
         case BridgeEvent.ANIM_SELECTED_MEUBLE:
             animeSelectedMeuble()
+            break;
+        case BridgeEvent.SHOW_HIDE_FACADES:
+            showhideFacades(param1)
             break;
         default:
             console.log("Bridge : no case found for event ", event)

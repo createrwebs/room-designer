@@ -1,0 +1,60 @@
+{
+    "name": "4 meubles d'angle",
+    "xmax": 3000,
+    "zmax": 3000,
+    "materialId": 1301,
+    "meubles": [
+        {
+            "sku": "NYANGH238",
+            "laqueOnMeshes": [
+                {
+                    "mesh": "tirroirfront-mtl-cuir",
+                    "laque": 1234
+                }
+            ],
+            "position": {
+                "wall": "front-right"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANGH219W",
+            "laqueOnMeshes": [
+                {
+                    "mesh": "tirroirfront-mtl-cuir",
+                    "laque": 1234
+                }
+            ],
+            "position": {
+                "wall": "right-back"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANGH219",
+            "laqueOnMeshes": [
+                {
+                    "mesh": "tirroirfront-mtl-cuir",
+                    "laque": 1234
+                }
+            ],
+            "position": {
+                "wall": "back-left"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANGH238W",
+            "laqueOnMeshes": [
+                {
+                    "mesh": "tirroirfront-mtl-cuir",
+                    "laque": 1234
+                }
+            ],
+            "position": {
+                "wall": "left-front"
+            },
+            "items": []
+        }
+    ]
+}

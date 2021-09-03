@@ -28,56 +28,60 @@ export const getCurrentDressing = () => {
 export const getCurrentDressingForDevis = () => {
     let dressing = {}
     const meubles = [];
-    const items = [];
     // const laqueOnMeshes = []
 
+    // meuble en objets
+
     MainScene.meubles.forEach(m => {
+        const meuble = {}
+        if (m === MainScene.selection) {
+            meuble.selected = true
+        }
         const joins = Meuble.isJoined(m)
-        if (m.skuInfo.type === "COIF") {// COIF has its own panels, FF FS SS SF appends to sku
-            meubles.push(`${m.props.sku}${joins.includes(Sides.L) ? 'S' : 'F'}${joins.includes(Sides.R) ? 'S' : 'F'}`)
+        if (["COIF", "BUR"].includes(m.skuInfo.type)) {// COIF & BUR has its own panels, FF FS SS SF appends to sku
+            meuble.sku = `${m.props.sku}${joins.includes(Sides.L) ? 'S' : 'F'}${joins.includes(Sides.R) ? 'S' : 'F'}`
+            // meubles.push(`${m.props.sku}${joins.includes(Sides.L) ? 'S' : 'F'}${joins.includes(Sides.R) ? 'S' : 'F'}`)
         }
         else {
-            meubles.push(m.props.sku)
+            meuble.sku = m.props.sku
+            // meubles.push(m.props.sku)
             if (!m.skuInfo.hasSides) {//gestion panneaux amovibles
-                if (!joins.includes(Sides.L)) meubles.push(m.getPanneauName(Sides.L))
-                if (!joins.includes(Sides.R)) meubles.push(m.getPanneauName(Sides.R))
+                if (!joins.includes(Sides.L)) meubles.push({ sku: m.getPanneauName(Sides.L) })
+                if (!joins.includes(Sides.R)) meubles.push({ sku: m.getPanneauName(Sides.R) })
             }
         }
+
+        const laqueMeuble = m.getFirstLaqueId()
+        if (laqueMeuble) meuble.laque = laqueMeuble
+
+        const items = [];
         m.items.forEach(i => {
             let sku
             if (i.skuInfo.type == "ANGAB") {
                 if (i.props.sku.substr(-1) === "R") {// le L est zappé
                     sku = i.props.sku.substr(0, i.props.sku.length - 1)
-
-                    // add panels
-                    items.push({
-                        sku: m.getPanneauName(Sides.L),
-                        laqueOnMeshes: []
-                    })
-                    items.push({
-                        sku: m.getPanneauName(Sides.R),
-                        laqueOnMeshes: []
-                    })
-
                 }
             }
             else {
                 sku = i.props.sku
             }
-            /*             for (const [key, value] of Object.entries(i.laqueOnMeshes)) {// laques in item
-                            laqueOnMeshes[key] = value
-                        } */
             if (sku) {
-                items.push({
-                    sku,
-                    laqueOnMeshes: i.laqueOnMeshes
-                })
+                const item = {
+                    sku
+                }
+                const laque = i.getFirstLaqueId()
+                if (laque) item.laque = laque
+                items.push(item)
             }
         })
-        /*         for (const [key, value] of Object.entries(m.laqueOnMeshes)) {// laques in meuble
-                    laqueOnMeshes[key] = value
-                } */
+        if (items.length > 0) {
+            meuble.items = items
+        }
+        meubles.push(meuble)
     })
+    /*
+    ajout des separateurs
+    */
     // console.log("Meuble.Joins", Meuble.Joins)
     Meuble.Joins.forEach(join => {
         const leftMeubleUid = join.substr(0, join.indexOf('-'));
@@ -85,15 +89,13 @@ export const getCurrentDressingForDevis = () => {
         const rightMeubleUid = join.substr(join.indexOf('-') + 1);
         const rightMeuble = MainScene.meubles.find(m => m.getUid() === rightMeubleUid)
         if (leftMeuble
-            && leftMeuble.skuInfo.type !== "COIF"
+            && !["COIF", "BUR"].includes(leftMeuble.skuInfo.type)
             && rightMeuble
-            && rightMeuble.skuInfo.type !== "COIF")
-            meubles.push(`NYH${leftMeuble.skuInfo.H}P${leftMeuble.skuInfo.PR}SE`)// right panel depth of left pane !
+            && !["COIF", "BUR"].includes(rightMeuble.skuInfo.type))
+            meubles.push({ sku: `NYH${leftMeuble.skuInfo.H}P${leftMeuble.skuInfo.PR}SE` })// right panel depth of left pane !
     })
 
     dressing.meubles = meubles
-    dressing.items = items
-    // dressing.laqueOnMeshes = laqueOnMeshes
     dressing.materialId = getMaterialId()
     return dressing
 }
