@@ -4,15 +4,6 @@
     "name": "4 meubles en coin avec leurs triangles",
     "meubles": [
         {
-            "sku": "NYC155H219P0",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 1010
-            },
-            "items": []
-        },
-        {
             "sku": "NYH238P62L096",
             "laqueOnMeshes": [],
             "position": {
@@ -21,11 +12,117 @@
             },
             "items": [
                 {
-                    "sku": "NYTIR2P62L096",
+                    "sku": "NYETAP62L096",
                     "laqueOnMeshes": [],
                     "position": {
                         "place": "left",
-                        "x": 50
+                        "x": 983
+                    }
+                },
+                {
+                    "sku": "NYETLP62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 1751
+                    }
+                },
+                {
+                    "sku": "NYETAP62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 2071
+                    }
+                },
+                {
+                    "sku": "NYSEPVP62",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 919
+                    }
+                },
+                {
+                    "sku": "BC77000",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 2380
+                    }
+                },
+                {
+                    "sku": "BC83000",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 663
+                    }
+                },
+                {
+                    "sku": "NYRGCHP62D",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 1514
+                    }
+                },
+                {
+                    "sku": "NYBLOTMPL096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 0
+                    }
+                }
+            ]
+        },
+        {
+            "sku": "NYH238P62L096",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1200
+            },
+            "items": [
+                {
+                    "sku": "NYETAP62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 983
+                    }
+                },
+                {
+                    "sku": "NYETLP62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 1751
+                    }
+                },
+                {
+                    "sku": "NYETAP62L096",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 2071
+                    }
+                },
+                {
+                    "sku": "NYSEPVP62",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 919
+                    }
+                },
+                {
+                    "sku": "BC77000",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 2380
                     }
                 }
             ]

@@ -152,7 +152,7 @@ export default class Draggable extends Meuble {
                 this.sendToCorner(this.wall)
                 break;
             default:
-                console.error("no wall for draggable")
+                console.error("no wall for Draggable")
         }
 
         if (Object.values(Walls).includes(this.wall)) {// on a wall

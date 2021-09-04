@@ -14,12 +14,15 @@ import {
     from '../api/actions'
 
 export default class Fbx {
+    static list = []
     constructor (props, object, state, skuInfo) {
         // console.log('Fbx', props, object, state)
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
         this.state = state// position & dressing stuff
         this.skuInfo = skuInfo// sku parsing info
+
+        Fbx.list.push(this)
 
         /* laques */
 
@@ -44,7 +47,10 @@ export default class Fbx {
             })
         }
     }
-
+    static getByUuid(uuid) {
+        // console.warn(`No laque material id for `, Fbx.list, uuid)
+        return Fbx.list.find(f => f.object.uuid === uuid)
+    }
     getUid() {
         return this.object ? this.object.uuid.substring(0, 8) : "no-uuid"// identifies uniquely
     }

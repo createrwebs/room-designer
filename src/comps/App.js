@@ -17,7 +17,7 @@ import {
 import { set as setCatalogue } from '../api/Catalogue'
 
 import { parseSKU } from '../3d/Sku'
-import sceneBridge from '../api/Bridge';
+import { comingFromKino as sceneBridge } from '../api/Bridge';
 import { setId as setMaterialId } from '../3d/Material'
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
@@ -30,7 +30,6 @@ class App extends Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			configLoaded: false,
 			catalogueLoaded: false
 		};
 		this.state = {
@@ -102,6 +101,32 @@ class App extends Component {
 		resizeScene()
 	}
 	render() {
+		const leftBottomDiv = {
+			color: '#887788',
+			font: '.8em Arial, sans-serif',
+			position: 'absolute',
+			padding: '8px',
+			bottom: '0px',
+		};
+		const rightBottomDiv = {
+			color: '#222222',
+			font: '.8em Arial, sans-serif',
+			position: 'absolute',
+			padding: '8px',
+			bottom: '0px',
+			right: '0px',
+			textAlign: "right"
+		};
+		const centralBottomDiv = {
+			color: '#222222',
+			font: '.8em Arial, sans-serif',
+			position: 'absolute',
+			padding: '8px',
+			bottom: '0px',
+			right: '0px',
+			width: '100%',
+			textAlign: "center"
+		};
 		return (
 			<div
 				style={{
@@ -118,8 +143,15 @@ class App extends Component {
 				{
 					this.state.catalogueLoaded &&
 					<div>
-						<Loading />
-						<Logging />
+						{localhost &&
+							<Loading style={leftBottomDiv} reducedVarToLog="loggingBottomLeft" />
+						}
+						{localhost &&
+							<Loading style={centralBottomDiv} reducedVarToLog="kinoBridge" />
+						}
+						{localhost &&
+							<Logging style={rightBottomDiv} />
+						}
 						<ThreeScene />
 					</div>
 				}

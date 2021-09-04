@@ -4,9 +4,9 @@ import {
     loadManagerProgress,
     loadManagerQueueFinished,
     loadManagerError,
-    KinoEvent
 }
     from '../api/actions'
+import { KinoEvent, goingToKino } from '../api/Bridge'
 import store from '../api/store';
 
 import { LoadingManager, TextureLoader } from "three";
@@ -51,7 +51,7 @@ export const loadFbx = (url, callback) => {
             object.userData.filename = filename
             if (undefined == Fbxs.find(fbx => fbx.userData.filename === filename))
                 Fbxs.push(object)
-            window.kino_bridge(KinoEvent.MEUBLE_LOADED, filename)
+            goingToKino(KinoEvent.MEUBLE_LOADED, filename)
             callback(object.clone())
         },
         (xhr) => {
@@ -65,6 +65,6 @@ export const loadFbx = (url, callback) => {
         (error) => {
             // console.log(error)
             store.dispatch(loadManagerError(filename))
-            window.kino_bridge(KinoEvent.ERROR_LOADING_MEUBLE, filename)
+            goingToKino(KinoEvent.ERROR_LOADING_MEUBLE, filename)
         })
 }

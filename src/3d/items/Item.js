@@ -16,6 +16,8 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { Measures, getSize } from '../Utils'
 import { getClosestInArray } from '../Drag'
 import { Slots } from '../Constants'
+import ItemDragging from './ItemDragging';
+import { Box3, Vector3 } from "three";
 
 export default class Item extends Fbx {
 
@@ -25,6 +27,7 @@ export default class Item extends Fbx {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo)
 
+        this.object.userData.item = this;// parent meuble
         this.parent = parent;// parent meuble
         this.place = (state && state.position && state.position.place) ? state.position.place : Slots.L
         this.positionY = (state && state.position && state.position.x) ? state.position.x : null
@@ -36,15 +39,15 @@ export default class Item extends Fbx {
 
         this.dragControls = undefined
         if (skuInfo.draggable) {
-            const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
-            dragControls.transformGroup = true;
-            dragControls.addEventListener('drag', this.dragging.bind(this))
-            dragControls.addEventListener('dragstart', this.dragStart.bind(this))
-            dragControls.addEventListener('dragend', this.dragEnd.bind(this))
-            this.dragControls = dragControls;
 
-            // if (MainScene.tool === Tools.HAMMER) this.dragControls.activate()
-            // else this.dragControls.deactivate()
+            // ItemDragging.add(object)
+
+            /*             const dragControls = new DragControls([object], MainScene.camera, MainScene.renderer.domElement);
+                        dragControls.transformGroup = true;
+                        dragControls.addEventListener('drag', this.dragging.bind(this))
+                        dragControls.addEventListener('dragstart', this.dragStart.bind(this))
+                        dragControls.addEventListener('dragend', this.dragEnd.bind(this))
+                        this.dragControls = dragControls; */
         }
 
         this.width = getSize(this.object, "x")
@@ -65,7 +68,8 @@ export default class Item extends Fbx {
         }
     }
     remove() {
-        if (this.dragControls) this.dragControls.dispose()
+        // if (this.dragControls) this.dragControls.dispose()
+        ItemDragging.remove(this.object)
         MainScene.interactionManager.remove(this.object)
 
         // what about places ?
@@ -79,10 +83,32 @@ export default class Item extends Fbx {
 
     /* position */
 
+    checkCollision() {
+        this.box = new Box3().setFromObject(this.object);
+        var collide = this.parent.items.filter(i => i != this)
+            .find(i => {
+                // console.log(i)
+                if (!i.box) i.box = new Box3().setFromObject(i.object);
+                return this.box.intersectsBox(new Box3().setFromObject(i.object))
+            })
+
+        if (collide) {
+            // console.log("collide", collide)
+            // this.object.position.y = this.positionY = this.lastY
+            this.setPositionX(this.lastPosition.x)
+            this.setPositionY(this.lastPosition.y)
+            this.setPositionZ(this.lastPosition.z)
+        }
+    }
     setPosition(x, y, z) {
+        this.lastPosition = new Vector3().copy(this.object.position)
         this.setPositionX(x)
         this.setPositionY(y)
         this.setPositionZ(z)
+        // console.log(x, y, z)
+
+        this.checkCollision()
+        this.box = new Box3().setFromObject(this.object);
     }
     setPositionX(x) {
 
@@ -168,20 +194,25 @@ export default class Item extends Fbx {
 
     click(interactiveEvent) {// deactivated => remove by dragging out
         // console.warn(`click Item ${this.props.sku}`, interactiveEvent)
-        interactiveEvent.stopPropagation()
+        if (interactiveEvent) {
+            // console.warn(`click equality`, interactiveEvent.target == this.object)
+            interactiveEvent.stopPropagation()
+        }
     }
     dragStart(event) {
-        // console.warn(`dragStart Item ${this.info()}`, event, this, Item.Dragged)
-
+        console.warn(`dragStart Item ${this.info()}`, event, this, Item.Dragged)
         if (Item.Dragged && Item.Dragged != this) {
-            return event.target.deactivate()// deactivation of drag controls of others
+            event.target.deactivate()// deactivation of other Draggable
+            return
         }
         Item.Dragged = this;
         store.dispatch(drag(this))
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
     }
     dragging(event) {
-        if (Item.Dragged != this) {
+        console.warn(`dragging Item ${this.info()}`, event, this == Item.Dragged)
+        if (!Item.Dragged || Item.Dragged != this) {
+            event.target.deactivate()
             return
         }
         // console.warn(`dragging Item ${this.info()}`, event)
@@ -191,6 +222,10 @@ export default class Item extends Fbx {
         MainScene.render();
     }
     dragEnd(event) {
+        console.warn(`dragEnd Item ${this.info()}`, event, this, Item.Dragged)
+        if (!Item.Dragged || Item.Dragged != this) {
+            return
+        }
         Item.Dragged = null
         store.dispatch(drag(null))
         this.parent.enableItemsDragging(true)// reactivation of drag controls of all
@@ -205,7 +240,7 @@ export default class Item extends Fbx {
             laqueOnMeshes: this.getLaqueOnMeshesJson(),
             position: {
                 place: this.place,
-                x: this.positionY ? this.positionY : this.object.position.y
+                x: Math.round(this.positionY ? this.positionY : this.object.position.y)
             },
         }
     }

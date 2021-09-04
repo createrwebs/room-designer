@@ -632,21 +632,21 @@
 				case KinoEvent.LOADING_MEUBLE:
 				case KinoEvent.MEUBLE_LOADED:
 				case KinoEvent.ERROR_LOADING_MEUBLE:
-					break;
-				case KinoEvent.SELECT_MEUBLE:
-					populate_items_list(arg1)
-					break;
 				case KinoEvent.SCENE_CHANGE:
 				case KinoEvent.SEND_MESSAGE:
 				case KinoEvent.MOUSEOVER_ITEM:
 				case KinoEvent.MOUSEOUT_ITEM:
+					break;
+				case KinoEvent.SELECT_MEUBLE:
+					populate_items_list(arg1)
+					break;
 				default:
 					console.log("kino_bridge", type, arg1 ? arg1 : "", arg2 ? arg2 : "")
 			}
 		}
 		var showhideFacades = true
 		local_scene_bridge = function (type, arg) {
-			console.log("local_scene_bridge", type)
+			// console.log("local_scene_bridge", type)
 			switch (type) {
 				case 'new_dressing':
 				case 'load_dressing':
@@ -676,7 +676,8 @@
 				case 'brush_mode':
 					break;
 			}
-			console.log("scene_bridge returns :", window.scene_bridge(type, arg))
+			// console.log("scene_bridge returns :", window.scene_bridge(type, arg))
+			window.scene_bridge(type, arg)
 		}
 	</script>
 </head>

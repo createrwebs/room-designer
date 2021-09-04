@@ -15,6 +15,9 @@ const trous238Panneaux = trous219Panneaux.concat([2135, 2199, 2263])
 const trous219COL = [343, 407, 471, 535, 599, 663, 727, 791, 855, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815]
 const trous238COL = [372, 436, 500, 564, 628, 692, 756, 820, 884, 948, 1012, 1076, 1140, 1204, 1268, 1332, 1396, 1460, 1524, 1588, 1652, 1716, 1780, 1844, 1908, 1972, 2036]
 
+// perçages NYANG
+// le bas se trouve à 87mm du sol puis décalage vers le haut tous les 64mm
+
 export const trousTIR = [80, 290, 480, 640]// trous du bas pour les tiroirs
 
 const types = [
@@ -24,7 +27,7 @@ const types = [
     "ANGETAP",
     "ANGTIR",// option tiroir supp pour angle
     "ANG",// Module angle, last match after ANGXX
-    "BC",// porte cintre, range cravate  // sans NY
+    "BC",// porte cintre, range cravate (sans NY)
     "BLOT0G",// bloc tiroir
     "BLOTMM",
     "BLOTMP",
@@ -74,21 +77,6 @@ const types = [
     "TIR4",
     "SEPV"// separateur vertical
 ]
-
-/*
-    "NYH238P62FG",// Finition gauche
-    "NYH238P62FD",// Finition droite
-    "NYH238P62SE",// separateur
-    "NYH238P40FG",
-    "NYH238P40FD",
-    "NYH238P40SE",
-    "NYH219P62FG",
-    "NYH219P62FD",
-    "NYH219P62SE",
-    "NYH219P40FG",
-    "NYH219P40FD",
-    "NYH219P40SE",
-*/
 
 export const parseSKU = (sku) => {
     const obj = {}
@@ -238,13 +226,18 @@ export const parseSKU = (sku) => {
         }
 
         obj.zback = obj.isCoulissante ? 20 : 26// profondeur du fond
+        obj.ymin = obj.isCoulissante ? 89 : 50// hauteur du bas
     }
     else {
         obj.occupyPlace = obj.type !== "SEPV"// occupies a place when vertical dragging items
+            && obj.type !== "RGCH"
 
         obj.draggable = obj.type !== "ANG90"
             && obj.type !== "ANGAB"
-        // && obj.type !== "FIL"
+            && obj.type !== "BC77000"
+            && obj.type !== "BC78000"
+            && obj.type !== "BC80000"
+            && !obj.isTiroir
     }
 
     console.info(sku, obj)

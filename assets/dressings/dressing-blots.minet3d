@@ -1,8 +1,7 @@
 {
-    "name": "1 armoire avec 3 blots",
     "xmax": 6000,
     "zmax": 4000,
-    "materialId": 1301,
+    "name": "1 armoire avec 3 blots",
     "meubles": [
         {
             "sku": "NYC231H238PG",
@@ -14,23 +13,64 @@
             "items": [
                 {
                     "sku": "NYBLOTMML074",
+                    "laqueOnMeshes": [],
                     "position": {
-                        "place": "left"
+                        "place": "left",
+                        "x": 908
                     }
                 },
                 {
                     "sku": "NYBLOTPPL074",
+                    "laqueOnMeshes": [],
                     "position": {
-                        "place": "center"
+                        "place": "center",
+                        "x": 89
                     }
                 },
                 {
                     "sku": "NYBLOTMPL074",
+                    "laqueOnMeshes": [],
                     "position": {
-                        "place": "right"
+                        "place": "right",
+                        "x": 89
+                    }
+                }
+            ]
+        },
+        {
+            "sku": "NYH238P62L040",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 991
+            },
+            "items": [
+                {
+                    "sku": "NYBLOTMML040",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 469
+                    }
+                },
+                {
+                    "sku": "NYBLOTMPL040",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 891
+                    }
+                },
+                {
+                    "sku": "NYBLOT0GL040",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 50
                     }
                 }
             ]
         }
-    ]
+    ],
+    "materialId": 1304
 }

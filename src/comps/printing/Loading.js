@@ -1,35 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-const leftBottomDiv = {
-	color: '#887788',
-	font: '.8em Arial, sans-serif',
-	position: 'absolute',
-	padding: '8px',
-	bottom: '0px',
-};
-
 export class Loading extends Component {
+	constructor (props) {
+		super(props);
+	}
 	render() {
 		return (
-			<div style={leftBottomDiv}>
-				{this.props.items.length > 0 &&
-					<span>loading...</span>
+			<div style={this.props.style}>
+				{Array.isArray(this.props.logging) &&
+					<div>
+						{
+							this.props.logging.length > 0 &&
+							<span>loading...</span>
+						}
+						{this.props.logging.map((element, key) => {
+							return (
+								<div key={key}>
+									<span>{element}</span>
+								</div>
+							);
+						})}
+					</div>
 				}
-				{this.props.items.map((element, key) => {
-					return (
-						<div key={key}>
-							<span>{element}</span>
-						</div>
-					);
-				})}
+				{typeof this.props.logging === "string" &&
+					<span style={{ whiteSpace: 'pre-line' }}>{this.props.logging}</span>
+				}
 			</div>
 		)
 	}
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+	const log = state[ownProps.reducedVarToLog]
 	return {
-		items: state.loadingItems,
+		logging: log,
 	}
 }
 export default connect(mapStateToProps)(Loading)

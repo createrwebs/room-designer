@@ -4,6 +4,7 @@ import {
     LoadingEvent
 }
     from './actions'
+import { KinoEvent, goingToKino } from './Bridge'
 
 function insertItem(array, item) {
     const newArray = [...array];
@@ -16,12 +17,12 @@ function removeItem(array, item) {
 }
 
 const initialState = {
-    configLoaded: false,
-    scenes: [],
-    light: true,
-    dragged: null,
+    loggingBottomRight: null,
+    loggingBottomLeft: null,
+    loggingTopRight: null,
     raycast: "",
-    loadingItems: []
+    loadingItems: [],
+    kinoBridge: "",
 }
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -30,37 +31,36 @@ export const reducer = (state = initialState, action) => {
 
         case LoadingEvent.START:
             return {
-                ...state, loadingItems: insertItem(state.loadingItems, action.url)
+                ...state, loggingBottomLeft: insertItem(state.loadingItems, action.url)
             }
         case LoadingEvent.PROGRESS:
+        case LoadingEvent.ERROR:
             return {
-                ...state, loadingItems: removeItem(state.loadingItems, action.url)
+                ...state, loggingBottomLeft: removeItem(state.loadingItems, action.url)
             }
         case LoadingEvent.QUEUE_FINISHED:
             return {
                 ...state
             }
-        case LoadingEvent.ERROR:
+
+        case KinoEvent.DRAG:
             return {
-                ...state, loadingItems: removeItem(state.loadingItems, action.url)
-            }
-
-        /* setters */
-
-        case SceneEvent.SETSCENES:
-            return {
-                ...state, scenes: action.scenes
-            }
-
-        /* meubles */
-
+                ...state, loggingBottomRight: action.meuble ? action.meuble.info() : ""
+            };
         case MeubleEvent.DRAG:
             return {
-                ...state, dragged: action.meuble
+                ...state, loggingBottomRight: action.meuble ? action.meuble.info() : ""
             };
         case SceneEvent.PRINTRAYCAST:
             return {
                 ...state, raycast: action.raycast
+            };
+        case SceneEvent.LOGKINOEVENT:
+            const kinoBridge = `${action.event}
+            ${action.param1 ? action.param1.toString() : ""}
+            ${action.param2 ? action.param2.toString() : ""}`
+            return {
+                ...state, kinoBridge
             };
         default:
             return state;

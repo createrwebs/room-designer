@@ -191,7 +191,7 @@ export const apply = (materials, meuble) => {
             }
             else {
                 if (materialMatch) {
-                    console.warn(`No texture found "${materialMatch[1]}" for subobject "${child.name}"`)
+                    // console.warn(`No texture found "${materialMatch[1]}" for subobject "${child.name}"`)
                     // of ${meuble.props.sku} : meuble undefined if generating pix
                 }
                 else {
@@ -224,7 +224,7 @@ export const apply = (materials, meuble) => {
             mirror.position.set(box.min.x + m_width / 2, box.min.y + m_height / 2, box.min.z + m_depth / 2);
             child.parent.add(mirror);
             child.parent.remove(child);
-            if (meuble.props) console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, child.name)
+            // if (meuble.props) console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, child.name)
         })
 
     /* light */

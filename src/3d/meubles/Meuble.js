@@ -1,9 +1,9 @@
 import {
     select,
     sceneChange,
-    KinoEvent,
 }
     from '../../api/actions'
+import { KinoEvent, goingToKino } from '../../api/Bridge'
 import { Errors } from '../../api/Errors'
 import { getProps } from '../../api/Catalogue'
 
@@ -31,6 +31,7 @@ import { Vector3 } from "three";
 import { create as createRuler } from '../helpers/Ruler';
 import { localhost } from '../../api/Utils';
 
+import ItemDragging from '../items/ItemDragging';
 import Item from '../items/Item'
 import Porte from '../items/Porte'
 import Etagere from '../items/Etagere'
@@ -187,18 +188,27 @@ export default class Meuble extends Fbx {
 
     enableItemsDragging(enabled) {
         this.items.forEach(i => {
-            if (i.dragControls) {
+            if (i.skuInfo.draggable) {
                 if (enabled) {
-                    i.dragControls.activate()
-                    if (!i.dragControls.enabled) {
-                        console.info("CANNOT ACTIVATE ITEM DRAGGING", i, i.dragControls)// do activate(), not enabled = true
-                        // i.dragControls.addEventListener('drag', i.dragging.bind(i))
-                        // i.dragControls.addEventListener('dragstart', i.dragStart.bind(i))
-                        // i.dragControls.addEventListener('dragend', i.dragEnd.bind(i))
-                    }
+                    ItemDragging.add(i.object)
                 }
-                else i.dragControls.deactivate()
+                else {
+                    ItemDragging.remove(i.object)
+                }
             }
+
+            /*             if (i.dragControls) {
+                            if (enabled) {
+                                i.dragControls.activate()
+                                if (!i.dragControls.enabled) {
+                                    console.info("CANNOT ACTIVATE ITEM DRAGGING", i, i.dragControls)// do activate(), not enabled = true
+                                    // i.dragControls.addEventListener('drag', i.dragging.bind(i))
+                                    // i.dragControls.addEventListener('dragstart', i.dragStart.bind(i))
+                                    // i.dragControls.addEventListener('dragend', i.dragEnd.bind(i))
+                                }
+                            }
+                            else i.dragControls.deactivate()
+                        } */
         })
     }
     enableClick(enabled) {
@@ -289,15 +299,15 @@ export default class Meuble extends Fbx {
         if (skuInfo.isPorte) {
             const portes = this.items.filter(i => i.skuInfo.isPorte)
             if (this.skuInfo.has2Doors && portes.length >= 2) {
-                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DOORS, `Trop de portes pour ce meuble`)
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DOORS, `Trop de portes pour ce meuble`)
             }
             if (!this.skuInfo.has2Doors && portes.length >= 1) {
-                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DOORS, `Trop de portes pour ce meuble`)
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DOORS, `Trop de portes pour ce meuble`)
             }
 
             const tiroir = this.items.find(i => i.skuInfo.isTiroir)
             if (tiroir && tiroir.skuInfo.type.substr(3, 4) !== skuInfo.type.substr(3, 4)) {// "-","2","4"
-                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.BAD_DOOR_FOR_DRAWER, `Porte non compatible avec le tiroir`)
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.BAD_DOOR_FOR_DRAWER, `Porte non compatible avec le tiroir`)
             }
         }
 
@@ -306,12 +316,12 @@ export default class Meuble extends Fbx {
             const slots = this.skuInfo.slots && this.skuInfo.slots.length > 1 ? this.skuInfo.slots.length : 1
             const tiroirs = this.items.filter(i => i.skuInfo.isTiroir)
             if (slots <= tiroirs.length) {
-                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DRAWERS, `Trop de tiroirs pour ce meuble`)
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_DRAWERS, `Trop de tiroirs pour ce meuble`)
             }
 
             const porte = this.items.find(i => i.skuInfo.isPorte)
             if (porte && porte.skuInfo.type.substr(3, 4) !== skuInfo.type.substr(3, 4)) {
-                return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.BAD_DRAWER_FOR_DOOR, `Tiroir non compatible avec la porte`)
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.BAD_DRAWER_FOR_DOOR, `Tiroir non compatible avec la porte`)
             }
         }
 
@@ -321,15 +331,15 @@ export default class Meuble extends Fbx {
             && props.sku !== this.skuInfo.paneSku[Sides.R]// for panes of AngAB
             && props.sku !== this.skuInfo.paneSku[Sides.L]// for panes of AngAB
         ) {
-            return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.ITEM_NON_COMPATIBLE, `${props.sku} non compatible avec ${this.props.sku} sélectionné`)
+            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.ITEM_NON_COMPATIBLE, `${props.sku} non compatible avec ${this.props.sku} sélectionné`)
         }
 
         // light already on top
         if (this.hasLight && ["BC77000", "BC78000"].includes(props.sku)) {
-            return window.kino_bridge(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_LIGHTS, `Trop de lampes sur le meuble`)
+            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_LIGHTS, `Trop de lampes sur le meuble`)
         }
 
-        window.kino_bridge(KinoEvent.LOADING_MEUBLE, props.sku)
+        goingToKino(KinoEvent.LOADING_MEUBLE, props.sku)
         loadFbx(props.fbx.url, this.itemLoaded.bind(this, props, state, skuInfo))
     }
     itemLoaded(props, state, skuInfo, object) {
@@ -477,6 +487,10 @@ export default class Meuble extends Fbx {
         sceneChange()
     }
 
+    getBottom() {
+        const tiroir = this.items.find(i => i.skuInfo.isTiroir)
+        return this.skuInfo.ymin + (tiroir ? tiroir.height : 0)
+    }
     getWidth() {
         if (Object.values(Walls).includes(this.wall)) {// on a wall
             return getSize(this.object, Room.getAxisForWall(this.wall))
@@ -572,7 +586,7 @@ export default class Meuble extends Fbx {
             laqueOnMeshes: this.getLaqueOnMeshesJson(),
             position: {
                 wall: this.wall,
-                x: this.position
+                x: Math.round(this.position)
             },
             items: items
         }

@@ -2,9 +2,9 @@ import {
     printRaycast,
     Tools,
     sceneChange,
-    KinoEvent
 }
     from '../api/actions'
+import { KinoEvent, goingToKino } from '../api/Bridge'
 import { Errors } from '../api/Errors'
 import {
     Scene,
@@ -386,12 +386,12 @@ export default {
     */
     itemMouseOver(fbx, interactiveEvent) {
         interactiveEvent.stopPropagation()
-        window.kino_bridge(KinoEvent.MOUSEOVER_ITEM, `${fbx.props.sku}|${fbx.getUid()}`, interactiveEvent.target ? interactiveEvent.target.name : "no-name")
+        goingToKino(KinoEvent.MOUSEOVER_ITEM, `${fbx.props.sku}|${fbx.getUid()}`, interactiveEvent.target ? interactiveEvent.target.name : "no-name")
 
     },
     itemMouseOut(fbx, interactiveEvent) {
         interactiveEvent.stopPropagation()
-        window.kino_bridge(KinoEvent.MOUSEOUT_ITEM, `${fbx.props.sku}|${fbx.getUid()}`, interactiveEvent.target ? interactiveEvent.target.name : "no-name")
+        goingToKino(KinoEvent.MOUSEOUT_ITEM, `${fbx.props.sku}|${fbx.getUid()}`, interactiveEvent.target ? interactiveEvent.target.name : "no-name")
     },
     enableMeublePainting(enabled) {
         this.meubles.forEach(m => {
@@ -512,10 +512,10 @@ export default {
             better find a place for future meuble before creation, only using skuInfo dimensions, and send error if no room !
         */
         switch (skuInfo.type) {
-            case "ANG":// not draggable, only located in angles
+            case "ANG":// not Draggable, only located in angles
                 meuble = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;
-            case "ANG90":// not draggable, only located in angles
+            case "ANG90":// not Draggable, only located in angles
 
                 // distingo creation : state
                 // preparation de la pose comme sur le dragStart : à sortir plus haut ?
@@ -528,7 +528,7 @@ export default {
 
                 meuble = new FileurAng90(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;
-            case "FIL":// a draggable with depth adjustement
+            case "FIL":// a Draggable with depth adjustement
                 meuble = new Fileur(props, object, pState, skuInfo)
                 break;
             case "P40RL057":// range chaussure, pivotable à 90
