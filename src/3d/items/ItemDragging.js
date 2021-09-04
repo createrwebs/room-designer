@@ -39,7 +39,7 @@ export default {
         return dragControls;
     },
     dragStart(event) {
-        // console.log(`dragStart Item`, event)
+        console.log(`dragStart Item`, event)
         this.current = event.item;
         store.dispatch(drag(this.current))
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
@@ -49,7 +49,7 @@ export default {
         MainScene.render();
     },
     dragEnd(event) {
-        // console.log(`dragEnd Item`, event)
+        console.log(`dragEnd Item`, event)
 
         this.current.box = new Box3().setFromObject(this.current.object);// updateBox()
 

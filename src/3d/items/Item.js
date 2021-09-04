@@ -27,7 +27,6 @@ export default class Item extends Fbx {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo)
 
-        this.object.userData.item = this;// parent meuble
         this.parent = parent;// parent meuble
         this.place = (state && state.position && state.position.place) ? state.position.place : Slots.L
         this.positionY = (state && state.position && state.position.x) ? state.position.x : null
@@ -87,7 +86,7 @@ export default class Item extends Fbx {
         this.box = new Box3().setFromObject(this.object);
         var collide = this.parent.items.filter(i => i != this)
             .find(i => {
-                // console.log(i)
+                console.log(i)
                 if (!i.box) i.box = new Box3().setFromObject(i.object);
                 return this.box.intersectsBox(new Box3().setFromObject(i.object))
             })
@@ -107,7 +106,7 @@ export default class Item extends Fbx {
         this.setPositionZ(z)
         // console.log(x, y, z)
 
-        this.checkCollision()
+        // this.checkCollision()
         this.box = new Box3().setFromObject(this.object);
     }
     setPositionX(x) {
