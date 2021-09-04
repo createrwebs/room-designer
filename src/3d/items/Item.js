@@ -85,6 +85,7 @@ export default class Item extends Fbx {
     checkCollision() {
         this.box = new Box3().setFromObject(this.object);
         var collide = this.parent.items.filter(i => i != this)
+            .filter(i => i.skuInfo.type != "ANGAB")
             .find(i => {
                 console.log(i)
                 if (!i.box) i.box = new Box3().setFromObject(i.object);
@@ -106,7 +107,7 @@ export default class Item extends Fbx {
         this.setPositionZ(z)
         // console.log(x, y, z)
 
-        // this.checkCollision()
+        this.checkCollision()
         this.box = new Box3().setFromObject(this.object);
     }
     setPositionX(x) {
