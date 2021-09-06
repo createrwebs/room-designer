@@ -8,51 +8,11 @@
             "laqueOnMeshes": [],
             "position": {
                 "wall": "right",
-                "x": 0
+                "x": 1000
             },
             "items": [
                 {
-                    "sku": "NYETAP62L096",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 983
-                    }
-                },
-                {
                     "sku": "NYETLP62L096",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 1751
-                    }
-                },
-                {
-                    "sku": "NYETAP62L096",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 2071
-                    }
-                },
-                {
-                    "sku": "NYSEPVP62",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 919
-                    }
-                },
-                {
-                    "sku": "BC77000",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 2380
-                    }
-                },
-                {
-                    "sku": "BC83000",
                     "laqueOnMeshes": [],
                     "position": {
                         "place": "left",
@@ -60,33 +20,15 @@
                     }
                 },
                 {
-                    "sku": "NYRGCHP62D",
+                    "sku": "NYCHACAS96",
                     "laqueOnMeshes": [],
                     "position": {
                         "place": "left",
-                        "x": 1514
+                        "x": 599
                     }
                 },
                 {
-                    "sku": "NYBLOTMPL096",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 0
-                    }
-                }
-            ]
-        },
-        {
-            "sku": "NYH238P62L096",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 1200
-            },
-            "items": [
-                {
-                    "sku": "NYETAP62L096",
+                    "sku": "NYCHAPANT96",
                     "laqueOnMeshes": [],
                     "position": {
                         "place": "left",
@@ -94,35 +36,19 @@
                     }
                 },
                 {
-                    "sku": "NYETLP62L096",
+                    "sku": "NYCHACHAUSS96",
                     "laqueOnMeshes": [],
                     "position": {
                         "place": "left",
-                        "x": 1751
+                        "x": 1303
                     }
                 },
                 {
-                    "sku": "NYETAP62L096",
+                    "sku": "NYPENRABP62M3L096",
                     "laqueOnMeshes": [],
                     "position": {
                         "place": "left",
-                        "x": 2071
-                    }
-                },
-                {
-                    "sku": "NYSEPVP62",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 919
-                    }
-                },
-                {
-                    "sku": "BC77000",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 2380
+                        "x": 1424
                     }
                 }
             ]

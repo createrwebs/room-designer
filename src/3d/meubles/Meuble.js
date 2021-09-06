@@ -43,6 +43,7 @@ import BC from '../items/BC'
 import AngAB from '../items/AngAB'
 import RangePull from '../items/RangePull'
 import SeparateurV from '../items/SeparateurV'
+import Penrab from '../items/Penrab'
 
 export default class Meuble extends Fbx {
     constructor (props, object, state, skuInfo) {
@@ -240,16 +241,20 @@ export default class Meuble extends Fbx {
     showFacades(show) {
         if (!show) {
             setTransparent(this, .25, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
+            // setVisible(this, false, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
             this.items.filter(i => i.skuInfo.isPorte || i.skuInfo.isTiroir)
                 .forEach(p => {
                     setTransparent(p, .25, ["porte", "miroir", "mirror", "poignee", "laquable"])
+                    // setVisible(p, false, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
                 });
         }
         else {
             setTransparent(this, 1, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
+            // setVisible(this, true, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
             this.items.filter(i => i.skuInfo.isPorte || i.skuInfo.isTiroir)
                 .forEach(p => {
                     setTransparent(p, 1, ["porte", "mirror", "miroir", "poignee", "laquable"])
+                    // setVisible(p, true, ["porte", "mirror", "miroir", "poignee", "laquable"])// portes deja presentes
                 });
         }
     }
@@ -375,6 +380,9 @@ export default class Meuble extends Fbx {
         else if (skuInfo.type === "SEPV") {
             item = new SeparateurV(props, object, state, skuInfo, this)
         }
+        else if (skuInfo.type === "PENRAB") {
+            item = new Penrab(props, object, state, skuInfo, this)
+        }
         else {
             item = new Item(props, object, state, skuInfo, this)
         }
@@ -393,6 +401,7 @@ export default class Meuble extends Fbx {
                 }) */
 
         this.items.push(item)
+        if (skuInfo.draggable) ItemDragging.add(item.object)
         this.object.add(item.object);
         MainScene.render()
         sceneChange()

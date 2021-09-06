@@ -1,0 +1,132 @@
+{
+    "xmax": 4000,
+    "zmax": 4000,
+    "name": "4 meubles en coin avec leurs triangles",
+    "meubles": [
+        {
+            "sku": "NYC231H238PP",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1000
+            },
+            "items": [
+                {
+                    "sku": "NYETLPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 372
+                    }
+                },
+                {
+                    "sku": "NYETLPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "right",
+                        "x": 1268
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "right",
+                        "x": 820
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "right",
+                        "x": 372
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "center",
+                        "x": 692
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 436
+                    }
+                },
+                {
+                    "sku": "NYETTPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 692
+                    }
+                },
+                {
+                    "sku": "NYETTPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "right",
+                        "x": 1844
+                    }
+                },
+                {
+                    "sku": "NYETTPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 564
+                    }
+                },
+                {
+                    "sku": "NYETAPCOL074",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 756
+                    }
+                }
+            ]
+        },
+        {
+            "sku": "NYH238P40L081",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 140
+            },
+            "items": [
+                {
+                    "sku": "NYETAP40L081",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 372
+                    }
+                },
+                {
+                    "sku": "NYETAP40L081",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 1111
+                    }
+                },
+                {
+                    "sku": "NYETAP40L081",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "place": "left",
+                        "x": 919
+                    }
+                }
+            ]
+        }
+    ],
+    "materialId": 1301
+}

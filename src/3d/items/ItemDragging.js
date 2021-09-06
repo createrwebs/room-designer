@@ -41,6 +41,7 @@ export default {
     dragStart(event) {
         console.log(`dragStart Item`, event)
         this.current = event.item;
+        this.current.startDrag()
         store.dispatch(drag(this.current))
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
     },

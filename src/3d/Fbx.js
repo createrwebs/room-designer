@@ -55,7 +55,7 @@ export default class Fbx {
         return this.object ? this.object.uuid.substring(0, 8) : "no-uuid"// identifies uniquely
     }
     info() {
-        return `${this.getUid()} | ${this.props.sku}`
+        return `${this.getUid()} | ${this.props.sku} ${this.positionY ? this.positionY : ""}`
     }
     sizeInfo() {
         return `${this.info()} (L ${this.width / 10}cm H ${this.height / 10}cm P ${this.depth / 10}cm)`

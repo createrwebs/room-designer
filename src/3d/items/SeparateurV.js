@@ -5,10 +5,10 @@ export default class SeparateurV extends Item {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo, parent)
 
-        const h = this.height
-        this.object.children.forEach(child => {
-            child.position.set(0, -h, 0)
-        })
+        /*         const h = this.height
+                this.object.children.forEach(child => {
+                    child.position.set(0, -h, 0)
+                }) */
 
         this.xSegment = {
             min: Measures.thick,
@@ -18,14 +18,15 @@ export default class SeparateurV extends Item {
 
     }
     setPositionX(x) {
+
+        // dragging rejected if collision between Etageres
         if (x)
             this.object.position.x = Math.max(this.xSegment.min, Math.min(this.xSegment.max, x))
     }
-    setPositionY(y) {
-        // console.log("pppp", this.positionY, this.height)
-        super.setPositionY(y)
-        // console.log(this.positionY, this.height)
-        // this.positionY -= this.height
-        // this.object.position.y = y - this.height
+    setPositionY(y = 0) {
+        const max = this.parent.skuInfo.H * 10 - this.height - 120
+        const min = this.parent.getBottom()
+        // console.log(min, max)
+        this.object.position.y = this.positionY = Math.round(Math.min(max, Math.max(min, y === undefined ? 0 : y)))
     }
 }

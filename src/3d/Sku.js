@@ -12,7 +12,8 @@ const trous238Panneaux = trous219Panneaux.concat([2135, 2199, 2263])
 // [372, 431, 599, 663, 727, 815]// 4 tiroirs encombrement on H238 & H219
 
 // perçages sur armoire coulissante :
-const trous219COL = [343, 407, 471, 535, 599, 663, 727, 791, 855, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815]
+// const trous219COL = [343, 407, 471, 535, 599, 663, 727, 791, 855, 919, 983, 1047, 1111, 1175, 1239, 1303, 1367, 1431, 1495, 1559, 1623, 1687, 1751, 1815]
+const trous219COL = [372, 436, 500, 564, 628, 692, 756, 820, 884, 948, 1012, 1076, 1140, 1204, 1268, 1332, 1396, 1460, 1524, 1588, 1652, 1716, 1780, 1844]
 const trous238COL = [372, 436, 500, 564, 628, 692, 756, 820, 884, 948, 1012, 1076, 1140, 1204, 1268, 1332, 1396, 1460, 1524, 1588, 1652, 1716, 1780, 1844, 1908, 1972, 2036]
 
 // perçages NYANG
@@ -229,8 +230,9 @@ export const parseSKU = (sku) => {
         obj.ymin = obj.isCoulissante ? 89 : 50// hauteur du bas
     }
     else {
-        obj.occupyPlace = obj.type !== "SEPV"// occupies a place when vertical dragging items
-            && obj.type !== "RGCH"
+        obj.useHole = obj.isEtagere// use a drilled hole to fix
+            || obj.type.substr(0, 2) === "RP"
+            || obj.isChassis
 
         obj.draggable = obj.type !== "ANG90"
             && obj.type !== "ANGAB"
@@ -238,6 +240,7 @@ export const parseSKU = (sku) => {
             && obj.type !== "BC78000"
             && obj.type !== "BC80000"
             && !obj.isTiroir
+            && !obj.isPorte
     }
 
     console.info(sku, obj)

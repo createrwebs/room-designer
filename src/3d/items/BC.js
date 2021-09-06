@@ -57,13 +57,15 @@ export default class BC extends Item {
                 }
                 break;
             case "BC81000":// porte cintre pivotant sous etagere
-                this.object.position.x = 80
+                // this.object.position.x = 80
+                super.setPositionX(x)
                 super.setPositionY(y)
                 this.object.position.y += 10
                 this.object.position.z = this.parent.skuInfo.P * 10 - this.depth
                 break;
             case "BC82000":// porte cintre extractible
-                this.object.position.x = 100
+                // this.object.position.x = 100
+                super.setPositionX(x)
                 super.setPositionY(y)
                 this.object.position.y -= 4
                 this.object.position.z = this.parent.skuInfo.P * 10 - this.depth
