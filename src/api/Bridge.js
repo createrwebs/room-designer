@@ -19,9 +19,10 @@ import {
     from './actions'
 import store from './store';
 
-import { getCurrentDressing } from '../3d/Dressing';
+import { getCurrentDressing, getCurrentDressingForDevis } from '../3d/Dressing';
 
 export const KinoEvent = {
+    APP_READY: 'app_ready',
     SELECT_MEUBLE: 'select_meuble',
     SCENE_CHANGE: 'scene_change',
     SEND_MESSAGE: 'send_message',
@@ -57,7 +58,8 @@ const BridgeEvent = {
     GENERATE_ONE_PIX: 'generateonepix',
     SET_SCENE_MATERIAL: 'set_scene_material',
     LOAD_ALL_SKU: 'load_all_sku',
-    SHOW_HIDE_FACADES: 'showhideFacades'
+    SHOW_HIDE_FACADES: 'showhideFacades',
+    GET_DEVIS: 'get_devis'
 }
 
 /*
@@ -68,7 +70,7 @@ export const comingFromKino = (event, param1, param2) => {
     // console.log("comingFromKino :", event, param1, param2)
     switch (event) {
         case BridgeEvent.NEW_DRESSING:
-            newScene(param1, param2)
+            newScene(param1)
             break;
         case BridgeEvent.SAVE_DRESSING:
             return getCurrentDressing()
@@ -81,6 +83,9 @@ export const comingFromKino = (event, param1, param2) => {
             break;
         case BridgeEvent.TAKE_PICTURE:
             takePicture()
+            break;
+        case BridgeEvent.GET_DEVIS:
+            console.log(getCurrentDressingForDevis())
             break;
         case BridgeEvent.GENERATE_ALL_PIX:
             generateAllPix()

@@ -2,9 +2,7 @@ import Item from './Item'
 
 export default class Etagere extends Item {
     setPositionZ(z) {
-        if (this.props.sku.includes("PCO")) {
-
-            // etagere pour armoire coulissante, plus courte
+        if (this.props.sku.includes("PCO")) {// etagere pour armoire coulissante, plus courte
             this.object.position.z = 20
         }
         else {

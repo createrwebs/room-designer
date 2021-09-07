@@ -19,6 +19,7 @@ export const getCurrentDressing = () => {
     })
     dressing.meubles = meubles
     dressing.materialId = getMaterialId()
+    dressing.joins = Meuble.Joins
     return dressing
 }
 
@@ -28,7 +29,6 @@ export const getCurrentDressing = () => {
 export const getCurrentDressingForDevis = () => {
     let dressing = {}
     const meubles = [];
-    // const laqueOnMeshes = []
 
     // meuble en objets
 

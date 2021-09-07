@@ -46,7 +46,7 @@ export default {
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
     },
     dragging(event) {
-        this.current.setPosition(event.intersection.x, event.intersection.y, event.intersection.z)
+        this.current.drag(event.intersection.x, event.intersection.y, event.intersection.z)
         MainScene.render();
     },
     dragEnd(event) {

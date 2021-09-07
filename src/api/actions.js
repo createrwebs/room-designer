@@ -20,6 +20,7 @@ import { getProps, getMultipleProps } from './Catalogue'
 import defaultconfig from '../../assets/config.json';
 import { KinoEvent, goingToKino } from './Bridge'
 import { Errors } from './Errors'
+import Meuble from '../3d/meubles/Meuble';
 
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
@@ -145,7 +146,7 @@ export const setConfig = (c) => {
 export const newScene = (dressing) => {
     if (!dressing) goingToKino(KinoEvent.NO_DRESSING_FILE)
     Room.setup(dressing)
-    if (dressing) setMaterialId(dressing.materialId)
+    if (dressing && dressing.materialId) setMaterialId(dressing.materialId)
     MainScene.update()
     MainScene.render()
 }
@@ -171,6 +172,7 @@ export const loadScene = (dressing) => {
     else {
         loadMeubles(dressing)
     }
+    if (dressing.joins) Meuble.Joins = dressing.joins
 }
 
 const loadMeubles = (dressing) => {

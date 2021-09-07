@@ -11,7 +11,7 @@ import MainScene from '../MainScene';
 import Fbx from '../Fbx'
 import { Measures, getSize } from '../Utils'
 import { parseSKU, trousTIR } from '../Sku'
-import { Walls, Corners, Sides } from '../Constants';
+import { Walls, Corners, Sides, Slots } from '../Constants';
 import Room from '../Room';
 import { loadFbx } from '../Loader'
 import {
@@ -49,8 +49,6 @@ export default class Meuble extends Fbx {
     constructor (props, object, state, skuInfo) {
         super(props, object, state, skuInfo)
         // console.log('Meuble', props, object, state, skuInfo)
-        console.log('Meuble', this)
-        // this.uid = this.getUid()
 
         this.items = []
 
@@ -168,7 +166,7 @@ export default class Meuble extends Fbx {
         applyMaterial(mtl, this)
         this.items.forEach(item => {
             item.removeLaqueOnMeshes()
-            applyMaterial(mtl, item)
+            // applyMaterial(mtl, item)
         })
         if (this.panneaux && this.panneaux[Sides.R]) applyMaterial(mtl, this.panneaux[Sides.R])
         if (this.panneaux && this.panneaux[Sides.L]) applyMaterial(mtl, this.panneaux[Sides.L])
@@ -189,7 +187,7 @@ export default class Meuble extends Fbx {
 
     enableItemsDragging(enabled) {
         this.items.forEach(i => {
-            if (i.skuInfo.draggable) {
+            if (i.skuInfo.draggableX || i.skuInfo.draggableY) {
                 if (enabled) {
                     ItemDragging.add(i.object)
                 }
@@ -197,19 +195,6 @@ export default class Meuble extends Fbx {
                     ItemDragging.remove(i.object)
                 }
             }
-
-            /*             if (i.dragControls) {
-                            if (enabled) {
-                                i.dragControls.activate()
-                                if (!i.dragControls.enabled) {
-                                    console.info("CANNOT ACTIVATE ITEM DRAGGING", i, i.dragControls)// do activate(), not enabled = true
-                                    // i.dragControls.addEventListener('drag', i.dragging.bind(i))
-                                    // i.dragControls.addEventListener('dragstart', i.dragStart.bind(i))
-                                    // i.dragControls.addEventListener('dragend', i.dragEnd.bind(i))
-                                }
-                            }
-                            else i.dragControls.deactivate()
-                        } */
         })
     }
     enableClick(enabled) {
@@ -371,7 +356,7 @@ export default class Meuble extends Fbx {
         else if (skuInfo.type === "RGCH") {
             item = new RangeChaussure(props, object, state, skuInfo, this)
         }
-        else if (skuInfo.type === "BC") {
+        else if (skuInfo.type === "BC" || skuInfo.type === "TABREP") {
             item = new BC(props, object, state, skuInfo, this)
         }
         else if (skuInfo.type === "ANGAB") {
@@ -387,21 +372,32 @@ export default class Meuble extends Fbx {
             item = new Item(props, object, state, skuInfo, this)
         }
 
-        item.setPosition(null, state && state.position ? state.position.x : null, null)// y=x yes it is
-        // console.log(item)
+        const newItem = !(state && state.position) && !skuInfo.isModule && skuInfo.type != "ANGAB"
+        if (localhost) console.log(item, state, newItem)
+
+        if (newItem) {
+
+            // TODO check collision & space
+            /*         this.items.filter(i => i !== item).forEach(i => {
+                        segment = getSegment(i.object)
+                        if (segment.min - lastPos >= meuble.width) {
+                            Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
+                        }
+                        lastMeuble = m;
+                        lastPos = m.position;
+                    }) */
+        }
+
+        item.setPosition(
+            state && state.position ? state.position.x : null,
+            state && state.position ? state.position.y : null,
+            null)
+
         if (state && state.callback) state.callback(item)// for positionning
-        // TODO
-        /*         this.items.filter(i => i !== item).forEach(i => {
-                    segment = getSegment(i.object)
-                    if (segment.min - lastPos >= meuble.width) {
-                        Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
-                    }
-                    lastMeuble = m;
-                    lastPos = m.position;
-                }) */
+
 
         this.items.push(item)
-        if (skuInfo.draggable) ItemDragging.add(item.object)
+        if (skuInfo.draggableX || skuInfo.draggableY) ItemDragging.add(item.object)
         this.object.add(item.object);
         MainScene.render()
         sceneChange()
@@ -496,16 +492,25 @@ export default class Meuble extends Fbx {
         sceneChange()
     }
 
-    getBottom() {
+    getBottom(slot = Slots.L, but) {
         const tiroir = this.items.find(i => i.skuInfo.isTiroir)
         return this.skuInfo.ymin + (tiroir ? tiroir.height : 0)
+
+        /*         const sortedItems = this.items
+                    .filter(i => i != but)
+                    .filter(i => i.place == slot)
+                    .filter(i => i.skuInfo.isTiroir || i.skuInfo.isBlot)
+                    .sort((a, b) => b.getBox().max.y - a.getBox().max.y)
+        
+                console.log(sortedItems)
+                return sortedItems && sortedItems.length > 0 ? sortedItems[0].getBox().max.y : this.skuInfo.ymin */
     }
     getWidth() {
         if (Object.values(Walls).includes(this.wall)) {// on a wall
             return getSize(this.object, Room.getAxisForWall(this.wall))
         }
         else if (Object.values(Corners).includes(this.wall)) {// on a corner
-            return (this.skuInfo.L * 10 + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
+            return (this.skuInfo.l + (2 * Measures.thick)) * Math.cos(Math.PI / 4);
         }
     }
 
@@ -592,6 +597,7 @@ export default class Meuble extends Fbx {
             })
         return {
             sku: this.props.sku,
+            uid: this.getUid(),
             laqueOnMeshes: this.getLaqueOnMeshesJson(),
             position: {
                 wall: this.wall,

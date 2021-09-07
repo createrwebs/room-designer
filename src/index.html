@@ -616,6 +616,7 @@
 		}
 
 		const KinoEvent = {
+			APP_READY: 'app_ready',
 			SELECT_MEUBLE: 'select_meuble',
 			SCENE_CHANGE: 'scene_change',
 			SEND_MESSAGE: 'send_message',
@@ -624,8 +625,9 @@
 			LOADING_MEUBLE: 'loading_meuble',
 			MEUBLE_LOADED: 'meuble_loaded',
 			ERROR_LOADING_MEUBLE: 'error_loading_meuble',
+			NO_CONFIG_FILE: 'no_config_file',
+			NO_DRESSING_FILE: 'no_dressing_file',
 		}
-
 		kino_bridge = function (type, arg1, arg2) {
 			// console.log("kino_bridge", type, arg1 ? arg1 : "", arg2 ? arg2 : "")
 			switch (type) {
@@ -636,6 +638,7 @@
 				case KinoEvent.SEND_MESSAGE:
 				case KinoEvent.MOUSEOVER_ITEM:
 				case KinoEvent.MOUSEOUT_ITEM:
+				case KinoEvent.APP_READY:
 					break;
 				case KinoEvent.SELECT_MEUBLE:
 					populate_items_list(arg1)
@@ -718,9 +721,11 @@
 	<button class="btn" onclick="local_scene_bridge('generateonepix','NYANGH219')">
 		<i class="fa fa-image"></i>
 	</button>
-
-	<button class="btn" onclick="local_scene_bridge('generateallpix')" style="margin-right: 1em;">
+	<button class="btn" onclick="local_scene_bridge('generateallpix')">
 		<i class="fa fa-clone"></i>
+	</button>
+	<button class="btn" onclick="local_scene_bridge('get_devis')" style="margin-right: 1em;">
+		<i class="fa fa-euro-sign"></i>
 	</button>
 
 	<button class="btn" onclick="local_scene_bridge('select_meuble')">

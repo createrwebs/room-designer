@@ -23,36 +23,14 @@ export default class Fbx {
         this.skuInfo = skuInfo// sku parsing info
 
         Fbx.list.push(this)
-
-        /* laques */
-
-        this.laqueOnMeshes = []
-        if (state && state.laqueOnMeshes) {
-            state.laqueOnMeshes.forEach(l => {
-                if (l.laque) {
-                    this.laqueOnMeshes[l.mesh] = l.laque
-                    const laq = getLaqueById(l.laque)
-                    if (laq) {
-                        loadOneMaterial(laq).then(m => {
-                            applyOnMesh(m, this.object.getChildByName(l.mesh))
-                            MainScene.render()
-                        });
-                    }
-                    else {
-                        console.warn(`No laque material found with id ${l.laque}`)
-                    }
-                } else {
-                    console.warn(`No laque material id for ${l.mesh}`)
-                }
-            })
-        }
     }
     static getByUuid(uuid) {
         // console.warn(`No laque material id for `, Fbx.list, uuid)
         return Fbx.list.find(f => f.object.uuid === uuid)
     }
     getUid() {
-        return this.object ? this.object.uuid.substring(0, 8) : "no-uuid"// identifies uniquely
+        return (this.state && this.state.uid) ? this.state.uid :
+            this.object ? this.object.uuid.substring(0, 8) : "no-uuid"// identifies uniquely
     }
     info() {
         return `${this.getUid()} | ${this.props.sku} ${this.positionY ? this.positionY : ""}`
@@ -98,6 +76,28 @@ export default class Fbx {
 
     /* laquables */
 
+    setLaques(state) {
+        this.laqueOnMeshes = []
+        if (state && state.laqueOnMeshes) {
+            state.laqueOnMeshes.forEach(l => {
+                if (l.laque) {
+                    this.laqueOnMeshes[l.mesh] = l.laque
+                    const laq = getLaqueById(l.laque)
+                    if (laq) {
+                        loadOneMaterial(laq).then(m => {
+                            applyOnMesh(m, this.object.getObjectByName(l.mesh))
+                            MainScene.render()
+                        });
+                    }
+                    else {
+                        console.warn(`No laque material found with id ${l.laque}`)
+                    }
+                } else {
+                    console.warn(`No laque material id for ${l.mesh}`)
+                }
+            })
+        }
+    }
     clickLaquable(interactiveEvent) {
 
         // console.log("clickLaquable", interactiveEvent)
@@ -131,6 +131,7 @@ export default class Fbx {
     // laques on meshes information lost
     getFirstLaqueId() {
         let laqueId
+        if (!this.laqueOnMeshes) return 0
         Object.entries(this.laqueOnMeshes).forEach(
             ([mesh, laque]) => {
                 laqueId = laque

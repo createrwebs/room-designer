@@ -141,10 +141,10 @@ export default {
             const leftWall = this.getSideWalls(wall)[0]
             // console.log(leftWall)
             if (wall === Walls.R || wall === Walls.F) {// close to origin
-                meubleDepthSegment = { min: 0, max: skuInfo.P * 10 }
+                meubleDepthSegment = { min: 0, max: skuInfo.p }
             }
             else {
-                meubleDepthSegment = { min: this.getWallLength(leftWall) - skuInfo.P * 10, max: this.getWallLength(leftWall) }
+                meubleDepthSegment = { min: this.getWallLength(leftWall) - skuInfo.p, max: this.getWallLength(leftWall) }
             }
             ax = this.getAxisForWall(leftWall)
             this.MeublesOnWall[leftWall].filter(m => m !== meuble).forEach(m => {
@@ -153,17 +153,17 @@ export default {
                 inter = segmentIntersect(meubleDepthSegment, seg)
                 // console.log(inter)
                 if (inter) {
-                    lastPos = Math.max(lastPos, lastPos + m.skuInfo.P * 10)
+                    lastPos = Math.max(lastPos, lastPos + m.skuInfo.p)
                 }
             })
 
             const rightWall = this.getSideWalls(wall)[1]
             // console.log(rightWall)
             if (wall === Walls.R || wall === Walls.F) {// close to origin
-                meubleDepthSegment = { min: 0, max: skuInfo.P * 10 }
+                meubleDepthSegment = { min: 0, max: skuInfo.p }
             }
             else {
-                meubleDepthSegment = { min: this.getWallLength(rightWall) - skuInfo.P * 10, max: this.getWallLength(rightWall) }
+                meubleDepthSegment = { min: this.getWallLength(rightWall) - skuInfo.p, max: this.getWallLength(rightWall) }
             }
             ax = this.getAxisForWall(rightWall)
             this.MeublesOnWall[rightWall].filter(m => m !== meuble).forEach(m => {
@@ -172,7 +172,7 @@ export default {
                 inter = segmentIntersect(meubleDepthSegment, seg)
                 // console.log(inter)
                 if (inter) {
-                    wallLength = Math.min(wallLength, wallLength - m.skuInfo.P * 10)
+                    wallLength = Math.min(wallLength, wallLength - m.skuInfo.p)
                 }
             })
         }

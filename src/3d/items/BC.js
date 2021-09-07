@@ -22,14 +22,20 @@ export default class BC extends Item {
         super.remove()
     }
     setPosition(x, y, z) {
+        const max = this.parent.skuInfo.H * 10 - this.height - Measures.thick
+        const min = this.parent.getBottom(this.slot)
         switch (this.props.sku) {
+            case "NYTABREP":// table repassage
+                this.object.position.x = 80
+                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                this.object.position.z = this.parent.skuInfo.p - this.depth - 80
+                break;
             case "BC50000":// porte pantalon sous etagere
                 this.object.position.x = 80
-                super.setPositionY(y)
-                this.object.position.y += 10
-                this.object.position.z = this.parent.skuInfo.P * 10 - this.depth
+                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                this.object.position.z = this.parent.skuInfo.p - this.depth
                 break;
-            case "BC77000":// leds au-dessus du meuble, nicht draggable!
+            case "BC77000":// leds au-dessus du meuble
             case "BC78000":
                 if (this.parent.skuInfo.type === "ANG") {
                     this.object.position.x = 620
@@ -37,10 +43,15 @@ export default class BC extends Item {
                     this.object.position.y = this.parent.skuInfo.H * 10
                     this.object.rotation.y = Math.PI / 4
                 }
+                else if (this.parent.skuInfo.isCoulissante) {
+                    this.object.position.x = Measures.thick + (this.parent.skuInfo.l - this.width) / 2
+                    this.object.position.y = this.parent.skuInfo.H * 10 - 60
+                    this.object.position.z = this.parent.skuInfo.p - this.depth + 50
+                }
                 else {
-                    this.object.position.x = Measures.thick + (this.parent.skuInfo.L * 10 - this.width) / 2
+                    this.object.position.x = Measures.thick + (this.parent.skuInfo.l - this.width) / 2
                     this.object.position.y = this.parent.skuInfo.H * 10
-                    this.object.position.z = this.parent.skuInfo.P * 10 - this.depth + 100
+                    this.object.position.z = this.parent.skuInfo.p - this.depth + 100
                 }
                 break;
             case "BC80000":// spot led detecteur
@@ -50,30 +61,32 @@ export default class BC extends Item {
                     this.object.position.y = this.parent.skuInfo.H * 10 - Measures.thick// - this.height
                     this.object.rotation.y = Math.PI / 4
                 }
-                else {
-                    this.object.position.x = Measures.thick + (this.parent.skuInfo.L * 10 - this.width) / 2
-                    this.object.position.y = this.parent.skuInfo.H * 10
-                    this.object.position.z = this.parent.skuInfo.P * 10 - this.depth + 100
+                else if (this.parent.skuInfo.isCoulissante) {
+                    this.object.position.x = Measures.thick + this.parent.skuInfo.l / 2
+                    this.object.position.y = this.parent.skuInfo.H * 10 - 60 - 17// 17=upper plank thickness
+                    this.object.position.z = this.parent.skuInfo.p - this.depth + 50
+                }
+                else {//BC80000 is fbx centered!
+                    this.object.position.x = Measures.thick + this.parent.skuInfo.l / 2
+                    this.object.position.y = this.parent.skuInfo.H * 10 - Measures.thick
+                    this.object.position.z = this.parent.skuInfo.p - this.depth + 50
                 }
                 break;
             case "BC81000":// porte cintre pivotant sous etagere
                 // this.object.position.x = 80
                 super.setPositionX(x)
-                super.setPositionY(y)
-                this.object.position.y += 10
-                this.object.position.z = this.parent.skuInfo.P * 10 - this.depth
+                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                this.object.position.z = this.parent.skuInfo.p - this.depth
                 break;
             case "BC82000":// porte cintre extractible
                 // this.object.position.x = 100
                 super.setPositionX(x)
-                super.setPositionY(y)
-                this.object.position.y -= 4
-                this.object.position.z = this.parent.skuInfo.P * 10 - this.depth
+                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                this.object.position.z = this.parent.skuInfo.p - this.depth
                 break;
             case "BC83000":// prise elec
                 this.object.position.x = 80
-                super.setPositionY(y)
-                this.object.position.y += 44
+                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
                 this.object.position.z = this.parent.depth - this.depth - 11//recul
                 break;
             case "BC84000":// porte cravate
@@ -81,7 +94,7 @@ export default class BC extends Item {
             case "BC84000D":
                 const toLeft = !(this.props.sku.substr(-1, 1) == "D")
                 this.object.position.x = (!toLeft ? this.parent.skuInfo.l - this.width : 0) + Measures.thick
-                super.setPositionY(y)
+                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
                 this.object.position.z = this.parent.skuInfo.p - this.depth
                 break;
             default:

@@ -234,16 +234,19 @@ export const parseSKU = (sku) => {
             || obj.type.substr(0, 2) === "RP"
             || obj.isChassis
 
-        obj.draggable = obj.type !== "ANG90"
-            && obj.type !== "ANGAB"
+        obj.draggableX = obj.type !== "ANGAB"
+            && !obj.isPorte
+
+        obj.draggableY = obj.type !== "ANGAB"
             && obj.type !== "BC77000"
             && obj.type !== "BC78000"
             && obj.type !== "BC80000"
+            && !obj.isBlot
             && !obj.isTiroir
             && !obj.isPorte
     }
 
-    console.info(sku, obj)
+    // console.info(sku, obj)
 
     return obj
 }

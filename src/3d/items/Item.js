@@ -17,22 +17,24 @@ export default class Item extends Fbx {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo)
         this.parent = parent;
-        this.place = (state && state.position && state.position.place) ? state.position.place : Slots.L
-        this.positionY = (state && state.position && state.position.x) ? state.position.x : null
+        this.slot = (state && state.position && state.position.slot) ? state.position.slot : Slots.L
+        // this.positionX = (state && state.position && state.position.x) ? state.position.x : null
+        // this.positionY = (state && state.position && state.position.y) ? state.position.y : null
 
         this.width = getSize(this.object, "x")
         this.height = getSize(this.object, "y")
         this.depth = getSize(this.object, "z")
         // console.log(`Item ${this.skuInfo.type} ${this.props.sku}`, this.width, this.height, this.depth, state, this.parent, this)
 
-        this.setTexture()
+        this.loadAndApplyMaterial()
     }
-    setTexture() {
+    loadAndApplyMaterial() {
         const material = getMaterialById(getMaterialId())
         if (material) {
             loadMaterial(material.textures).then(m => {
                 // console.log(`material loaded`, m, this)
                 applyMaterial(m, this)
+                this.setLaques(this.state)
                 MainScene.render()
             })
         }
@@ -43,7 +45,7 @@ export default class Item extends Fbx {
 
         // add new available hole in places list
         if (this.parent.places) {
-            let places = this.parent.places[this.place]
+            let places = this.parent.places[this.slot]
             if (this.skuInfo.useHole && this.positionY
                 && this.parent.skuInfo.trous.includes(this.positionY)
                 && !places.includes(this.positionY)) {
@@ -60,6 +62,9 @@ export default class Item extends Fbx {
         });
         places = places.sort((a, b) => a - b)
         // console.log(">>>>", places)
+    }
+    getBox() {
+        return new Box3().setFromObject(this.object)
     }
     startDrag() {
         if (this.skuInfo.useHole) {
@@ -90,15 +95,22 @@ export default class Item extends Fbx {
             }
         }
     }
-    setPosition(x, y, z) {
+    drag(x, y, z) {
+
         this.lastPosition = new Vector3().copy(this.object.position)
-        this.setPositionX(x)
-        this.setPositionY(y)
-        this.setPositionZ(z)
-        // console.log(x, y, z)
+        if (this.skuInfo.draggableX)
+            this.setPositionX(x)
+        if (this.skuInfo.draggableY)
+            this.setPositionY(y)
+        // this.setPositionZ(z)
 
         this.checkCollision()
         this.box = new Box3().setFromObject(this.object);
+    }
+    setPosition(x, y, z) {
+        this.setPositionX(x)
+        this.setPositionY(y)
+        this.setPositionZ(z)
     }
     setPositionX(x) {
 
@@ -109,45 +121,46 @@ export default class Item extends Fbx {
 
         const slots = this.parent.skuInfo.slots && this.parent.skuInfo.slots.length > 1 ? this.parent.skuInfo.slots.length : 1
 
-        // set x from this.place info
+        // set x from this.slot info
         if (!x) {
-            x = this.place == Slots.R ? this.parent.skuInfo.slots[2]
-                : this.place == Slots.C ? this.parent.skuInfo.slots[1]
+            x = this.slot == Slots.R ? this.parent.skuInfo.slots[2]
+                : this.slot == Slots.C ? this.parent.skuInfo.slots[1]
                     : 0
         }
         if (slots > 1) {
             if (slots > 2 && x >= this.parent.skuInfo.slots[2]) {
                 this.object.position.x = this.parent.skuInfo.slots[2]
-                this.place = Slots.R
+                this.slot = Slots.R
             } else if (x >= this.parent.skuInfo.slots[1]) {
                 this.object.position.x = this.parent.skuInfo.slots[1]
-                this.place = Slots.C
+                this.slot = Slots.C
             } else {
                 this.object.position.x = 0
-                this.place = Slots.L
+                this.slot = Slots.L
             }
             this.object.position.x += Measures.thick;
         } else {
             this.object.position.x = Measures.thick;
         }
+        this.positionX = this.object.position.x
     }
     setPositionY(y) {
 
         // dragging Item | from saved dressing | by user click
 
         if (this.skuInfo.useHole) {
-            let places = this.parent.places[this.place]
+            let places = this.parent.places[this.slot]
             // console.log("/placesY", this.parent.skuInfo.trous)
             // console.log("|placesY", places)
 
             if (!places) {
-                console.warn(`no slot available for ${this.props.sku} in ${this.place} slot of ${this.parent.props.sku}`)
+                console.warn(`no slot available for ${this.props.sku} in ${this.slot} slot of ${this.parent.props.sku}`)
                 // this.parent.removeItem(this)
                 this.object.position.y = this.positionY - Measures.thick / 2
                 return
             }
             if (places.length == 0) {
-                console.warn(`no place available for ${this.props.sku} in ${this.place} slot of ${this.parent.props.sku}`)
+                console.warn(`no place available for ${this.props.sku} in ${this.slot} slot of ${this.parent.props.sku}`)
                 // this.parent.removeItem(this)
                 this.object.position.y = this.positionY - Measures.thick / 2
                 return
@@ -167,9 +180,12 @@ export default class Item extends Fbx {
             this.object.position.y = this.positionY - Measures.thick / 2
 
             // remove new occupied hole in places list
-            this.parent.places[this.place] = places.filter(p => p !== this.positionY).sort((a, b) => a - b)
+            this.parent.places[this.slot] = places.filter(p => p !== this.positionY).sort((a, b) => a - b)
 
             // console.log("---setPositionY", this.positionY, position, closest)
+        }
+        else {
+            this.positionY = this.object.position.y
         }
     }
     setPositionZ(z) {
@@ -188,8 +204,9 @@ export default class Item extends Fbx {
             sku: this.props.sku,
             laqueOnMeshes: this.getLaqueOnMeshesJson(),
             position: {
-                place: this.place,
-                x: Math.round(this.positionY ? this.positionY : this.object.position.y)
+                slot: this.slot,
+                x: Math.round(this.positionX ? this.positionX : this.object.position.x),
+                y: Math.round(this.positionY ? this.positionY : this.object.position.y)
             },
         }
     }

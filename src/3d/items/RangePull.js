@@ -1,14 +1,20 @@
 import Item from './Item'
-import { Measures, getSize } from '../Utils'
+import { Measures } from '../Utils'
 
 export default class RangePull extends Item {
+    constructor (props, object, state, skuInfo, parent) {
+        super(props, object, state, skuInfo, parent)
 
-    setPositionY(y) {
-
-        if (y) {
-            y = Math.min(this.parent.skuInfo.h - this.height, Math.max(0, y))
-        }
-        super.setPositionY(y)
-        // this.object.position.y = Math.max(50, this.positionY - 372)
+        let h = -this.height
+        this.object.children.forEach(child => {
+            child.position.set(0, h, 0)
+        })
+    }
+    setPositionY(y = 0) {
+        const max = this.parent.skuInfo.H * 10 - Measures.thick
+        const min = this.parent.getBottom(this.slot) + this.height
+        // console.log(min, max)
+        super.setPositionY(Math.min(max, Math.max(min, y === undefined ? 0 : y)))
+        // this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
     }
 }

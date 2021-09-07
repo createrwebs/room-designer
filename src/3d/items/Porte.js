@@ -31,7 +31,7 @@ export default class Porte extends Item {
             this.object.position.x = 620
         }
         else {
-            this.object.position.x = !this.parent.skuInfo.has2Doors || this.isLeftDoor ? this.deport : this.parent.skuInfo.L * 10 / 2 + Measures.thick
+            this.object.position.x = !this.parent.skuInfo.has2Doors || this.isLeftDoor ? this.deport : this.parent.skuInfo.l / 2 + Measures.thick
         }
     }
     setPositionY(y) {

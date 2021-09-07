@@ -17,7 +17,7 @@ import {
 import { set as setCatalogue } from '../api/Catalogue'
 
 import { parseSKU } from '../3d/Sku'
-import { comingFromKino as sceneBridge } from '../api/Bridge';
+import { comingFromKino as sceneBridge, KinoEvent, goingToKino } from '../api/Bridge';
 import { setId as setMaterialId } from '../3d/Material'
 
 import { WEBGL } from 'three/examples/jsm/WEBGL.js';
@@ -62,6 +62,7 @@ class App extends Component {
 						window.ts.meubles[0].click()
 					}, 2500)
 					// gui = getGui()
+					goingToKino(KinoEvent.APP_READY)
 				})
 		}
 		else {
@@ -80,7 +81,7 @@ class App extends Component {
 							gui.hide() */
 							newScene();
 							this.setState({ catalogueLoaded: true })
-
+							goingToKino(KinoEvent.APP_READY)
 						})
 						.catch(e => {
 							console.log("load catalogue error", e);

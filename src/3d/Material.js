@@ -10,6 +10,7 @@ import {
 } from "three";
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
 import { loadTexture } from './Loader'
+import MainScene from "./MainScene";
 
 /*
     textures loading manager keeps already loaded textures in Textures[]
@@ -19,17 +20,17 @@ const Textures = []
 
 let mId = 0
 export const getId = () => {
-    return mId
+    return parseInt(mId)
 }
 export const setId = (id) => {
-    mId = id
+    mId = parseInt(id)
 }
 
 export const getLaqueById = (id) => {
-    return window.laques.find(m => m.id === id)
+    return window.laques.find(m => m.id === parseInt(id))
 }
 export const getMaterialById = (id) => {
-    return window.materials.find(m => m.id === id)
+    return window.materials.find(m => m.id === parseInt(id))
 }
 export const setTransparent = (meuble, opacity, parts) => {
     meuble.object.children//c.type === "Mesh"

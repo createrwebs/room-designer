@@ -37,7 +37,7 @@ export default class RL057 extends Draggable {
 
     insideMeubleThreshold = 100// mm de drag dans un meuble pour pivoter
 
-    // TODO 1/4 turn range chaussure
+    // TODO 1/4 turn range chaussure porte + etagere item !
     insideDrag(inside, stickTo, target) {
         if ((inside < this.insideMeubleThreshold) || target == null) {
             this.switchToNormalPos()
