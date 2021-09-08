@@ -508,13 +508,16 @@ export default {
             case "ANG90":// not Draggable, only located in angles
 
                 // distingo creation : state
-                // preparation de la pose comme sur le dragStart : à sortir plus haut ?
+                // TODO preparation de la pose comme sur le dragStart : à sortir plus haut ?
                 Room.setupWallConstraints(skuInfo.l)
                 Room.axis = Room.getAxisForWall(wall);
                 Room.populateMeublesOnWalls(this.meubles)
                 Room.populateSpacesOnWalls(null, skuInfo)
                 Room.populateMeublesOnCorners(this.meubles)
-                if (!state && !Room.isCornerFreeForMeuble(corner, skuInfo)) return Errors.CORNER_FULL
+                if (!state) {
+                    const cornerFree = Room.isCornerFreeForMeuble(corner, skuInfo)
+                    if (typeof cornerFree === "string") return cornerFree// error
+                }
 
                 meuble = new FileurAng90(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;

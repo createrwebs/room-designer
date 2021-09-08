@@ -227,7 +227,8 @@ export const parseSKU = (sku) => {
         }
 
         obj.zback = obj.isCoulissante ? 20 : 26// profondeur du fond
-        obj.ymin = obj.isCoulissante ? 89 : 50// hauteur du bas
+        obj.ymin = obj.isCoulissante ? 89 : 50// hauteur interieure du bas
+        obj.ymax = obj.H * 10 - (obj.isCoulissante ? 60 + 17 : 25) // hauteur interieure du haut
     }
     else {
         obj.useHole = obj.isEtagere// use a drilled hole to fix

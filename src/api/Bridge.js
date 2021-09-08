@@ -33,6 +33,7 @@ export const KinoEvent = {
     ERROR_LOADING_MEUBLE: 'error_loading_meuble',
     NO_CONFIG_FILE: 'no_config_file',
     NO_DRESSING_FILE: 'no_dressing_file',
+    NO_RLTURN_ON_COULISSANTE: 'no_rlturn_on_coulissante',
 }
 
 export const goingToKino = (event, param1, param2) => {

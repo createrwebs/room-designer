@@ -202,10 +202,10 @@ const loadMeuble = (state) => {
     loadFbx(props.fbx.url, object => {
 
         // duplicate of clickMeuble plus bas :
-        const result = MainScene.createMeuble(props, object, state, skuInfo)
-        if (typeof result === "string") {// creation problem
-            console.warn(`creation error : ${result}`)
-            switch (result) {
+        const createMeubleResult = MainScene.createMeuble(props, object, state, skuInfo)
+        if (typeof createMeubleResult === "string") {// creation problem
+            // console.warn(`creation error : ${createMeubleResult}`)
+            switch (createMeubleResult) {
 
                 // TODO extraire gestion Errors
 
@@ -213,10 +213,16 @@ const loadMeuble = (state) => {
                     return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
                 case Errors.NO_ROOM:
                     return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
+                case Errors.CORNER_FULL:
+                    return goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Ce coin est déjà occupé`)
+                case Errors.NO_PLACE_IN_CORNER:
+                    return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_IN_CORNER, `Il n'y a pas assez de place dans le coin pour ce meuble`)
+                default:
+                    console.warn(`error ${createMeubleResult} not handled`)
             }
         }
         else {
-            MainScene.add(result);
+            MainScene.add(createMeubleResult);
             MainScene.render()
         }
     })
@@ -548,21 +554,23 @@ export const clickMeubleLine = (sku) => {
         }
         goingToKino(KinoEvent.LOADING_MEUBLE, sku)
         loadFbx(props.fbx.url, object => {
-            const result = MainScene.createMeuble(props, object, null, skuInfo)
-            if (typeof result === "string") {// creation problem
-                switch (result) {
+            const createMeubleResult = MainScene.createMeuble(props, object, null, skuInfo)
+            if (typeof createMeubleResult === "string") {// creation problem
+                switch (createMeubleResult) {// TODO out errors
                     case Errors.NOT_A_MODULE:
                         return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
                     case Errors.NO_ROOM:
-                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ${sku}`)
+                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
                     case Errors.CORNER_FULL:
-                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Il n'y a pas assez de place pour ${sku} dans ce coin`)
+                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Ce coin est déjà occupé`)
+                    case Errors.NO_PLACE_IN_CORNER:
+                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_IN_CORNER, `Il n'y a pas assez de place dans le coin pour ce meuble`)
                     default:
-                        console.warn(`error ${result} not handled`)
+                        console.warn(`error ${createMeubleResult} not handled`)
                 }
             }
             else {
-                MainScene.add(result);
+                MainScene.add(createMeubleResult);
                 MainScene.render()
             }
         })

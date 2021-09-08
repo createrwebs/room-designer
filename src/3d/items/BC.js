@@ -55,20 +55,18 @@ export default class BC extends Item {
                 }
                 break;
             case "BC80000":// spot led detecteur
+                this.object.position.y = this.parent.getTop()
                 if (this.parent.skuInfo.type === "ANG") {
                     this.object.position.x = 780
                     this.object.position.z = 800
-                    this.object.position.y = this.parent.skuInfo.H * 10 - Measures.thick// - this.height
                     this.object.rotation.y = Math.PI / 4
                 }
                 else if (this.parent.skuInfo.isCoulissante) {
-                    this.object.position.x = Measures.thick + this.parent.skuInfo.l / 2
-                    this.object.position.y = this.parent.skuInfo.H * 10 - 60 - 17// 17=upper plank thickness
+                    this.object.position.x = Measures.thick + this.parent.skuInfo.l / 2//BC80000 is fbx centered!
                     this.object.position.z = this.parent.skuInfo.p - this.depth + 50
                 }
-                else {//BC80000 is fbx centered!
-                    this.object.position.x = Measures.thick + this.parent.skuInfo.l / 2
-                    this.object.position.y = this.parent.skuInfo.H * 10 - Measures.thick
+                else {
+                    this.object.position.x = Measures.thick + this.parent.skuInfo.l / 2//BC80000 is fbx centered!
                     this.object.position.z = this.parent.skuInfo.p - this.depth + 50
                 }
                 break;

@@ -1,5 +1,6 @@
 import { Walls, Corners, Sides } from "./Constants";
-import { Space } from "./Drag";
+import { Space } from "./Space";
+import { Errors } from '../api/Errors'
 import { getSegment, segmentIntersect, getSize, Measures } from './Utils'
 import Meuble from './meubles/Meuble';
 import { Vector3 } from "three";
@@ -20,8 +21,8 @@ export default {
 
     setup(dressing) {
         this.name = dressing && dressing.name ? dressing.name : this.name
-        this.xmax = dressing && dressing.xmax ? dressing.xmax : this.xmax
-        this.zmax = dressing && dressing.zmax ? dressing.zmax : this.zmax
+        this.xmax = dressing && dressing.xmax ? parseInt(dressing.xmax) : this.xmax
+        this.zmax = dressing && dressing.zmax ? parseInt(dressing.zmax) : this.zmax
     },
 
     getRoofPosition(h) {
@@ -230,7 +231,7 @@ export default {
 
     isCornerFreeForMeuble(corner, skuInfo) {
         //  if (!Object.values(Corners).includes(corner) return false
-        if (this.MeublesOnCorners[corner]) return false
+        if (this.MeublesOnCorners[corner]) return Errors.CORNER_FULL
 
         // calculation of width when in corners + angab :
         const mWidth = Math.round((skuInfo.l + (2 * Measures.thick)) * Math.cos(Math.PI / 4) + skuInfo.p)
@@ -246,7 +247,7 @@ export default {
             segment = { min: 0, max: mWidth }
         }
         const space0 = Space.onWall[walls[0]].find(s => s.include(segment))
-        if (!space0) return false
+        if (!space0) return Errors.NO_PLACE_IN_CORNER
 
         const toRight1 = this.toRightDirection(walls[1]);
         if (toRight1) {
@@ -256,7 +257,7 @@ export default {
             segment = { min: this.getWallLength(walls[1]) - mWidth, max: this.getWallLength(walls[1]) }
         }
         const space1 = Space.onWall[walls[1]].find(s => s.include(segment))
-        if (!space1) return false
+        if (!space1) return Errors.NO_PLACE_IN_CORNER
 
         return true
     },

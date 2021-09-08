@@ -1,4 +1,5 @@
 import Room from './Room';
+import { Space } from './Space';
 import { Walls, Corners } from "./Constants";
 
 const insideRoomThreshold = 620// mm de drag contre le mur pour changer
@@ -6,28 +7,6 @@ const enterWallThreshold = 300// mm de drag dans un mur pour changer
 
 /* dragging help routines & objects */
 
-/*
-    a one-dim segment with a minimum and a maximum
-*/
-export class Space {
-    static onWall = []// right,back,left,front
-    static getClosest(wall, segment) {
-        if (!Space.onWall[wall]) return null;
-        if (Space.onWall[wall] && Space.onWall[wall].length == 0) return null;
-        Space.onWall[wall].sort((s1, s2) =>
-            Math.min(segment.max - s2.min, s2.max - segment.min) - Math.min(segment.max - s1.min, s1.max - segment.min))
-        return Space.onWall[wall][0]
-    }
-    constructor (min, max, prev, next) {
-        this.min = min;
-        this.max = max;
-        this.prev = prev;// Draggable object (Meuble...) located at the minimum of the segment
-        this.next = next;// Draggable object (Meuble...) located at the maximum of the segment
-    }
-    include(segment) {
-        return segment.max <= this.max && segment.min >= this.min
-    }
-}
 // get closest value from x in array
 export const getClosestInArray = (x, array) => {
     return array.reduce(function (prev, curr) {

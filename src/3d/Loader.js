@@ -63,8 +63,9 @@ export const loadFbx = (url, callback) => {
             }
         },
         (error) => {
-            // console.log(error)
+            console.error(error)
             store.dispatch(loadManagerError(filename))
             goingToKino(KinoEvent.ERROR_LOADING_MEUBLE, filename)
-        })
+        }
+    )
 }

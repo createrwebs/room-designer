@@ -24,7 +24,7 @@ export default class SeparateurV extends Item {
             this.object.position.x = Math.max(this.xSegment.min, Math.min(this.xSegment.max, x))
     }
     setPositionY(y = 0) {
-        const max = this.parent.skuInfo.H * 10 - this.height - 120
+        const max = this.parent.getTop()
         const min = this.parent.getBottom(this.slot)
         // console.log(min, max)
         this.object.position.y = this.positionY = Math.round(Math.min(max, Math.max(min, y === undefined ? 0 : y)))

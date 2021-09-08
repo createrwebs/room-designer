@@ -1,7 +1,7 @@
-import Item from './Item'
+import ItemUsingHole from '../items/ItemUsingHole'
 import { Measures } from '../Utils'
 
-export default class RangePull extends Item {
+export default class RangePull extends ItemUsingHole {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo, parent)
 
@@ -11,10 +11,9 @@ export default class RangePull extends Item {
         })
     }
     setPositionY(y = 0) {
-        const max = this.parent.skuInfo.H * 10 - Measures.thick
+        const max = this.parent.getTop()
         const min = this.parent.getBottom(this.slot) + this.height
         // console.log(min, max)
         super.setPositionY(Math.min(max, Math.max(min, y === undefined ? 0 : y)))
-        // this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
     }
 }

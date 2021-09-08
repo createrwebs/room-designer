@@ -13,7 +13,7 @@ export default class Penrab extends Item {
         this.object.position.x = Measures.thick
     }
     setPositionY(y = 0) {
-        const max = this.parent.skuInfo.H * 10 - this.height - Measures.thick
+        const max = this.parent.getTop() - this.height
         const min = this.parent.getBottom(this.slot)
         // console.log(min, max)
         // super.setPositionY(Math.min(max, Math.max(min, y === undefined ? 0 : y)))

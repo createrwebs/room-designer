@@ -23,7 +23,7 @@ export default class AngAB extends Item {
         const triangles = [...Array(nbTriangles).keys()].map(num => {
             const triangle = base.clone()
             triangle.name = `${this.props.sku.substr(-1)}${num}${this.object.children[0].name}`
-            triangle.position.y = (this.parent.skuInfo.H * 10 - Measures.thick) * (num / (nbTriangles - 1))
+            triangle.position.y = (this.parent.getTop()) * (num / (nbTriangles - 1))
             triangle.position.z = DZ
             if (side === Sides.L) {
                 triangle.position.x = - DX

@@ -9,11 +9,14 @@ import store from '../../api/store';
 
 import MainScene from '../MainScene';
 import Meuble from './Meuble'
+import { KinoEvent, goingToKino } from '../../api/Bridge'
+import { Errors } from '../../api/Errors'
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { create as createCross } from '../helpers/Cross';
 import { draw, draw as drawSegments } from '../helpers/Segments';
-import { Space, getWallChange } from '../Drag';
+import { getWallChange } from '../Drag';
+import { Space } from '../Space';
 import { Walls, Corners, Sides } from '../Constants';
 import Room from '../Room';
 
@@ -110,11 +113,21 @@ export default class Draggable extends Meuble {
 
             if (this.isOnAWall()
                 && this.skuInfo.angABSku
-                && Object.values(Corners).includes(newPlace)
-                && Room.isCornerFreeForMeuble(newPlace, this.skuInfo)
-            ) {// from wall to corner
-                this.addAngAB()
-                this.wall = newPlace
+                && Object.values(Corners).includes(newPlace)) {// from wall to corner
+                const cornerFree = Room.isCornerFreeForMeuble(newPlace, this.skuInfo)
+                if (typeof cornerFree === "string")// error
+                    switch (cornerFree) {// TODO out errors
+                        case Errors.CORNER_FULL:
+                            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Ce coin est déjà occupé`)
+                        case Errors.NO_PLACE_IN_CORNER:
+                            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_IN_CORNER, `Il n'y a pas assez de place dans le coin pour ce meuble`)
+                        default:
+                            console.warn(`error ${cornerFree} not handled`)
+                    }
+                else {
+                    this.addAngAB()
+                    this.wall = newPlace
+                }
             }
             else if (!this.isOnAWall() && Object.values(Walls).includes(newPlace)) {// from corner to wall
                 this.removeAngAB()
