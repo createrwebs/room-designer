@@ -70,7 +70,9 @@ class App extends Component {
 				.then(c => {
 					setConfig(c ? c : config)
 
-					fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
+					const site_root = window.minet3d_reqs_object && window.minet3d_reqs_object.site_root ?
+						window.minet3d_reqs_object.site_root : "/"
+					fetch(`${site_root}/wp-json/minet-api/v2/catalogue`, {
 						method: 'GET',
 					})
 						.then(response => response.json())

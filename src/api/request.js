@@ -1,19 +1,5 @@
 // import axios from 'axios'
 
-/* 
-{
-	"ajaxurl": "https://kinotools.kinoki.fr/minet3d/wp-admin/admin-ajax.php",
-		"templates_url": "https://kinotools.kinoki.fr/minet3d/wp-content/themes/minet3d_2021",
-			"uploads_url": {
-		"path": "/srv/data/web/vhosts/kinotools.kinoki.fr/htdocs/minet3d/wp-content/uploads/2021/04",
-			"url": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads/2021/04",
-				"subdir": "/2021/04",
-					"basedir": "/srv/data/web/vhosts/kinotools.kinoki.fr/htdocs/minet3d/wp-content/uploads",
-						"baseurl": "https://kinotools.kinoki.fr/minet3d/wp-content/uploads",
-							"error": false
-	}
-} */
-
 export function getJson(name) {
 
 	const path = window.minet3d_reqs_object && window.minet3d_reqs_object.templates_url ?
