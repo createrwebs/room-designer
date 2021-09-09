@@ -6,13 +6,14 @@ import {
     getMaterialById,
     getId as getMaterialId,
 } from '../Material'
-import { Measures, getSize } from '../Utils'
+import { Measures, getSize, getSegment, segmentIntersect } from '../Utils'
 import { getClosestInArray } from '../Drag'
 import { Slots } from '../Constants'
 import ItemDragging from './ItemDragging';
 import { Box3, Vector3 } from "three";
 import { KinoEvent, goingToKino } from '../../api/Bridge'
 import { Errors } from '../../api/Errors'
+import { Space } from "../Space";
 
 export default class Item extends Fbx {
 
@@ -46,14 +47,7 @@ export default class Item extends Fbx {
         MainScene.interactionManager.remove(this.object)
 
         // add new available hole in places list
-        if (this.parent.places) {
-            let places = this.parent.places[this.slot]
-            if (this.skuInfo.useHole && this.positionY
-                && this.parent.skuInfo.trous.includes(this.positionY)
-                && !places.includes(this.positionY)) {
-                places.push(this.positionY)
-            }
-        }
+        this.parent.addNewHoleInPlace(this.slot, this)
     }
 
     /* positioning */
@@ -63,13 +57,14 @@ export default class Item extends Fbx {
     }
     startDrag() {
     }
-    checkCollision(box) {
+    checkCollision(box, slot) {
         return this.parent.items.filter(i => i != this)
+            .filter(i => i.slot === slot)
             .filter(i => i.skuInfo.type != "ANGAB")
             .find(i => {
                 // console.log(i)
                 // if (!i.box) i.box = new Box3().setFromObject(i.object);
-                // console.log(this.box, i.box, this.box.intersectsBox(i.box))
+                // console.log(slot, this, i, box.intersectsBox(new Box3().setFromObject(i.object)))
                 return box.intersectsBox(new Box3().setFromObject(i.object))
             })
     }
@@ -81,23 +76,34 @@ export default class Item extends Fbx {
         if (intersectionBox.max.y - intersectionBox.min.y > 2) {
             this.setPositionX(this.lastPosition.x)
             this.setPositionY(this.lastPosition.y)
+            this.object.position.y = this.lastPosition.y
             this.setPositionZ(this.lastPosition.z)
         }
     }
     drag(x, y, z) {
 
         this.lastPosition = new Vector3().copy(this.object.position)
-        if (this.skuInfo.draggableX)
+        if (this.skuInfo.draggableX && this.skuInfo.draggableY) {
+            this.setPosition(x, y, z)
+        } else if (this.skuInfo.draggableX) {
             this.setPositionX(x)
-        if (this.skuInfo.draggableY)
+        } else if (this.skuInfo.draggableY) {
             this.setPositionY(y)
+        }
         // this.setPositionZ(z)
 
-        const collide = this.checkCollision(new Box3().setFromObject(this.object))
+        const collide = this.checkCollision(new Box3().setFromObject(this.object), this.slot)
+        // console.warn("colliding", collide, y)
         if (collide) {
             this.returnToLastPosition(new Box3().setFromObject(this.object), collide)
         }
         this.box = new Box3().setFromObject(this.object);
+    }
+    getSegmentY() {
+        return {
+            min: this.parent.getBottom(this.slot),
+            max: this.parent.getTop()
+        }
     }
     setPosition(x, y, z) {
         this.setPositionX(x)
@@ -110,7 +116,7 @@ export default class Item extends Fbx {
         // when slot changes, filter positions Y like in setPositionY(y)
         // x => y !
 
-
+        const lastSlot = this.slot
         const slots = this.parent.skuInfo.slots && this.parent.skuInfo.slots.length > 1 ? this.parent.skuInfo.slots.length : 1
 
         // set x from this.slot info
@@ -119,6 +125,7 @@ export default class Item extends Fbx {
                 : this.slot == Slots.C ? this.parent.skuInfo.slots[1]
                     : 0
         }
+
         if (slots > 1) {
             if (slots > 2 && x >= this.parent.skuInfo.slots[2]) {
                 this.object.position.x = this.parent.skuInfo.slots[2]
@@ -134,13 +141,30 @@ export default class Item extends Fbx {
         } else {
             this.object.position.x = Measures.thick;
         }
+        if (lastSlot && lastSlot != this.slot) {
+            console.log(`slot change from ${lastSlot} to ${this.slot}`)
+            this.parent.addNewHoleInPlace(lastSlot, this)
+        }
         this.positionX = this.object.position.x
+
     }
     /*
         only for new item, using Holes
     */
     findFreePlaceInSlot(slot) {
-        return 200
+
+        const spaces = this.parent.populateSpacesForItem(this, slot)
+        // const spaces = 
+        Space.onWall[this.parent.getUid()]
+        // const segment = getSegment(this.object, "y")
+        // const closestSpace = Space.getClosest(this.parent.getUid(), segment);
+        console.warn("findFreePlaceInSlot", slot, spaces)
+        if (spaces && spaces.length > 0) {
+            return (spaces[0].max - spaces[0].min) / 2
+        }
+        else {
+            return Errors.NO_PLACE_FOR_ITEM
+        }
     }
     setPositionY(y) {// dragging Item | from saved dressing | by user click
         this.positionY = this.object.position.y

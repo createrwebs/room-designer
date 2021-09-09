@@ -247,7 +247,7 @@ export const parseSKU = (sku) => {
             && !obj.isPorte
     }
 
-    // console.info(sku, obj)
+    console.info(sku, obj)
 
     return obj
 }

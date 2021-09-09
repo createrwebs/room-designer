@@ -5,15 +5,19 @@ export default class RangePull extends ItemUsingHole {
     constructor (props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo, parent)
 
-        let h = -this.height
+        const h = -this.height
         this.object.children.forEach(child => {
-            child.position.set(0, h, 0)
+            child.position.set(0, h - Measures.thick / 2, 0)
         })
     }
+    getSegmentY() {
+        return {
+            min: this.parent.getBottom(this.slot) + this.height,
+            max: this.parent.getTop()
+        }
+    }
     setPositionY(y = 0) {
-        const max = this.parent.getTop()
-        const min = this.parent.getBottom(this.slot) + this.height
-        // console.log(min, max)
-        super.setPositionY(Math.min(max, Math.max(min, y === undefined ? 0 : y)))
+        const segmentY = this.getSegmentY()
+        super.setPositionY(Math.min(segmentY.max, Math.max(segmentY.min, y === undefined ? 0 : y)))
     }
 }

@@ -4,105 +4,42 @@
     "name": "untitled",
     "meubles": [
         {
-            "sku": "NYC155H238P0",
-            "uid": "C905CEEE",
+            "sku": "NYH238P62L081",
+            "uid": "E58C2EE5",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "back",
-                "x": 1280
-            },
-            "items": []
-        },
-        {
-            "sku": "NYH238P40RL057",
-            "uid": "D00BB42B",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "back",
-                "x": 2830
+                "wall": "right",
+                "x": 1000
             },
             "items": [
                 {
-                    "sku": "NYETAP40L057",
+                    "sku": "NYETAP62L081",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
                         "x": 25,
-                        "y": 372
+                        "y": 2263
                     }
                 },
                 {
-                    "sku": "NYPPC-H238",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 23,
-                        "y": 23
-                    }
-                }
-            ],
-            "turned": 0
-        },
-        {
-            "sku": "NYH238P40RL057",
-            "uid": "B89193CE",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 1930
-            },
-            "items": [
-                {
-                    "sku": "NYETAP40L057",
+                    "sku": "NYETLP62L081",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
                         "x": 25,
-                        "y": 1559
+                        "y": 1815
                     }
                 },
                 {
-                    "sku": "NYETAP40L057",
+                    "sku": "NYCHACHAUSS81",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
                         "x": 25,
-                        "y": 1431
+                        "y": 1239
                     }
                 }
-            ],
-            "turned": 0
-        },
-        {
-            "sku": "NYH238P40RL057",
-            "uid": "2EB4367B",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 350
-            },
-            "items": [
-                {
-                    "sku": "NYETAP40L057",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 25,
-                        "y": 372
-                    }
-                }
-            ],
-            "turned": 0
-        },
-        {
-            "sku": "NYH219P62L059",
-            "uid": "0AE5C0EA",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 3270
-            },
-            "items": []
+            ]
         }
     ],
     "materialId": 1301,

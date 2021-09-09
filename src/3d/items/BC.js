@@ -33,6 +33,8 @@ export default class BC extends Item {
             case "BC50000":// porte pantalon sous etagere
                 this.object.position.x = 80
                 this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                // this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                // super.setPositionY()
                 this.object.position.z = this.parent.skuInfo.p - this.depth
                 break;
             case "BC77000":// leds au-dessus du meuble

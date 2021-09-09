@@ -24,25 +24,23 @@ export default class ItemUsingHole extends Item {
     */
     findFreePlaceInSlot(slot) {
         let places = this.parent.places[slot]
-        if (!places) {
-            goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_FOR_ITEM,
-                `no free place available for ${this.props.sku} in ${slot} slot of ${this.parent.props.sku}`)
-            return
+        if (!places || places.length == 0) {
+            // goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_FOR_ITEM,
+            // `no free place available for ${this.props.sku} in ${slot} slot of ${this.parent.props.sku}`)
+            return Errors.NO_PLACE_FOR_ITEM
         }
-        if (places.length == 0) {
-            goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_FOR_ITEM,
-                `no free place available for ${this.props.sku} in ${slot} slot of ${this.parent.props.sku}`)
-            return
-        }
-        const hole = places.find(t => {
-            this.object.position.y = t - Measures.thick / 2
-            const collide = this.checkCollision(new Box3().setFromObject(this.object))
-            return collide == undefined
-        })
+        const segmentY = this.getSegmentY()
+        const hole = places.filter(t => segmentY.min <= t && t <= segmentY.max)
+            .find(t => {
+                this.object.position.y = t
+                const collide = this.checkCollision(new Box3().setFromObject(this.object), slot)
+                // console.warn(t, this, collide)
+                return collide == undefined
+            })
         if (!hole) {
-            goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_FOR_ITEM,
-                `no free place available for ${this.props.sku} in ${slot} slot of ${this.parent.props.sku}`)
-            return
+            // goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_FOR_ITEM,
+            // `no free place available for ${this.props.sku} in ${slot} slot of ${this.parent.props.sku}`)
+            return Errors.NO_PLACE_FOR_ITEM
         }
         else return hole
     }
@@ -54,32 +52,26 @@ export default class ItemUsingHole extends Item {
         if (!places) {
             console.warn(`no slot available for ${this.props.sku} in ${this.slot} slot of ${this.parent.props.sku}`)
             // this.parent.removeItem(this)
-            this.object.position.y = this.positionY - Measures.thick / 2
+            this.object.position.y = this.positionY// - Measures.thick / 2
             return
         }
         if (places.length == 0) {
             console.warn(`no place available for ${this.props.sku} in ${this.slot} slot of ${this.parent.props.sku}`)
             // this.parent.removeItem(this)
-            this.object.position.y = this.positionY - Measures.thick / 2
+            this.object.position.y = this.positionY// - Measures.thick / 2
             return
         }
 
         // add new available hole in places list
-        if (this.positionY
-            && this.parent.skuInfo.trous.includes(this.positionY)
-            && !places.includes(this.positionY)) {
-            places.push(this.positionY)
-        }
+        this.parent.addNewHoleInPlace(this.slot, this)
 
-        // console.log("---setPositionY", y)
         const position = y ? y : 0
         const closest = getClosestInArray(position, places)
         this.positionY = closest
-        this.object.position.y = this.positionY - Measures.thick / 2
+        this.object.position.y = this.positionY// - Measures.thick / 2
 
         // remove new occupied hole in places list
         this.parent.places[this.slot] = places.filter(p => p !== this.positionY).sort((a, b) => a - b)
 
-        // console.log("-ss--setPositionY", this.positionY, position, closest)
     }
 }

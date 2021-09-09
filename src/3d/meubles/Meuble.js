@@ -119,7 +119,7 @@ export default class Meuble extends Fbx {
         this.setPosition(state.position);
 
         // log meuble to console
-        // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`)
+        console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`, this.getSlots())
 
         const front = this.getFrontPosition()
         const roof = Room.getRoofPosition()
@@ -264,6 +264,24 @@ export default class Meuble extends Fbx {
         return Object.values(Walls).includes(this.wall)
     }
 
+    /* slots */
+
+    getSlots() {
+        return [Slots.L, Slots.C, Slots.R].filter((e, n) => this.skuInfo.slots ? n < this.skuInfo.slots.length : n == 0)
+    }
+
+    // add new available hole in places list
+    addNewHoleInPlace(slot, item) {
+        if (this.places) {
+            let places = this.places[slot]
+            if (places && item.skuInfo.useHole && item.positionY
+                && this.skuInfo.trous.includes(item.positionY)
+                && !places.includes(item.positionY)) {
+                places.push(item.positionY)
+            }
+        }
+    }
+
     /* items */
 
     removeItem(item, event) {
@@ -381,34 +399,37 @@ export default class Meuble extends Fbx {
 
         const isNewItem = !(state && state.position) && !skuInfo.isModule && skuInfo.type != "ANGAB"
         if (isNewItem) {
-            this.populateSpacesForItem(item, Slots.L)
 
+            /* this.populateSpacesForItem(item, Slots.L)
             if (this.ruler.getObjectByName("dragItemHelper"))
                 this.ruler.remove(this.ruler.getObjectByName("dragItemHelper"))
             this.dragItemHelper = drawInMeuble(this.getUid())
             this.dragItemHelper.name = "dragItemHelper"
             if (this.dragItemHelper) {
                 this.ruler.add(this.dragItemHelper);
-            }
+            } */
 
-            if (item.skuInfo.useHole) {
-                const hole = item.findFreePlaceInSlot(item.slot)
-                if (hole) {
-                    state = {
-                        position: {
-                            y: hole
-                        }
+            let place
+            const slot = this.getSlots().find(slot => {
+                item.slot = slot
+                item.setPositionX() // first, move item to slot
+                place = item.findFreePlaceInSlot(slot)
+                // console.log("Found place in slot:", slot, place)
+                return typeof place !== "string"
+            })
+            console.log("found slot place", place, slot)
+            if (slot && place) {
+                state = {
+                    position: {
+                        // slot: slot
+                        y: place
                     }
-                }
-                else {
-                    console.log("no hole found")
-                    return this.removeItem(item)
                 }
             }
             else {
-
+                console.log("no place found", slot, place)
+                return this.removeItem(item)
             }
-
         }
         // console.log("------------", item.slot, state, state && state.position ? state.position.y : null)
 
@@ -422,7 +443,9 @@ export default class Meuble extends Fbx {
         MainScene.render()
         sceneChange()
     }
+
     populateSpacesForItem(item, slot = Slots.L) {
+        const axis = "y"
         let lastItem = null;
         let lastPos = this.getBottom(), segment;
         // console.log(this.getUid())
@@ -432,8 +455,9 @@ export default class Meuble extends Fbx {
         this.items.filter(i => i != item)
             .filter(i => i.slot == slot)
             .filter(i => i.skuInfo.type != "ANGAB")
+            .sort((m1, m2) => m1.object.position[axis] - m2.object.position[axis])
             .forEach(i => {
-                segment = getSegment(i.object, "y")
+                segment = getSegment(i.object, axis)
                 if (segment.min - lastPos >= item.height) {
                     spaces.push(new Space(lastPos, segment.min, lastItem, i))
                 }
@@ -444,6 +468,7 @@ export default class Meuble extends Fbx {
         if (this.getTop() - (segment ? segment.max : 0) >= item.height) {
             spaces.push(new Space((segment ? segment.max : lastPos), this.getTop(), lastItem, null))
         }
+        return spaces
     }
     /* angab */
 

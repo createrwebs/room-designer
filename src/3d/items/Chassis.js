@@ -27,11 +27,15 @@ export default class Chassis extends ItemUsingHole {
     setPositionX(x) {
         this.object.position.x = Measures.thick
     }
+    getSegmentY() {
+        return {
+            min: this.parent.getBottom(this.slot),
+            max: this.parent.getTop()// - this.height
+        }
+    }
     setPositionY(y = 0) {
-        const max = this.parent.getTop() - this.height
-        const min = this.parent.getBottom(this.slot)
-        // console.log(min, max)
-        super.setPositionY(Math.min(max, Math.max(min, y === undefined ? 0 : y)))
+        const segmentY = this.getSegmentY()
+        super.setPositionY(Math.min(segmentY.max, Math.max(segmentY.min, y === undefined ? 0 : y)))
     }
     setPositionZ(z) {
         this.object.position.z = this.parent.depth - this.depth - 11

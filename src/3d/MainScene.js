@@ -497,28 +497,33 @@ export default {
         else {
             pState = state
         }
+
+        // distingo creation : state
+        // TODO preparation de la pose comme sur le dragStart : à sortir plus haut ?
+        Room.setupWallConstraints(skuInfo.l)
+        Room.axis = Room.getAxisForWall(wall);
+        Room.populateMeublesOnWalls(this.meubles)
+        Room.populateSpacesOnWalls(null, skuInfo)
+        Room.populateMeublesOnCorners(this.meubles)
+
+
         let meuble
         /* 
             better find a place for future meuble before creation, only using skuInfo dimensions, and send error if no room !
         */
         switch (skuInfo.type) {
             case "ANG":// not Draggable, only located in angles
-                meuble = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
-                break;
-            case "ANG90":// not Draggable, only located in angles
-
-                // distingo creation : state
-                // TODO preparation de la pose comme sur le dragStart : à sortir plus haut ?
-                Room.setupWallConstraints(skuInfo.l)
-                Room.axis = Room.getAxisForWall(wall);
-                Room.populateMeublesOnWalls(this.meubles)
-                Room.populateSpacesOnWalls(null, skuInfo)
-                Room.populateMeublesOnCorners(this.meubles)
                 if (!state) {
                     const cornerFree = Room.isCornerFreeForMeuble(corner, skuInfo)
                     if (typeof cornerFree === "string") return cornerFree// error
                 }
-
+                meuble = new Angle(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
+                break;
+            case "ANG90":// fileur angle not Draggable, only located in angles
+                if (!state) {
+                    const cornerFree = Room.isCornerFreeForMeuble(corner, skuInfo)
+                    if (typeof cornerFree === "string") return cornerFree// error
+                }
                 meuble = new FileurAng90(props, object, state ? state : { position: { wall: corner, x: 0 } }, skuInfo)
                 break;
             case "FIL":// a Draggable with depth adjustement
@@ -529,24 +534,25 @@ export default {
                 break;
             default:
                 meuble = new Draggable(props, object, pState, skuInfo)
+        }
+        if (!state && skuInfo.type != "ANG" && skuInfo.type != "ANG90") {
 
-                if (!state) {
+            // TODO
 
-                    // place on front wall ? ..Draggable routines ! //TODO
-                    // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
-                    const axis = Room.getAxisForWall(wall);
-                    const x = Room.getSpaceOnWall(meuble, this.meubles)
+            // place on front wall ? ..Draggable routines ! 
+            // on n'utilise pas setPosition 2 fois !. Routine getSpaceOnWall pour trouver sa place :
+            const axis = Room.getAxisForWall(wall);
+            const x = Room.getSpaceOnWall(meuble, this.meubles)
 
-                    if (x === false) {// destroy Meuble?
-                        return Errors.NO_ROOM
-                    }
-                    else {
-                        meuble.object.position[axis] = x
-                        console.log(meuble.wall, x)
+            if (x === false) {// destroy Meuble?
+                return Errors.NO_ROOM
+            }
+            else {
+                meuble.object.position[axis] = x
+                console.log(meuble.wall, x)
 
 
-                    }
-                }
+            }
         }
         return meuble
     }
