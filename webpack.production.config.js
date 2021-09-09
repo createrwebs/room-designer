@@ -1,9 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const CopyPlugin = require("copy-webpack-plugin");
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const args = process.argv.slice(2);
 
@@ -49,10 +49,10 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            title: 'NY Minet',
-            template: './src/index.html'
-        }),
+        /*         new HtmlWebpackPlugin({
+                    title: 'NY Minet',
+                    template: './src/index.html'
+                }), */
         /*         new BundleAnalyzerPlugin({
                     generateStatsFile: false,
                     analyzerMode: 'static',
