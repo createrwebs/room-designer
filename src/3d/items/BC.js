@@ -22,8 +22,10 @@ export default class BC extends Item {
         super.remove()
     }
     setPosition(x, y, z) {
-        const max = this.parent.skuInfo.H * 10 - this.height - Measures.thick
+
+        const max = this.parent.getTop() - this.height
         const min = this.parent.getBottom(this.slot)
+
         switch (this.props.sku) {
             case "NYTABREP":// table repassage
                 this.object.position.x = 80
@@ -93,9 +95,21 @@ export default class BC extends Item {
             case "BC84000G":
             case "BC84000D":
                 const toLeft = !(this.props.sku.substr(-1, 1) == "D")
-                this.object.position.x = (!toLeft ? this.parent.skuInfo.l - this.width : 0) + Measures.thick
-                this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
-                this.object.position.z = this.parent.skuInfo.p - this.depth
+                if (this.parent.skuInfo.type === "ANG") {
+                    this.object.position.x = (!toLeft ? this.parent.skuInfo.l - this.width - Measures.thick : 2 * Measures.thick)
+                    this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                    this.object.position.z = this.parent.skuInfo.p - this.depth - 20
+                }
+                else if (this.parent.skuInfo.isCoulissante) {
+                    this.object.position.x = (!toLeft ? this.parent.skuInfo.l - this.width - Measures.thick : Measures.thick)
+                    this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                    this.object.position.z = this.parent.skuInfo.p - this.depth - 40
+                }
+                else {
+                    this.object.position.x = (!toLeft ? this.parent.skuInfo.l - this.width : 0) + Measures.thick
+                    this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
+                    this.object.position.z = this.parent.skuInfo.p - this.depth
+                }
                 break;
             default:
                 super.setPosition(x, y, z)

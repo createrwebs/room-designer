@@ -47,6 +47,9 @@ import AngAB from '../items/AngAB'
 import RangePull from '../items/RangePull'
 import SeparateurV from '../items/SeparateurV'
 import Penrab from '../items/Penrab'
+import ANGETAP from '../items/ANGETAP'
+import ANGETAL from '../items/ANGETAL'
+import ANGTIR from '../items/ANGTIR'
 
 export default class Meuble extends Fbx {
     constructor (props, object, state, skuInfo) {
@@ -357,7 +360,12 @@ export default class Meuble extends Fbx {
 
         let item;
         if (skuInfo.isEtagere) {
-            item = new Etagere(props, object, state, skuInfo, this)
+            if (skuInfo.type === "ANGETAP") {
+                item = new ANGETAP(props, object, state, skuInfo, this)
+            }
+            else if (skuInfo.type === "ANGETAL") {
+                item = new ANGETAL(props, object, state, skuInfo, this)
+            } else item = new Etagere(props, object, state, skuInfo, this)
         }
         else if (skuInfo.isChassis) {
             item = new Chassis(props, object, state, skuInfo, this)
@@ -389,6 +397,9 @@ export default class Meuble extends Fbx {
         else if (skuInfo.type === "PENRAB") {
             item = new Penrab(props, object, state, skuInfo, this)
         }
+        else if (skuInfo.type === "ANGTIR") {
+            item = new ANGTIR(props, object, state, skuInfo, this)
+        }
         else {
             item = new Item(props, object, state, skuInfo, this)
         }
@@ -397,7 +408,7 @@ export default class Meuble extends Fbx {
         this.items.push(item)
         if (skuInfo.draggableX || skuInfo.draggableY) ItemDragging.add(item.object)
 
-        const isNewItem = !(state && state.position) && !skuInfo.isModule && skuInfo.type != "ANGAB"
+        const isNewItem = !(state && state.position) && !skuInfo.isModule && skuInfo.type != "ANGAB" && !skuInfo.isPorte
         if (isNewItem) {
 
             /* this.populateSpacesForItem(item, Slots.L)
@@ -408,15 +419,17 @@ export default class Meuble extends Fbx {
             if (this.dragItemHelper) {
                 this.ruler.add(this.dragItemHelper);
             } */
-
+            console.log(item.slot)
             let place
-            const slot = this.getSlots().find(slot => {
-                item.slot = slot
-                item.setPositionX() // first, move item to slot
-                place = item.findFreePlaceInSlot(slot)
-                // console.log("Found place in slot:", slot, place)
-                return typeof place !== "string"
-            })
+            const slot = this.getSlots()
+                .filter(slot => item.forceSlot ? slot == item.forceSlot : true)
+                .find(slot => {
+                    item.slot = slot
+                    item.setPositionX() // first, move item to slot
+                    place = item.findFreePlaceInSlot(slot)
+                    // console.log("Found place in slot:", slot, place)
+                    return typeof place !== "string"
+                })
             console.log("found slot place", place, slot)
             if (slot && place) {
                 state = {
@@ -444,10 +457,17 @@ export default class Meuble extends Fbx {
         sceneChange()
     }
 
+    /*
+        generate array of Spaces available for item
+    */
     populateSpacesForItem(item, slot = Slots.L) {
         const axis = "y"
         let lastItem = null;
-        let lastPos = this.getBottom(), segment;
+        // find boundaries {min,max} for item in meuble :
+        const segmentY = item.getSegmentY()
+        const limits = { min: Math.max(segmentY.min, this.getBottom()), max: Math.min(segmentY.max, this.getTop()) }
+        let lastPos = limits.min
+        let segment;
         // console.log(this.getUid())
         Space.onWall[this.getUid()] = []
         let spaces = Space.onWall[this.getUid()] = []
@@ -458,16 +478,23 @@ export default class Meuble extends Fbx {
             .sort((m1, m2) => m1.object.position[axis] - m2.object.position[axis])
             .forEach(i => {
                 segment = getSegment(i.object, axis)
+                // tentative de limiter le segmentY :
+                /*                 if (segment.min > limits.max) {
+                                    lastItem = i;
+                                    lastPos = segment.max;
+                                    return
+                                } */
                 if (segment.min - lastPos >= item.height) {
                     spaces.push(new Space(lastPos, segment.min, lastItem, i))
                 }
-                console.warn(segment, segment.max - segment.min)
+                // console.warn(segment, segment.max - segment.min)
                 lastItem = i;
-                lastPos = segment.max;//m.position;
+                lastPos = segment.max;
             })
-        if (this.getTop() - (segment ? segment.max : 0) >= item.height) {
-            spaces.push(new Space((segment ? segment.max : lastPos), this.getTop(), lastItem, null))
+        if (limits.max - (segment ? segment.max : 0) >= item.height) {
+            spaces.push(new Space((segment ? segment.max : lastPos), limits.max, lastItem, null))
         }
+        // console.warn(segmentY, limits, spaces)
         return spaces
     }
     /* angab */

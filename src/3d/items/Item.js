@@ -93,7 +93,7 @@ export default class Item extends Fbx {
         // this.setPositionZ(z)
 
         const collide = this.checkCollision(new Box3().setFromObject(this.object), this.slot)
-        // console.warn("colliding", collide, y)
+        // console.warn("colliding", this.slot, collide, y)
         if (collide) {
             this.returnToLastPosition(new Box3().setFromObject(this.object), collide)
         }

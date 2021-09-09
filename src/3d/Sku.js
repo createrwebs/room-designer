@@ -135,6 +135,8 @@ export const parseSKU = (sku) => {
 
     /* etagere */
     obj.isEtagere = obj.type.substr(0, 2) === "ET"
+        || obj.type === "ANGETAL"
+        || obj.type === "ANGETAP"
 
     /* portes */
     obj.isPorte = obj.type.substr(0, 1) === "P" && obj.type.length == 4
@@ -166,6 +168,8 @@ export const parseSKU = (sku) => {
         case "ANG":
             obj.P = obj.PR = obj.PL = 62// angle module has fixed depth of 62
             obj.L = 106
+            obj.trous = obj.H === 219 ? trous219Panneaux : trous238Panneaux
+            obj.slots = [0, 99]// R & C
             break;
         case "BUR":
         case "COIF":
@@ -235,7 +239,7 @@ export const parseSKU = (sku) => {
             || obj.type.substr(0, 2) === "RP"
             || obj.isChassis
 
-        obj.draggableX = obj.type !== "ANGAB"
+        obj.draggableX = obj.type.substr(0, 3) !== "ANG"
             && !obj.isPorte
 
         obj.draggableY = obj.type !== "ANGAB"

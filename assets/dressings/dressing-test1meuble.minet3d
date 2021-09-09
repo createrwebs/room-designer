@@ -4,39 +4,58 @@
     "name": "untitled",
     "meubles": [
         {
-            "sku": "NYH238P62L081",
-            "uid": "E58C2EE5",
+            "sku": "NYANGH219",
+            "uid": "BFB124AA",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "right",
-                "x": 1000
+                "wall": "front-right"
             },
             "items": [
                 {
-                    "sku": "NYETAP62L081",
+                    "sku": "BC84000D",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
                         "x": 25,
-                        "y": 2263
+                        "y": 649
                     }
                 },
                 {
-                    "sku": "NYETLP62L081",
+                    "sku": "BC84000G",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
                         "x": 25,
-                        "y": 1815
+                        "y": 205
+                    }
+                }
+            ]
+        },
+        {
+            "sku": "NYC155H219PP",
+            "uid": "7BBD4A59",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1063
+            },
+            "items": [
+                {
+                    "sku": "BC84000D",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 1344,
+                        "y": 1012
                     }
                 },
                 {
-                    "sku": "NYCHACHAUSS81",
+                    "sku": "BC84000G",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
                         "x": 25,
-                        "y": 1239
+                        "y": 462
                     }
                 }
             ]
