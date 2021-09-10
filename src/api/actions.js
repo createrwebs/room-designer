@@ -21,6 +21,7 @@ import defaultconfig from '../../assets/config.json';
 import { KinoEvent, goingToKino } from './Bridge'
 import { Errors } from './Errors'
 import Meuble from '../3d/meubles/Meuble';
+import { draw as drawMetrage } from '../3d/helpers/Metrage';
 
 export const SceneEvent = {
     SETCONFIG: 'setconfig',
@@ -492,7 +493,29 @@ export const showhideFacades = (show) => {
     })
     MainScene.render()
 }
-
+let Metrage;
+let showMetrage = true
+export const showhideMetrage = (show) => {
+    MainScene.meubles.forEach(meuble => {
+        meuble.showMetrage(show)
+    })
+    MainScene.render()
+    /*     if (typeof show === "undefined") {//from dragging
+    
+        }
+        else {
+            showMetrage = show
+        }
+        if (showMetrage) {
+            if (Metrage) MainScene.scene.remove(Metrage)
+            Metrage = drawMetrage()
+            if (Metrage) MainScene.scene.add(Metrage)
+        }
+        else {
+            if (Metrage) MainScene.scene.remove(Metrage)
+        }
+        MainScene.render() */
+}
 
 export const animeSelectedMeuble = () => {
     const selectedMeuble = MainScene.selection

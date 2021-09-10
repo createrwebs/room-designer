@@ -12,6 +12,7 @@ import {
 	loadScene,
 	clickMeubleLine,
 	changeTool,
+	showhideMetrage,
 }
 	from '../api/actions'
 import { set as setCatalogue } from '../api/Catalogue'
@@ -58,9 +59,10 @@ class App extends Component {
 					}
 					this.setState({ catalogueLoaded: true })
 					setTimeout(function () {
-						changeTool(Tools.HAMMER)
-						window.ts.meubles[0].click()
-					}, 2500)
+						// changeTool(Tools.HAMMER)
+						// window.ts.meubles[0].click()
+						// showhideMetrage(true)
+					}, 5000)
 					// gui = getGui()
 					goingToKino(KinoEvent.APP_READY)
 				})

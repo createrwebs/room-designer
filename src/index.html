@@ -650,6 +650,7 @@
 			}
 		}
 		var showhideFacades = true
+		var show_rulers = false
 		local_scene_bridge = function (type, arg) {
 			// console.log("local_scene_bridge", type)
 			switch (type) {
@@ -669,9 +670,14 @@
 					break;
 				case 'edit_meuble':
 					break;
+
 				case 'showhideFacades':
 					showhideFacades = !showhideFacades
 					arg = showhideFacades
+					break;
+				case 'show_rulers':
+					show_rulers = !show_rulers
+					arg = show_rulers
 					break;
 				case 'remove_meuble':
 					arg = true
@@ -740,6 +746,10 @@
 
 	<button class="btn" onclick="local_scene_bridge('showhideFacades')">
 		<i class="fa fa-eye"></i>
+	</button>
+
+	<button class="btn" onclick="local_scene_bridge('show_rulers')">
+		<i class="fa fa-ruler"></i>
 	</button>
 
 	<i class="fa fa-palette" style="margin-left: 1em"></i>

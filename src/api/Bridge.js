@@ -14,6 +14,7 @@ import {
     generateOnePix,
     setSceneMaterial,
     showhideFacades,
+    showhideMetrage,
     logKinoEvent
 }
     from './actions'
@@ -60,6 +61,7 @@ const BridgeEvent = {
     SET_SCENE_MATERIAL: 'set_scene_material',
     LOAD_ALL_SKU: 'load_all_sku',
     SHOW_HIDE_FACADES: 'showhideFacades',
+    SHOW_HIDE_RULERS: 'show_rulers',
     GET_DEVIS: 'get_devis'
 }
 
@@ -125,6 +127,9 @@ export const comingFromKino = (event, param1, param2) => {
             break;
         case BridgeEvent.SHOW_HIDE_FACADES:
             showhideFacades(param1)
+            break;
+        case BridgeEvent.SHOW_HIDE_RULERS:
+            showhideMetrage(param1)
             break;
         default:
             console.log("Bridge : no case found for event ", event)

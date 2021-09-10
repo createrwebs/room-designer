@@ -4,6 +4,16 @@
     "name": "untitled",
     "meubles": [
         {
+            "sku": "NYH238P62L040",
+            "uid": "6F91B493",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 2270
+            },
+            "items": []
+        },
+        {
             "sku": "NYANGH219",
             "uid": "BFB124AA",
             "laqueOnMeshes": [],
@@ -16,7 +26,7 @@
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
-                        "x": 25,
+                        "x": 879,
                         "y": 649
                     }
                 },
@@ -25,7 +35,7 @@
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
-                        "x": 25,
+                        "x": 50,
                         "y": 205
                     }
                 }
@@ -37,7 +47,7 @@
             "laqueOnMeshes": [],
             "position": {
                 "wall": "right",
-                "x": 1063
+                "x": 1840
             },
             "items": [
                 {
@@ -45,7 +55,7 @@
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
-                        "x": 1344,
+                        "x": 1369,
                         "y": 1012
                     }
                 },
@@ -59,6 +69,37 @@
                     }
                 }
             ]
+        },
+        {
+            "sku": "NYC155H219PG",
+            "uid": "E908326F",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 3400
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40RL057",
+            "uid": "33BBB9A1",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "left",
+                "x": 3460
+            },
+            "items": [],
+            "turned": 0
+        },
+        {
+            "sku": "NYH238P62L059",
+            "uid": "EA1719A0",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1203
+            },
+            "items": []
         }
     ],
     "materialId": 1301,
