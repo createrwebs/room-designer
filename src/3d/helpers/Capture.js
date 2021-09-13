@@ -13,15 +13,14 @@ const saveFile = function (strData, filename) {
     }
 }
 export const takePix = (name) => {
-
-    var imgData;
-    var strDownloadMime = "image/octet-stream";
-
     try {
-        var strMime = "image/jpeg";
-        imgData = MainScene.getRendererNodeElement().toDataURL(strMime);
-
-        saveFile(imgData.replace(strMime, strDownloadMime), name ? `${name}.png` : "scene-3d.png");
+        const imgData = MainScene.getRendererNodeElement().toDataURL("image/jpeg");
+        const image = new Image();
+        image.src = imgData
+        const w = window.open("");
+        w.document.write(image.outerHTML);
+        // to save it :
+        // saveFile(imgData.replace("image/jpeg", "image/octet-stream"), name ? `${name}.png` : "scene-3d.png");
     } catch (e) {
         console.log('takePix error', e);
         return;

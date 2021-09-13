@@ -16,179 +16,196 @@ import {
 import { Walls } from '../Constants';
 import { Space } from '../Space';
 import Room from '../Room';
-import helvetiker_regular from 'three/examples/fonts/helvetiker_regular.typeface.json'
 import MainScene from "../MainScene";
-const font = new Font(helvetiker_regular);
+import TextSprite from './TextSprite'
+import Meuble from '../meubles/Meuble';
+import { getSegment, segmentIntersect, getSize, Measures } from '../Utils'
+import { Sides } from "../Constants";
 
-const division1 = 100
-const division2 = 20
-const division1Width = 20
-const division2Width = 10
-export const textParam = {
-    font: font,
-    size: 70,
-    height: 2,
-    curveSegments: 12,
-    bevelEnabled: false,
-    bevelThickness: 10,
-    bevelSize: 8,
-    bevelOffset: 0,
-    bevelSegments: 5
-};
-const textParamTitle = {
-    font: font,
-    size: 40,
-    height: 2,
-};
-export const material = new LineBasicMaterial({ color: 0x223344, linewidth: 3, opacity: 1 });
-export const lineHeightInRoom = 2600
+const material1 = new LineBasicMaterial({ color: 0x000000, linewidth: 1, opacity: 1 });
+const material2 = new LineBasicMaterial({ color: 0xBBBBBB, linewidth: 1, opacity: 1 });
+const lineHeightInRoom = 2600
+const minimalSpace = 99
+const distance = 120//distance Text From Line
+
+/*
+new THREE.TextSprite({
+    alignment: 'center',
+    backgroundColor: 'rgba(0,0,0,0)',
+    color: '#fff',
+    fontFamily: 'sans-serif',
+    fontSize: 1,
+    fontStyle: 'normal',
+    fontVariant: 'normal',
+    fontWeight: 'normal',
+    lineGap: 0.25,
+    padding: 0.5,
+    strokeColor: '#fff',
+    strokeWidth: 0,
+    text: '',
+}, material)
+*/
+const makeTextSprite = (t) => {
+    return new TextSprite({
+        alignment: 'center',
+        color: '#000000',
+        fontFamily: 'Arial, Helvetica, sans-serif',
+        fontSize: 80,
+        fontStyle: 'bold',
+        text: t,
+    });
+}
+
+export const updateMetrage = () => {
+
+    draw()
+}
 
 export const draw = () => {
     const metrage = new Group();
     metrage.name = "metrage"
-    /* 
-        const material = new LineBasicMaterial({ color: 0x000000, linewidth: 3, opacity: 1 });
-        const points = []
-        const walls = [Walls.R, Walls.B, Walls.L, Walls.F]
-        walls.forEach(w => {
-            const axis = Room.getAxisForWall(w)
-            const meubles = Room.getMeublesOnWall(MainScene.meubles, w, axis)
-            drawWall(points, metrage, meubles, w, axis)
-        });
-        const geometry = new BufferGeometry().setFromPoints(points)
-        geometry.name = "metrage-geometry"
-    
-        metrage.add(new LineSegments(geometry, material)) */
-
-    MainScene.meubles.forEach(m => metrage.add(m.getMetrage()))
-
+    const walls = [Walls.R, Walls.B, Walls.L, Walls.F]
+    walls.forEach(w => {
+        const axis = Room.getAxisForWall(w)
+        const meubles = Room.getMeublesOnWall(MainScene.meubles, w, axis)
+        drawWall([], metrage, meubles, w, axis)
+    });
     return metrage
 
 }
-
 const drawWall = (points, metrage, meubles, wall, axis) => {
+    // console.log("drawWall", meubles, wall, axis)
 
-    // console.log(meubles, axis)
+    /*     Meuble.Joins.forEach(join => {
+            const leftMeubleUid = join.substr(0, join.indexOf('-'));
+            const leftMeuble = MainScene.meubles.find(m => m.getUid() === leftMeubleUid)
+            const rightMeubleUid = join.substr(join.indexOf('-') + 1);
+            const rightMeuble = MainScene.meubles.find(m => m.getUid() === rightMeubleUid)
+                   
+            //TODO how get groups of joined meubles ?
+    
+        }) 
+        */
+    let cotation, position, width
+    meubles.forEach(meuble => {
+        const box = new Box3().setFromObject(meuble.object)
+        const joins = Meuble.isJoined(meuble)
 
-    meubles.forEach(m => {
-
-        var box = new Box3().setFromObject(m.object);
-
-        if (axis === "x") {// for meubles in room
-            points.push(new Vector3(box.min.x, lineHeightInRoom, wall === Walls.R ? 0 : Room.zmax));
-            points.push(new Vector3(box.max.x, lineHeightInRoom, wall === Walls.R ? 0 : Room.zmax));
-
-            const label = new TextGeometry(Math.round((box.max.x - box.min.x) / 10).toString() + " cm", textParam);
-            const textMesh = new Mesh(label, material);
-
-            console.log(textMesh, new Box3().setFromObject(textMesh))
-
-            textMesh.position.x = (box.max.x + box.min.x) / 2 - textParam.size / 2
-            textMesh.position.y = lineHeightInRoom + 30
-            textMesh.position.z = wall === Walls.R ? -30 : Room.zmax + 30
-            if (wall === Walls.R) {
-                textMesh.rotateX(-Math.PI / 2)
-            }
-            else {
-                textMesh.rotateY(Math.PI)
-                textMesh.rotateX(-Math.PI / 2)
-            }
-            metrage.add(textMesh);
-
+        if (axis === "x") {
+            position = box.min.x
+            width = Math.round(box.max.x - box.min.x)
         }
-        else if (axis === "z") {// for meubles in room
-            points.push(new Vector3(wall === Walls.F ? 0 : Room.xmax, lineHeightInRoom, box.min.z));
-            points.push(new Vector3(wall === Walls.F ? 0 : Room.xmax, lineHeightInRoom, box.max.z));
-
-            const labelZ = new TextGeometry(Math.round((box.max.z - box.min.z) / 10).toString() + "cm", textParam);
-            const textMeshZ = new Mesh(labelZ, material);
-            textMeshZ.position.x = wall === Walls.F ? -30 : Room.xmax + 30
-            textMeshZ.position.y = lineHeightInRoom + 30
-            textMeshZ.position.z = (box.max.z + box.min.z) / 2 - textParam.size / 2
-            if (wall === Walls.F) {
-                textMeshZ.rotateZ(Math.PI / 2)
-                textMeshZ.rotateY(Math.PI / 2)
-            }
-            else {
-                textMeshZ.rotateZ(Math.PI / 2)
-                textMeshZ.rotateY(-Math.PI / 2)
-                textMeshZ.rotateX(Math.PI)
-            }
-            metrage.add(textMeshZ);
+        else if (axis === "z") {
+            position = box.min.z
+            width = Math.round(box.max.z - box.min.z)
         }
+        if (joins && joins.includes(Sides.R)) {
+            if (!Room.toRightDirection(wall)) {
+                position += Measures.thick
+            }
+            width -= Measures.thick
+        }
+        // console.log(meuble, joins, position, width, wall, axis)
+        cotation = drawOneCotation(position, width, wall, axis, material1)
+        metrage.add(cotation)
     })
+
+    // space between meubles
+    if (meubles.length == 0) return
+    let lastMeuble = null;
+    let lastPos = 0, segment, spaces = [];
+    let wallLength = (wall === Walls.L || wall === Walls.R) ? Room.xmax : Room.zmax
+    meubles.forEach(m => {
+        segment = getSegment(m.object, axis)
+        spaces.push(new Space(lastPos, segment.min, lastMeuble, m))
+        lastMeuble = m;
+        lastPos = segment.max;//m.position;
+    })
+    spaces.push(new Space((segment ? segment.max : lastPos), wallLength, lastMeuble, null))
+    spaces.forEach(space => {
+        // console.log(wall, space)
+        // if (space.prev && space.next) {
+        width = Math.round(space.max - space.min)
+        if (width > minimalSpace)
+            cotation = drawOneCotation(space.min, width, wall, axis, material2)
+        // console.log(meuble, joins, position, width, wall, axis)
+        metrage.add(cotation)
+        // }
+
+    })
+
+}
+const drawOneCotation = (position, width, wall, axis, material = material2) => {
+    // console.log("drawOneCotation", position,width, axis)
+
+    const metrage = new Group();
+    metrage.name = "metrage"
+    let points = [], geometry, label
+    const abscis = axis === "x" ? (wall === Walls.R ? 0 : Room.zmax) : wall === Walls.F ? 0 : Room.xmax
+    const textMesh = makeTextSprite(Math.round(width).toString() + "mm");//round? ceil? floor?
+
+    if (axis === "x") {
+        points.push(new Vector3(position, lineHeightInRoom, abscis));
+        points.push(new Vector3(position + width, lineHeightInRoom, abscis));
+        geometry = new BufferGeometry().setFromPoints(points)
+        geometry.name = "metrage-geometry"
+        metrage.add(new LineSegments(geometry, material))
+
+        points = []
+        points.push(new Vector3(position, lineHeightInRoom, abscis));
+        points.push(new Vector3(position, Room.ymax, abscis));
+        geometry = new BufferGeometry().setFromPoints(points)
+        metrage.add(new LineSegments(geometry, material2))
+
+        points = []
+        points.push(new Vector3(position + width, lineHeightInRoom, abscis));
+        points.push(new Vector3(position + width, Room.ymax, abscis));
+        geometry = new BufferGeometry().setFromPoints(points)
+        metrage.add(new LineSegments(geometry, material2))
+
+        textMesh.position.x = position + width / 2
+        textMesh.position.y = lineHeightInRoom + 80
+        textMesh.position.z = wall === Walls.R ? -distance : Room.zmax + distance
+        if (wall === Walls.R) {
+            textMesh.rotateX(-Math.PI / 2)
+        }
+        else {
+            textMesh.rotateY(Math.PI)
+            textMesh.rotateX(-Math.PI / 2)
+        }
+    }
+    else if (axis === "z") {
+        points.push(new Vector3(abscis, lineHeightInRoom, position));
+        points.push(new Vector3(abscis, lineHeightInRoom, position + width));
+        geometry = new BufferGeometry().setFromPoints(points)
+        geometry.name = "metrage-geometry"
+        metrage.add(new LineSegments(geometry, material))
+
+        points = []
+        points.push(new Vector3(abscis, lineHeightInRoom, position));
+        points.push(new Vector3(abscis, Room.ymax, position));
+        geometry = new BufferGeometry().setFromPoints(points)
+        metrage.add(new LineSegments(geometry, material2))
+
+        points = []
+        points.push(new Vector3(abscis, lineHeightInRoom, position + width));
+        points.push(new Vector3(abscis, Room.ymax, position + width));
+        geometry = new BufferGeometry().setFromPoints(points)
+        metrage.add(new LineSegments(geometry, material2))
+
+        textMesh.position.x = wall === Walls.F ? -distance : Room.xmax + distance
+        textMesh.position.y = lineHeightInRoom + 80
+        textMesh.position.z = position + width / 2
+        if (wall === Walls.R) {
+            textMesh.rotateX(-Math.PI / 2)
+        }
+        else {
+            textMesh.rotateY(Math.PI)
+            textMesh.rotateX(-Math.PI / 2)
+        }
+    }
+    metrage.add(textMesh);
+
+    return metrage
 }
 
-
-
-export const makeTextSprite = (message, parameters) => {
-    if (parameters === undefined) parameters = {};
-
-    var fontface = parameters.hasOwnProperty("fontface") ?
-        parameters["fontface"] : "Arial";
-
-    var fontsize = parameters.hasOwnProperty("fontsize") ?
-        parameters["fontsize"] : 18;
-
-    var borderThickness = parameters.hasOwnProperty("borderThickness") ?
-        parameters["borderThickness"] : 4;
-
-    var borderColor = parameters.hasOwnProperty("borderColor") ?
-        parameters["borderColor"] : { r: 0, g: 0, b: 0, a: 1.0 };
-
-    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
-        parameters["backgroundColor"] : { r: 255, g: 255, b: 255, a: 0 };
-
-    // var spriteAlignment = SpriteAlignment.topLeft;
-
-    var canvas = document.createElement('canvas');
-    var context = canvas.getContext('2d');
-    context.font = "Bold " + "256" + "px " + "Arial";
-
-    // get size data (height depends only on font size)
-    var metrics = context.measureText(message);
-    var textWidth = metrics.width;
-
-    // background color
-    context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
-        + backgroundColor.b + "," + backgroundColor.a + ")";
-    // border color
-    context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
-        + borderColor.b + "," + borderColor.a + ")";
-
-    context.lineWidth = borderThickness;
-    roundRect(context, borderThickness / 2, borderThickness / 2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
-    // 1.4 is extra height factor for text below baseline: g,j,p,q.
-
-    // text color
-    context.fillStyle = "rgba(0, 0, 0, 1.0)";
-
-    context.fillText(message, borderThickness, fontsize + borderThickness);
-
-    // canvas contents will be used for a texture
-    var texture = new Texture(canvas)
-    texture.needsUpdate = true;
-
-    var spriteMaterial = new SpriteMaterial(
-        { map: texture, useScreenCoordinates: false })//, alignment: spriteAlignment });
-    var sprite = new Sprite(spriteMaterial);
-    sprite.scale.set(200, 100, 100);
-    return sprite;
-}
-
-// function for drawing rounded rectangles
-function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-}

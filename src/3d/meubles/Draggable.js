@@ -3,7 +3,7 @@ import {
     drag,
     sceneChange,
     Tools,
-    // showhideMetrage
+    showhideMetrage as updateMetrage
 }
     from '../../api/actions'
 import store from '../../api/store';
@@ -181,7 +181,7 @@ export default class Draggable extends Meuble {
         else if (Object.values(Corners).includes(this.wall)) {// on a corner
 
         }
-        // showhideMetrage()
+        updateMetrage()
         MainScene.render();
     }
 
@@ -192,7 +192,7 @@ export default class Draggable extends Meuble {
         Draggable.Dragged = null
         if (Draggable.Cross && Draggable.Cross.parent) MainScene.scene.remove(Draggable.Cross)
         if (Draggable.Segments && Draggable.Segments.parent) MainScene.scene.remove(Draggable.Segments)
-        // showhideMetrage()
+        updateMetrage()
         sceneChange()
         MainScene.render()
         MainScene.meubles.forEach(m => {// reactivation of others

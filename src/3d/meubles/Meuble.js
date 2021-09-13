@@ -33,13 +33,6 @@ import {
     Mesh,
     Group
 } from "three";
-import {
-    textParam,
-    material as metrageMaterial,
-    lineHeightInRoom,
-    makeTextSprite
-} from '../helpers/Metrage'
-
 import { Space } from "../Space";
 import { getSegment, segmentIntersect } from '../Utils'
 import { drawInMeuble } from '../helpers/Segments';
@@ -120,6 +113,8 @@ export default class Meuble extends Fbx {
             loadFbx(pL.fbx.url, this.panneauLoaded.bind(this, pL, Sides.L))
             loadFbx(pR.fbx.url, this.panneauLoaded.bind(this, pR, Sides.R))
             // loadFbx(pS.fbx.url, this.panneauLoaded.bind(this, pS, "separateur"))
+        }
+        else {
         }
 
         /* textures */
@@ -700,90 +695,6 @@ export default class Meuble extends Fbx {
     /*
         info
     */
-    showMetrage(show) {
-        if (!show) {
-            if (this.metrage) {
-                this.object.remove(this.metrage)
-                // this.metrage = null
-            }
-        }
-        else {
-            // if (this.metrage) this.object.remove(this.metrage)
-            if (!this.metrage) this.metrage = this.getMetrage()
-            this.object.add(this.metrage)
-        }
-    }
-    getMetrage() {
-        const lineHeightInRoom = 2800
-        const wall = this.wall
-        const axis = Room.getAxisForWall(this.wall)
-        const box = new Box3().setFromObject(this.object);
-        const metrage = new Group();
-        metrage.name = "metrage"
-        const material = new LineBasicMaterial({ color: 0x990000, linewidth: 3, opacity: 1 });
-        const points = []
-
-        console.log("compute metrage")
-
-        if (axis === "x") {// for meubles in room
-            points.push(new Vector3(0, lineHeightInRoom, 0));
-            points.push(new Vector3(this.width, lineHeightInRoom, 0));
-
-            const labelTextX = Math.round((box.max.x - box.min.x) / 10).toString() + " cm"
-            /*  const textMeshX = this.getMetrageLabel(text)
-              const labelBoxX = new Box3().setFromObject(textMeshX)
-              const labelWidthX = labelBoxX.max.x - labelBoxX.min.x
-              console.log(textMeshX, labelBoxX, labelWidthX) */
-
-            const textMeshX = makeTextSprite(labelTextX, {
-                fontsize: 128,
-                fontface: "helvetiker_regular",
-                borderColor: { r: 33, g: 33, b: 33, a: 0 }
-            });
-            textMeshX.position.x = this.width / 2 //- labelWidthX / 2
-            textMeshX.position.y = lineHeightInRoom + 30
-            textMeshX.position.z = -30
-            metrage.add(textMeshX);
-
-        }
-        else if (axis === "z") {// for meubles in room
-            // points.push(new Vector3(0, lineHeightInRoom, 0));
-            // points.push(new Vector3(0, lineHeightInRoom, this.width));
-            points.push(new Vector3(0, lineHeightInRoom, 0));
-            points.push(new Vector3(this.width, lineHeightInRoom, 0));
-
-            const labelTextZ = Math.round((box.max.x - box.min.x) / 10).toString() + " cm"
-            // const textMeshZ = this.getMetrageLabel(labelTextZ)
-            // const labelBoxZ = new Box3().setFromObject(textMeshZ)
-            // const labelWidthZ = labelBoxZ.max.x - labelBoxZ.min.x
-            // console.log(textMeshZ, labelBoxZ, labelWidthZ)
-            const textMeshZ = makeTextSprite(labelTextZ, {
-                fontsize: 128,
-                fontface: "helvetiker_regular",
-                borderColor: { r: 33, g: 33, b: 33, a: 0 }
-            });
-            textMeshZ.position.x = this.width / 2// - labelWidthZ / 2
-            textMeshZ.position.y = lineHeightInRoom + 30
-            textMeshZ.position.z = -30
-            metrage.add(textMeshZ);
-        }
-
-        const geometry = new BufferGeometry().setFromPoints(points)
-        geometry.name = "metrage-geometry"
-
-        metrage.add(new LineSegments(geometry, metrageMaterial))
-        return metrage
-
-    }
-    getMetrageLabel(text) {
-        const label = new TextGeometry(text, textParam);
-        const textMesh = new Mesh(label, metrageMaterial);
-        // const labelBox = new Box3().setFromObject(textMeshX)
-        // const labelWidth = labelBox.max.x - labelBox.min.x
-        // console.log(textMeshX, labelBox, labelWidth)
-        return textMesh
-    }
-
 
     getJSON() {
         const position = {

@@ -494,27 +494,23 @@ export const showhideFacades = (show) => {
     MainScene.render()
 }
 let Metrage;
-let showMetrage = true
+let showMetrage = false
 export const showhideMetrage = (show) => {
-    MainScene.meubles.forEach(meuble => {
-        meuble.showMetrage(show)
-    })
+    if (typeof show === "undefined") {//from dragging
+
+    }
+    else {
+        showMetrage = show
+    }
+    if (showMetrage) {
+        if (Metrage) MainScene.scene.remove(Metrage)
+        Metrage = drawMetrage()
+        if (Metrage) MainScene.scene.add(Metrage)
+    }
+    else {
+        if (Metrage) MainScene.scene.remove(Metrage)
+    }
     MainScene.render()
-    /*     if (typeof show === "undefined") {//from dragging
-    
-        }
-        else {
-            showMetrage = show
-        }
-        if (showMetrage) {
-            if (Metrage) MainScene.scene.remove(Metrage)
-            Metrage = drawMetrage()
-            if (Metrage) MainScene.scene.add(Metrage)
-        }
-        else {
-            if (Metrage) MainScene.scene.remove(Metrage)
-        }
-        MainScene.render() */
 }
 
 export const animeSelectedMeuble = () => {
@@ -594,6 +590,7 @@ export const clickMeubleLine = (sku) => {
             }
             else {
                 MainScene.add(createMeubleResult);
+                showhideMetrage()
                 MainScene.render()
             }
         })

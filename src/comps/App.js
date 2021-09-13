@@ -61,8 +61,8 @@ class App extends Component {
 					setTimeout(function () {
 						// changeTool(Tools.HAMMER)
 						// window.ts.meubles[0].click()
-						// showhideMetrage(true)
-					}, 5000)
+						showhideMetrage(true)
+					}, 3000)
 					// gui = getGui()
 					goingToKino(KinoEvent.APP_READY)
 				})
