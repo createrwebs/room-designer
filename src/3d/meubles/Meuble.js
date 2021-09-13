@@ -218,14 +218,16 @@ export default class Meuble extends Fbx {
         if (enabled) {
             MainScene.interactionManager.add(this.object)
             if (!this.object._listeners || !this.object._listeners.click)//only 1 entry
-                this.object.addEventListener('click', this.click.bind(this))
+                // this.object.addEventListener('click', this.click.bind(this))
+                this.object.addEventListener('mousedown', this.click.bind(this))
         } else {
             MainScene.interactionManager.remove(this.object)
-            this.object.removeEventListener('click', this.click.bind(this))
+            // this.object.removeEventListener('click', this.click.bind(this))
+            this.object.removeEventListener('mousedown', this.click.bind(this))
         }
     }
     click(interactiveEvent) {
-        // console.warn(`click Meuble ${this.info()}`)
+        console.warn(`click Meuble ${this.info()}`)
         if (interactiveEvent) {
             // console.warn(`click equality`, interactiveEvent.target == this.object)
             interactiveEvent.stopPropagation()

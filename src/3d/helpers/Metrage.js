@@ -13,14 +13,13 @@ import {
     Sprite,
     SpriteAlignment
 } from "three";
-import { Walls } from '../Constants';
+import { Walls, Corners, Sides } from '../Constants';
 import { Space } from '../Space';
 import Room from '../Room';
 import MainScene from "../MainScene";
 import TextSprite from './TextSprite'
 import Meuble from '../meubles/Meuble';
 import { getSegment, segmentIntersect, getSize, Measures } from '../Utils'
-import { Sides } from "../Constants";
 
 const material1 = new LineBasicMaterial({ color: 0x000000, linewidth: 1, opacity: 1 });
 const material2 = new LineBasicMaterial({ color: 0xBBBBBB, linewidth: 1, opacity: 1 });
@@ -99,11 +98,16 @@ const drawWall = (points, metrage, meubles, wall, axis) => {
             position = box.min.z
             width = Math.round(box.max.z - box.min.z)
         }
-        if (joins && joins.includes(Sides.R)) {
-            if (!Room.toRightDirection(wall)) {
-                position += Measures.thick
+        if (joins && joins.includes(Sides.R)) {// only left meuble reduces
+            const jointUid = Meuble.Joins.find(join => join.substr(0, join.indexOf('-')) === meuble.getUid())
+            const jointMeuble = MainScene.meubles.find(m => m.getUid() === jointUid.substr(jointUid.indexOf('-') + 1))
+            if (jointMeuble
+                && (jointMeuble.wall === wall || Object.values(Corners).includes(jointMeuble.wall))) {// angle meuble case
+                if (!Room.toRightDirection(wall)) {
+                    position += Measures.thick
+                }
+                width -= Measures.thick
             }
-            width -= Measures.thick
         }
         // console.log(meuble, joins, position, width, wall, axis)
         cotation = drawOneCotation(position, width, wall, axis, material1)

@@ -4,42 +4,12 @@
     "name": "untitled",
     "meubles": [
         {
-            "sku": "NYANGH219W",
-            "uid": "DB82BCAB",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "front-right"
-            },
-            "items": []
-        },
-        {
-            "sku": "NYH219P40RL057",
-            "uid": "292D575E",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 3390
-            },
-            "items": [],
-            "turned": 0
-        },
-        {
-            "sku": "NYH238P40P62",
-            "uid": "D4637840",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "front",
-                "x": 2560
-            },
-            "items": []
-        },
-        {
             "sku": "NYH238P62L040",
             "uid": "6F91B493",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "front",
-                "x": 3300
+                "wall": "right",
+                "x": 4190
             },
             "items": []
         },
@@ -48,8 +18,7 @@
             "uid": "EA1719A0",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "right",
-                "x": 2080
+                "wall": "right-back"
             },
             "items": []
         }

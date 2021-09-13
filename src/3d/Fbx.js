@@ -28,6 +28,9 @@ export default class Fbx {
         // console.warn(`No laque material id for `, Fbx.list, uuid)
         return Fbx.list.find(f => f.object.uuid === uuid)
     }
+    /* static getByUid(uid) {
+        return Fbx.list.find(f => f.getUid() === uid)
+    } */
     getUid() {
         return (this.state && this.state.uid) ? this.state.uid :
             this.object ? this.object.uuid.substring(0, 8) : "no-uuid"// identifies uniquely
