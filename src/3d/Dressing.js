@@ -99,3 +99,4 @@ export const getCurrentDressingForDevis = () => {
     dressing.materialId = getMaterialId()
     return dressing
 }
+window.getCurrentDressingForDevis = getCurrentDressingForDevis

@@ -1,28 +1,92 @@
 {
-    "xmax": 6000,
-    "zmax": 6000,
+    "xmax": 4900,
+    "zmax": 5000,
     "name": "untitled",
     "meubles": [
         {
-            "sku": "NYH238P62L040",
-            "uid": "6F91B493",
+            "sku": "NYH238P62L081",
+            "uid": "57E49C1A",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "right",
-                "x": 4190
+                "wall": "front",
+                "x": 3132
             },
-            "items": []
-        },
-        {
-            "sku": "NYH238P62L059",
-            "uid": "EA1719A0",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right-back"
-            },
-            "items": []
+            "items": [
+                {
+                    "sku": "NYETAP62L081",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1111
+                    }
+                },
+                {
+                    "sku": "NYCASP62L081",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 25,
+                        "y": 0
+                    }
+                },
+                {
+                    "sku": "NYPVG4H238L40",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 23,
+                        "y": 807
+                    }
+                },
+                {
+                    "sku": "NYPVD4H238L40",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 430,
+                        "y": 807
+                    }
+                },
+                {
+                    "sku": "NYTIR4P62L081",
+                    "laqueOnMeshes": [
+                        {
+                            "mesh": "laquable-mtl-hori",
+                            "laque": 3127
+                        }
+                    ],
+                    "position": {
+                        "slot": "left",
+                        "x": 25,
+                        "y": 50
+                    }
+                },
+                {
+                    "sku": "NYCHACAS81",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1047
+                    }
+                },
+                {
+                    "sku": "NYPENRABP62M2L081",
+                    "laqueOnMeshes": [],
+                    "position": {
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1486
+                    }
+                }
+            ]
         }
     ],
-    "materialId": 1301,
-    "joins": []
+    "materialId": 1293,
+    "joins": [
+        "57E49C1A-9830ACBA",
+        "3BF28B5C-57E49C1A",
+        "1703C8F6-57E49C1A"
+    ]
 }

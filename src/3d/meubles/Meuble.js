@@ -95,15 +95,6 @@ export default class Meuble extends Fbx {
 
         this.positionAllChildren()
 
-        /* add sub objects */
-
-        if (state && state.items)
-            state.items
-                .filter(i => i.sku.indexOf("ANGAB") == -1)// angab auto-added later, with panels
-                .forEach(i => {
-                    this.addItemBySku(i.sku, i)
-                })
-
         /* panneaux */
 
         if (!this.skuInfo.hasSides) {
@@ -132,6 +123,15 @@ export default class Meuble extends Fbx {
         this.setupRuler();
 
         this.setPosition(state.position);
+
+        /* add sub objects */
+
+        if (state && state.items)
+            state.items
+                .filter(i => i.sku.indexOf("ANGAB") == -1)// angab auto-added later, with panels
+                .forEach(i => {
+                    this.addItemBySku(i.sku, i)
+                })
 
         // log meuble to console
         console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`, this.getSlots())
@@ -183,7 +183,7 @@ export default class Meuble extends Fbx {
         applyMaterial(mtl, this)
         this.items.forEach(item => {
             item.removeLaqueOnMeshes()
-            // applyMaterial(mtl, item)
+            applyMaterial(mtl, item)
         })
         if (this.panneaux && this.panneaux[Sides.R]) applyMaterial(mtl, this.panneaux[Sides.R])
         if (this.panneaux && this.panneaux[Sides.L]) applyMaterial(mtl, this.panneaux[Sides.L])
@@ -218,11 +218,9 @@ export default class Meuble extends Fbx {
         if (enabled) {
             MainScene.interactionManager.add(this.object)
             if (!this.object._listeners || !this.object._listeners.click)//only 1 entry
-                // this.object.addEventListener('click', this.click.bind(this))
                 this.object.addEventListener('mousedown', this.click.bind(this))
         } else {
             MainScene.interactionManager.remove(this.object)
-            // this.object.removeEventListener('click', this.click.bind(this))
             this.object.removeEventListener('mousedown', this.click.bind(this))
         }
     }
@@ -725,7 +723,7 @@ export default class Meuble extends Fbx {
     remove() {
         Meuble.detach(this)
         MainScene.interactionManager.remove(this.object)
-        this.object.removeEventListener('click', this.click.bind(this))
+        this.object.removeEventListener('mousedown', this.click.bind(this))
 
         this.items.forEach(i => {
             this.removeItem(i)
@@ -752,5 +750,15 @@ export default class Meuble extends Fbx {
     static isJoined(meuble) {// returns array [Sides.L,Sides.R] if joined
         return Meuble.Joins.filter(join => join.includes(meuble.getUid()))
             .map(join => join.indexOf(meuble.getUid()) === 0 ? Sides.R : Sides.L)
+    }
+    static findRightJoin(meuble) {
+        const join = Meuble.Joins.find(j => j.substr(0, j.indexOf('-')) === meuble.getUid())
+        if (join) return join.substr(join.indexOf('-') + 1)
+        return null
+    }
+    static findLeftJoin(meuble) {
+        const join = Meuble.Joins.find(j => j.substr(j.indexOf('-') + 1) === meuble.getUid())
+        if (join) return join.substr(0, join.indexOf('-'))
+        return null
     }
 } 

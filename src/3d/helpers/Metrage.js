@@ -74,20 +74,12 @@ export const draw = () => {
 }
 const drawWall = (points, metrage, meubles, wall, axis) => {
     // console.log("drawWall", meubles, wall, axis)
+    window.metrages = []
 
-    /*     Meuble.Joins.forEach(join => {
-            const leftMeubleUid = join.substr(0, join.indexOf('-'));
-            const leftMeuble = MainScene.meubles.find(m => m.getUid() === leftMeubleUid)
-            const rightMeubleUid = join.substr(join.indexOf('-') + 1);
-            const rightMeuble = MainScene.meubles.find(m => m.getUid() === rightMeubleUid)
-                   
-            //TODO how get groups of joined meubles ?
-    
-        }) 
-        */
     let cotation, position, width
     meubles.forEach(meuble => {
         const box = new Box3().setFromObject(meuble.object)
+        // console.log(meuble.object)
         const joins = Meuble.isJoined(meuble)
 
         if (axis === "x") {
@@ -107,10 +99,44 @@ const drawWall = (points, metrage, meubles, wall, axis) => {
                     position += Measures.thick
                 }
                 width -= Measures.thick
+                /*
+                                // generating chain of joint meubles
+                                if (!Meuble.findLeftJoin(meuble) || Object.values(Corners).includes(meuble.wall)) {
+                                    const joinMetrage = {
+                                        position: position,
+                                        width: width
+                                    }
+                                    let union, unionMeuble = jointMeuble, unionUid, unionBox
+                                    while (unionMeuble) {
+                                        unionBox = new Box3().setFromObject(unionMeuble.object)
+                                        if (axis === "x") {
+                                            joinMetrage.width += Math.round(unionBox.max.x - unionBox.min.x)
+                                        }
+                                        else if (axis === "z") {
+                                            joinMetrage.width += Math.round(unionBox.max.z - unionBox.min.z)
+                                        }
+                                        union = Meuble.isJoined(unionMeuble)
+                                        if (union && union.includes(Sides.R)) {// only left meuble reduces
+                                            unionUid = Meuble.findRightJoin(unionMeuble)
+                                            unionMeuble = MainScene.meubles.find(m => m.getUid() === unionUid)
+                                            if (unionMeuble
+                                                && (unionMeuble.wall === wall || Object.values(Corners).includes(unionMeuble.wall))) {// angle meuble case
+                                                if (!Room.toRightDirection(wall)) {
+                                                    // position += Measures.thick
+                                                }
+                
+                                            }
+                                            else unionMeuble = null
+                                        }
+                                        else unionMeuble = null
+                                    }
+                                    metrage.add(drawOneCotation(joinMetrage.position, joinMetrage.width, wall, axis, lineHeightInRoom + 400, material1))
+                                }*/
             }
         }
         // console.log(meuble, joins, position, width, wall, axis)
-        cotation = drawOneCotation(position, width, wall, axis, material1)
+        cotation = drawOneCotation(position, width, wall, axis, lineHeightInRoom, material1)
+        window.metrages.push({ p: position, w: width })
         metrage.add(cotation)
     })
 
@@ -127,48 +153,46 @@ const drawWall = (points, metrage, meubles, wall, axis) => {
     })
     spaces.push(new Space((segment ? segment.max : lastPos), wallLength, lastMeuble, null))
     spaces.forEach(space => {
-        // console.log(wall, space)
-        // if (space.prev && space.next) {
         width = Math.round(space.max - space.min)
-        if (width > minimalSpace)
-            cotation = drawOneCotation(space.min, width, wall, axis, material2)
-        // console.log(meuble, joins, position, width, wall, axis)
-        metrage.add(cotation)
-        // }
-
+        if (width > minimalSpace) {
+            cotation = drawOneCotation(space.min, width, wall, axis, lineHeightInRoom, material2)
+            window.metrages.push({ p: space.min, w: width })
+            // console.log(meuble, joins, position, width, wall, axis)
+            metrage.add(cotation)
+        }
     })
 
 }
-const drawOneCotation = (position, width, wall, axis, material = material2) => {
+const drawOneCotation = (position, width, wall, axis, height, material = material2) => {
     // console.log("drawOneCotation", position,width, axis)
 
     const metrage = new Group();
     metrage.name = "metrage"
     let points = [], geometry, label
     const abscis = axis === "x" ? (wall === Walls.R ? 0 : Room.zmax) : wall === Walls.F ? 0 : Room.xmax
-    const textMesh = makeTextSprite(Math.round(width).toString() + "mm");//round? ceil? floor?
+    const textMesh = makeTextSprite(Math.round(width).toString());//round? ceil? floor? + "mm"
 
     if (axis === "x") {
-        points.push(new Vector3(position, lineHeightInRoom, abscis));
-        points.push(new Vector3(position + width, lineHeightInRoom, abscis));
+        points.push(new Vector3(position, height, abscis));
+        points.push(new Vector3(position + width, height, abscis));
         geometry = new BufferGeometry().setFromPoints(points)
         geometry.name = "metrage-geometry"
         metrage.add(new LineSegments(geometry, material))
 
         points = []
-        points.push(new Vector3(position, lineHeightInRoom, abscis));
+        points.push(new Vector3(position, height, abscis));
         points.push(new Vector3(position, Room.ymax, abscis));
         geometry = new BufferGeometry().setFromPoints(points)
         metrage.add(new LineSegments(geometry, material2))
 
         points = []
-        points.push(new Vector3(position + width, lineHeightInRoom, abscis));
+        points.push(new Vector3(position + width, height, abscis));
         points.push(new Vector3(position + width, Room.ymax, abscis));
         geometry = new BufferGeometry().setFromPoints(points)
         metrage.add(new LineSegments(geometry, material2))
 
         textMesh.position.x = position + width / 2
-        textMesh.position.y = lineHeightInRoom + 80
+        textMesh.position.y = height + 80
         textMesh.position.z = wall === Walls.R ? -distance : Room.zmax + distance
         if (wall === Walls.R) {
             textMesh.rotateX(-Math.PI / 2)
@@ -179,26 +203,26 @@ const drawOneCotation = (position, width, wall, axis, material = material2) => {
         }
     }
     else if (axis === "z") {
-        points.push(new Vector3(abscis, lineHeightInRoom, position));
-        points.push(new Vector3(abscis, lineHeightInRoom, position + width));
+        points.push(new Vector3(abscis, height, position));
+        points.push(new Vector3(abscis, height, position + width));
         geometry = new BufferGeometry().setFromPoints(points)
         geometry.name = "metrage-geometry"
         metrage.add(new LineSegments(geometry, material))
 
         points = []
-        points.push(new Vector3(abscis, lineHeightInRoom, position));
+        points.push(new Vector3(abscis, height, position));
         points.push(new Vector3(abscis, Room.ymax, position));
         geometry = new BufferGeometry().setFromPoints(points)
         metrage.add(new LineSegments(geometry, material2))
 
         points = []
-        points.push(new Vector3(abscis, lineHeightInRoom, position + width));
+        points.push(new Vector3(abscis, height, position + width));
         points.push(new Vector3(abscis, Room.ymax, position + width));
         geometry = new BufferGeometry().setFromPoints(points)
         metrage.add(new LineSegments(geometry, material2))
 
         textMesh.position.x = wall === Walls.F ? -distance : Room.xmax + distance
-        textMesh.position.y = lineHeightInRoom + 80
+        textMesh.position.y = height + 80
         textMesh.position.z = position + width / 2
         if (wall === Walls.R) {
             textMesh.rotateX(-Math.PI / 2)

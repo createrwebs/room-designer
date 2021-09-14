@@ -352,23 +352,7 @@ export default {
     },
     enableMeubleClicking(enabled) {
         this.meubles.forEach(m => {
-            /*             m.items.forEach(i => {
-                            if (enabled) {
-                                this.interactionManager.add(i.object)
-                                i.object.addEventListener('click', i.click.bind(i))
-                            } else {
-                                this.interactionManager.remove(i.object)
-                                i.object.removeEventListener('click', i.click.bind(i))
-                            }
-                        }) */
             m.enableClick(enabled)
-            /*             if (enabled) {
-                            this.interactionManager.add(m.object)
-                            m.addClickListener()
-                        } else {
-                            this.interactionManager.remove(m.object)
-                            m.removeClickListener()
-                        } */
         })
     },
 
@@ -391,13 +375,13 @@ export default {
                 .forEach(c => {
                     if (enabled) {
                         this.interactionManager.add(c)
-                        c.addEventListener('click', m.clickLaquable.bind(m))
+                        c.addEventListener('mousedown', m.clickLaquable.bind(m))
                         c.addEventListener('mouseover', this.itemMouseOver.bind(this, m))
                         c.addEventListener('mouseout', this.itemMouseOut.bind(this, m))
 
                     } else {
                         this.interactionManager.remove(c)
-                        c.removeEventListener('click', m.clickLaquable.bind(m))
+                        c.removeEventListener('mousedown', m.clickLaquable.bind(m))
                         c.removeEventListener('mouseover', this.itemMouseOver.bind(this, m))
                         c.removeEventListener('mouseout', this.itemMouseOut.bind(this, m))
                     }
@@ -406,12 +390,12 @@ export default {
                 i.object.children.filter(c => i.props.laquables.includes(c.name)).forEach(c => {
                     if (enabled) {
                         this.interactionManager.add(c)
-                        c.addEventListener('click', i.clickLaquable.bind(i))
+                        c.addEventListener('mousedown', i.clickLaquable.bind(i))
                         c.addEventListener('mouseover', this.itemMouseOver.bind(this, i))
                         c.addEventListener('mouseout', this.itemMouseOut.bind(this, i))
                     } else {
                         this.interactionManager.remove(c)
-                        c.removeEventListener('click', i.clickLaquable.bind(i))
+                        c.removeEventListener('mousedown', i.clickLaquable.bind(i))
                         c.removeEventListener('mouseover', this.itemMouseOver.bind(this, i))
                         c.removeEventListener('mouseout', this.itemMouseOut.bind(this, i))
                     }
@@ -432,10 +416,10 @@ export default {
             m.items.forEach(i => {
                 if (enabled) {
                     this.interactionManager.add(i.object)
-                    i.object.addEventListener('click', m.removeItem.bind(m, i))
+                    i.object.addEventListener('mousedown', m.removeItem.bind(m, i))
                 } else {
                     this.interactionManager.remove(i.object)
-                    i.object.removeEventListener('click', m.removeItem.bind(m, i))
+                    i.object.removeEventListener('mousedown', m.removeItem.bind(m, i))
                 }
             })
         })

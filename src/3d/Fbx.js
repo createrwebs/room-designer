@@ -119,6 +119,7 @@ export default class Fbx {
     }
     getLaqueOnMeshesJson() {
         const laqueOnMeshes = []
+        console.log(this, this.laqueOnMeshes)
         Object.entries(this.laqueOnMeshes).forEach(
             ([mesh, laque]) => {
                 // console.log(mesh, laque)

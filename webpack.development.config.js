@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 const args = process.argv.slice(2);
 module.exports = {
@@ -61,14 +60,6 @@ module.exports = {
             title: 'NY Minet',
             template: './src/index.html'
         }),
-        new webpack.HotModuleReplacementPlugin(),
-        new BrowserSyncPlugin({
-            host: 'localhost',
-            port: 3000,
-            proxy: 'http://localhost:8080/'
-        },
-            {
-                reload: false
-            })
+        new webpack.HotModuleReplacementPlugin()
     ],
 };
