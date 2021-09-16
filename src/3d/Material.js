@@ -49,7 +49,6 @@ export const setVisible = (meuble, visible, parts) => {
     meuble.object.children//c.type === "Mesh"
         .filter(c => (parts ? parts.some(element => c.name.includes(element)) : true))
         .forEach(c => {
-            // console.log(c)
             c.visible = visible;
         });
 }
@@ -103,7 +102,6 @@ export const loadOne = (material) => {
 
 }
 export const load = (materials) => {
-    // console.log('load material', materials);
     let texturePromises = [];
     return new Promise((resolveTexturesLoaded, rejectTexturesLoaded) => {
         Object.entries(materials).forEach(
@@ -158,7 +156,6 @@ export const load = (materials) => {
     })
 }
 export const apply = (materials, meuble) => {
-    // console.log('Material : apply', materials, 'on', meuble)
     let material_args, material, mtl
 
     /*
@@ -168,7 +165,6 @@ export const apply = (materials, meuble) => {
     meuble.object.children.forEach(child => {
         const materialMatch = child.name.match(/-mtl-(.*)/)
 
-        // console.log('Material : apply', materials, 'on', materialMatch, child.name)
         // child object name that contains -mtl- should be textured with materialMatch[1]
         if (materialMatch && materialMatch.length > 0) {
             mtl = materials.find(m => m.part.includes(materialMatch[1]))
@@ -185,7 +181,6 @@ export const apply = (materials, meuble) => {
                 else {
                     material = new MeshStandardMaterial(material_args);
                 }
-                // console.log('Apply Material ', material, 'on', mtl, child.name)
                 child.material = material;
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -225,7 +220,6 @@ export const apply = (materials, meuble) => {
             mirror.position.set(box.min.x + m_width / 2, box.min.y + m_height / 2, box.min.z + m_depth / 2);
             child.parent.add(mirror);
             child.parent.remove(child);
-            // if (meuble.props) console.warn(`Mirror found & replaced in meuble ${meuble.props.sku}`, child.name)
         })
 
     /* light */

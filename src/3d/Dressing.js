@@ -82,7 +82,6 @@ export const getCurrentDressingForDevis = () => {
     /*
     ajout des separateurs
     */
-    // console.log("Meuble.Joins", Meuble.Joins)
     Meuble.Joins.forEach(join => {
         const leftMeubleUid = join.substr(0, join.indexOf('-'));
         const leftMeuble = MainScene.meubles.find(m => m.getUid() === leftMeubleUid)

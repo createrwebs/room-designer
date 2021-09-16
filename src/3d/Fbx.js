@@ -16,16 +16,13 @@ import {
 export default class Fbx {
     static list = []
     constructor (props, object, state, skuInfo) {
-        // console.log('Fbx', props, object, state)
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
         this.state = state// position & dressing stuff
         this.skuInfo = skuInfo// sku parsing info
-
         Fbx.list.push(this)
     }
     static getByUuid(uuid) {
-        // console.warn(`No laque material id for `, Fbx.list, uuid)
         return Fbx.list.find(f => f.object.uuid === uuid)
     }
     /* static getByUid(uid) {
@@ -103,13 +100,11 @@ export default class Fbx {
     }
     clickLaquable(interactiveEvent) {
 
-        // console.log("clickLaquable", interactiveEvent)
         interactiveEvent.stopPropagation()
         applyOnMesh(MainScene.laque, interactiveEvent.target)
 
         //memorize :
         this.laqueOnMeshes[interactiveEvent.target.name] = MainScene.laqueId
-        // console.log("clickLaquable", this, this.laqueOnMeshes)
 
         MainScene.render()
         sceneChange()
@@ -119,10 +114,8 @@ export default class Fbx {
     }
     getLaqueOnMeshesJson() {
         const laqueOnMeshes = []
-        console.log(this, this.laqueOnMeshes)
         Object.entries(this.laqueOnMeshes).forEach(
             ([mesh, laque]) => {
-                // console.log(mesh, laque)
                 laqueOnMeshes.push({
                     mesh: mesh,
                     laque: laque

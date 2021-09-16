@@ -14,7 +14,6 @@ export default class ItemUsingHole extends Item {
             places = places.filter(p => p !== i.positionY)
         });
         places = places.sort((a, b) => a - b)
-        // console.log(">>>>", places)
     }
     startDrag() {
         this.computeAvailableHoles()

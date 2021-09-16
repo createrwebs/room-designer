@@ -6,8 +6,6 @@ import {
     takePicture,
     downloadScene,
     clickMeubleLine,
-    dragMeubleOverScene,
-    dropMeubleOnScene,
     animeSelectedMeuble,
     changeTool,
     generateAllPix,
@@ -21,6 +19,12 @@ import {
 import store from './store';
 
 import { getCurrentDressing, getCurrentDressingForDevis } from '../3d/Dressing';
+
+/*
+    Kino = front end word press site, by Raf
+    Scene = threejs 3d scene, this, app, by Fab
+    all actions going from Scene to Kino are treated here
+*/
 
 export const KinoEvent = {
     APP_READY: 'app_ready',
@@ -66,18 +70,18 @@ const BridgeEvent = {
 }
 
 /*
-    all actions coming from front end site are treated here
+    all actions coming from Kino are treated here
 */
 
 export const comingFromKino = (event, param1, param2) => {
-    // console.log("comingFromKino :", event, param1, param2)
     switch (event) {
         case BridgeEvent.NEW_DRESSING:
             newScene(param1)
             break;
         case BridgeEvent.SAVE_DRESSING:
             return getCurrentDressing()
-            break;
+        case BridgeEvent.GET_DEVIS:
+            return getCurrentDressingForDevis()
         case BridgeEvent.LOAD_DRESSING:
             loadScene(param1, param2)
             break;
@@ -86,9 +90,6 @@ export const comingFromKino = (event, param1, param2) => {
             break;
         case BridgeEvent.TAKE_PICTURE:
             takePicture()
-            break;
-        case BridgeEvent.GET_DEVIS:
-            console.log(getCurrentDressingForDevis())
             break;
         case BridgeEvent.GENERATE_ALL_PIX:
             generateAllPix()
@@ -99,17 +100,12 @@ export const comingFromKino = (event, param1, param2) => {
         case BridgeEvent.ADD_MEUBLE_TO_SCENE:
             clickMeubleLine(param1, param2)
             break;
-        case BridgeEvent.DRAG_MEUBLE_OVER_SCENE:
-            dragMeubleOverScene(param1, param2)
-            break;
-        /*         case BridgeEvent.DROP_MEUBLE_TO_SCENE:
-                    store.dispatch(dropMeubleOnScene(param1, param2))
-                    break; */
         case BridgeEvent.SET_SCENE_MATERIAL:
             setSceneMaterial(param1)
             break;
         case BridgeEvent.LOAD_ALL_SKU:
             generateAllPix(param1)
+            break;
         case BridgeEvent.SELECT_MEUBLE:
             changeTool(Tools.ARROW)
             break;

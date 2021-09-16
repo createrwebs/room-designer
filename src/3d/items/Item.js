@@ -158,7 +158,7 @@ export default class Item extends Fbx {
         Space.onWall[this.parent.getUid()]
         // const segment = getSegment(this.object, "y")
         // const closestSpace = Space.getClosest(this.parent.getUid(), segment);
-        console.warn("findFreePlaceInSlot", slot, spaces)
+        // console.warn("findFreePlaceInSlot", slot, spaces)
         if (spaces && spaces.length > 0) {
             return (spaces[0].max - spaces[0].min) / 2
         }

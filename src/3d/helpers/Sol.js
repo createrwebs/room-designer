@@ -10,7 +10,6 @@ const divisionWidth = 1000// <100 lag
 const material = new LineBasicMaterial({ color: 0xBBBBBB, linewidth: 3, opacity: 1 });
 
 export const create = (largeur, longueur) => {
-    // console.log("createsolgrid", largeur, longueur);
     const points = [];
     let k = 0;
     while (k <= largeur) {

@@ -5,7 +5,22 @@ export default class Miroir extends Item {
     setPositionX(x) {
         const middle = (this.parent.skuInfo.l + 2 * Measures.thick) / 2
         const toRight = x > middle
-        this.object.position.x = this.positionX = toRight ? this.parent.skuInfo.l : this.width// - this.width
+        if (toRight) {
+            this.object.children.forEach(child => {
+                child.position.z = this.depth + 80
+                child.rotation.y = -Math.PI
+            })
+        }
+        else {
+            this.object.children.forEach(child => {
+                child.position.z = 80
+                child.rotation.y = 0
+            })
+        }
+
+        this.object.position.x
+            = this.positionX
+            = toRight ? this.parent.skuInfo.l + this.width - 14 : this.width - 14
     }
     getSegmentY() {
         return {

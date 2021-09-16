@@ -27,7 +27,6 @@ manager.onProgress = (url, itemsLoaded, itemsTotal) => {
     }
 }
 manager.onError = (url) => {
-    // console.log('There was an error loading ' + url);
     store.dispatch(loadManagerError(getFileNameFromUrl(url)))
 }
 
@@ -55,15 +54,12 @@ export const loadFbx = (url, callback) => {
             callback(object.clone())
         },
         (xhr) => {
-            // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
             store.dispatch(loadManagerProgress(filename, xhr.loaded / xhr.total))
-            // if (itemsLoaded === itemsTotal) {
             if (xhr.loaded / xhr.total) {
                 store.dispatch(loadManagerQueueFinished())
             }
         },
         (error) => {
-            console.error(error)
             store.dispatch(loadManagerError(filename))
             goingToKino(KinoEvent.ERROR_LOADING_MEUBLE, filename)
         }

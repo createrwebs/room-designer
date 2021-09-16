@@ -18,9 +18,6 @@ export default class Tiroir extends Item {
             return !(p >= segmentY.min && p <= segmentY.max + 60)//aeration!
         })
         this.parent.places[this.slot] = places
-
-        // console.log(places, segmentY)
-
     }
     setPositionY(y) {
         this.object.position.y = this.parent.skuInfo.ymin

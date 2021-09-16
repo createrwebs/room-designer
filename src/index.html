@@ -942,7 +942,6 @@
 			NO_RLTURN_ON_COULISSANTE: 'no_rlturn_on_coulissante',
 		}
 		kino_bridge = function (type, arg1, arg2) {
-			// console.log("kino_bridge", type, arg1 ? arg1 : "", arg2 ? arg2 : "")
 			switch (type) {
 				case KinoEvent.LOADING_MEUBLE:
 				case KinoEvent.MEUBLE_LOADED:
@@ -958,7 +957,7 @@
 					populate_items_list(arg1)
 					break;
 				default:
-					console.log("kino_bridge", type, arg1 ? arg1 : "", arg2 ? arg2 : "")
+					console.warn("kino_bridge", type, arg1 ? arg1 : "", arg2 ? arg2 : "")
 			}
 		}
 		var showhideFacades = true

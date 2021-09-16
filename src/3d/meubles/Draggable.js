@@ -65,18 +65,12 @@ export default class Draggable extends Meuble {
     /* events */
 
     dragStart(event) {
-        // console.log("dragStart", this, event)
         if (Draggable.Dragged) {//|| tool != Tools.ARROW
             event.target.enabled = false;// deactivation of other Draggable
             return
         }
         Draggable.Dragged = this;
         MainScene.orbitControls.enabled = false;// deactivation of orbit controls while dragging
-
-        /* if (event.altKey) {
-            console.debug("alt+click has just happened!");
-            return;
-        } */
 
         Room.setupWallConstraints(this.getWidth())
 
@@ -110,7 +104,7 @@ export default class Draggable extends Meuble {
         const newPlace = getWallChange(this.wall, event.object.position)
 
         if (this.wall != newPlace) {
-            console.warn(`Moving from ${this.wall} to ${newPlace}`)
+            // console.warn(`Moving from ${this.wall} to ${newPlace}`)
 
             if (this.isOnAWall()
                 && this.skuInfo.angABSku
@@ -175,7 +169,6 @@ export default class Draggable extends Meuble {
             event.object.position[axis] = 10 * (Math.round(event.object.position[axis] / 10))//grid magnet 1cm
             event.object.position[axis] = Math.max(Room[this.wall].min, Math.min(Room[this.wall].max, event.object.position[axis]))
 
-            // console.log(">>>", axis, event.object.position)// object disappear because position NaN !
             event.object.position[axis] = Room.collisionSolver(this);
         }
         else if (Object.values(Corners).includes(this.wall)) {// on a corner
@@ -186,7 +179,6 @@ export default class Draggable extends Meuble {
     }
 
     dragEnd(event) {
-        // console.log("dragEnd", this)
         MainScene.orbitControls.enabled = true;
         store.dispatch(drag(null))
         Draggable.Dragged = null

@@ -135,12 +135,10 @@ export default {
 
 
         // meuble on side wall forbid dragging to corner :
-        // console.warn("Wall", wall)
         let ax, inter, seg, meubleDepthSegment
         if (this.getSideWalls(wall) && this.getSideWalls(wall).length == 2) {
 
             const leftWall = this.getSideWalls(wall)[0]
-            // console.log(leftWall)
             if (wall === Walls.R || wall === Walls.F) {// close to origin
                 meubleDepthSegment = { min: 0, max: skuInfo.p }
             }
@@ -150,16 +148,13 @@ export default {
             ax = this.getAxisForWall(leftWall)
             this.MeublesOnWall[leftWall].filter(m => m !== meuble).forEach(m => {
                 seg = getSegment(m.object, ax)
-                // console.log("+++", m.props.sku, meubleDepthSegment, seg)
                 inter = segmentIntersect(meubleDepthSegment, seg)
-                // console.log(inter)
                 if (inter) {
                     lastPos = Math.max(lastPos, lastPos + m.skuInfo.p)
                 }
             })
 
             const rightWall = this.getSideWalls(wall)[1]
-            // console.log(rightWall)
             if (wall === Walls.R || wall === Walls.F) {// close to origin
                 meubleDepthSegment = { min: 0, max: skuInfo.p }
             }
@@ -169,15 +164,12 @@ export default {
             ax = this.getAxisForWall(rightWall)
             this.MeublesOnWall[rightWall].filter(m => m !== meuble).forEach(m => {
                 seg = getSegment(m.object, ax)
-                // console.log("---", m.props.sku, meubleDepthSegment, seg)
                 inter = segmentIntersect(meubleDepthSegment, seg)
-                // console.log(inter)
                 if (inter) {
                     wallLength = Math.min(wallLength, wallLength - m.skuInfo.p)
                 }
             })
         }
-        // console.warn(lastPos, wallLength)
 
         // ------------------
 
@@ -190,7 +182,6 @@ export default {
             if (segment.min - lastPos >= mWidth) {
                 Space.onWall[wall].push(new Space(lastPos, segment.min, lastMeuble, m))
             }
-            // console.warn(segment, segment.max - segment.min)
             lastMeuble = m;
             lastPos = segment.max;//m.position;
         })
@@ -210,7 +201,6 @@ export default {
         // Object.keys(this).forEach(w => {// right,back,left
         [Walls.R, Walls.B, Walls.L, Walls.F].forEach(w => {// right,back,left if exists
             this.MeublesOnWall[w] = this.getMeublesOnWall(meublesOnScene, w, this.getAxisForWall(w))
-            // console.log(this.MeublesOnWall[w])
         });
     },
 
@@ -346,7 +336,6 @@ export default {
                 if (next && next.skuInfo.type === "ANG90") {// ANG90 corner fileur pushing
                     next.setDepth(Sides.L, meuble.skuInfo.PR)
                 }
-                // console.log(mWidth)
                 return toRight ? closestSpace.max - mWidth + (fusion ? Measures.thick : 0) :
                     closestSpace.min + mWidth + (fusion ? -Measures.thick : 0)
             default:

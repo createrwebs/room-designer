@@ -31,9 +31,6 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import Stats from 'three/examples/jsm/libs/stats.module'
 
-/* 3d mouse interaction */
-// import { Interaction } from 'three.interaction';// fails to use
-// import { InteractionManager } from "three.interactive";// ok but 500kB re-imports all three !
 import { InteractionManager } from "./ThreeInteractive";// ok, pasted from ./node_modules\three.interactive\src\index.js
 
 import store from '../api/store';
@@ -55,19 +52,6 @@ export default {
     laque: null,
     laqueId: null,
     selection: null,
-
-    /*  clickOnScene(event) {// do not work
-         // console.log("clickOnScene", event)
-         var raycaster = new Raycaster();
-         var mouse = new Vector2();
-         raycaster.setFromCamera(mouse, this.camera);
-         const selectedMeuble = this.meubles.find(m => {
-             const box = new Box3().setFromObject(m.object);
-             if (raycaster.ray.intersectsBox(box) === true) {
-             }
-         })
-         if (selectedMeuble) select(selectedMeuble)
-     }, */
 
     getRendererNodeElement() {
         return this.renderer.domElement
@@ -135,14 +119,9 @@ export default {
         // renderer.localClippingEnable = false;
         // renderer.setClearColor(0xFFFFFF);
 
-
         /* stats */
 
         // this.frame_stats = stats = new Stats();
-
-        /* raycaster */
-
-        // renderer.domElement.addEventListener("click", this.clickOnScene.bind(this), true);
 
         /* camera */
 
@@ -182,10 +161,8 @@ export default {
         this.setupLights()
         this.buildWalls()
         this.resize()
-        // console.log("MainScene setup", this)
     },
     render() {
-        // console.log("render")
         if (this.interactionManager) this.interactionManager.update();
 
         this.getRaycasterIntersect()
@@ -291,7 +268,6 @@ export default {
         }
     },
     clear() {
-        // console.log("scene clear")
         if (this.scene) this.scene.clear();
         this.meubles = [];
 
@@ -453,8 +429,6 @@ export default {
         2 origins : click meuble line or load meuble from dressing => confusion
     */
     createMeuble(props, object, state, skuInfo) {
-        // console.log("createMeuble", props, object, state, skuInfo)
-
         if (!skuInfo.isModule) {
             return Errors.NOT_A_MODULE
         }
@@ -534,7 +508,6 @@ export default {
             }
             else {
                 meuble.object.position[axis] = x
-                // console.log(meuble.wall, x)
 
 
             }

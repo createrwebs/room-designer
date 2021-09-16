@@ -37,10 +37,6 @@ import { Space } from "../Space";
 import { getSegment, segmentIntersect } from '../Utils'
 import { drawInMeuble } from '../helpers/Segments';
 
-// Controls
-// import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-// import { Interaction } from 'three.interaction';
-
 import { create as createRuler } from '../helpers/Ruler';
 import { localhost } from '../../api/Utils';
 
@@ -65,7 +61,6 @@ import ANGTIR from '../items/ANGTIR'
 export default class Meuble extends Fbx {
     constructor (props, object, state, skuInfo) {
         super(props, object, state, skuInfo)
-        // console.log('Meuble', props, object, state, skuInfo)
 
         this.items = []
 
@@ -134,9 +129,6 @@ export default class Meuble extends Fbx {
                     this.addItemBySku(i.sku, i)
                 })
 
-        // log meuble to console
-        // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`, this.getSlots())
-
         const front = this.getFrontPosition()
         const roof = Room.getRoofPosition()
         const center = this.getCenterPoint()
@@ -193,7 +185,6 @@ export default class Meuble extends Fbx {
         const material = getMaterialById(getMaterialId())
         if (material) {
             loadMaterial(material.textures).then(mtl => {
-                // console.log(`material loaded`, mtl)
                 // applyMaterial(m, this)
                 this.applyMaterialOnMeuble(mtl)
                 MainScene.render()
@@ -433,7 +424,6 @@ export default class Meuble extends Fbx {
             if (this.dragItemHelper) {
                 this.ruler.add(this.dragItemHelper);
             } */
-            // console.log(item.slot)
             let place
             const slot = this.getSlots()
                 .filter(slot => item.forceSlot ? slot == item.forceSlot : true)
@@ -458,8 +448,6 @@ export default class Meuble extends Fbx {
                 return this.removeItem(item)
             }
         }
-        // console.log("------------", item.slot, state, state && state.position ? state.position.y : null)
-
         item.setPosition(
             state && state.position ? state.position.x : null,
             state && state.position ? state.position.y : null,
@@ -482,10 +470,8 @@ export default class Meuble extends Fbx {
         const limits = { min: Math.max(segmentY.min, this.getBottom()), max: Math.min(segmentY.max, this.getTop()) }
         let lastPos = limits.min
         let segment;
-        // console.log(this.getUid())
         Space.onWall[this.getUid()] = []
         let spaces = Space.onWall[this.getUid()] = []
-        // console.log(spaces)
         this.items.filter(i => i != item)
             .filter(i => i.slot == slot)
             .filter(i => i.skuInfo.type != "ANGAB")
@@ -501,20 +487,17 @@ export default class Meuble extends Fbx {
                 if (segment.min - lastPos >= item.height) {
                     spaces.push(new Space(lastPos, segment.min, lastItem, i))
                 }
-                // console.warn(segment, segment.max - segment.min)
                 lastItem = i;
                 lastPos = segment.max;
             })
         if (limits.max - (segment ? segment.max : 0) >= item.height) {
             spaces.push(new Space((segment ? segment.max : lastPos), limits.max, lastItem, null))
         }
-        // console.warn(segmentY, limits, spaces)
         return spaces
     }
     /* angab */
 
     positionPaneForAngAB(side, item) {
-        // console.log("positionPaneForAngAB", item, side)
         const PDX = ((side === Sides.L ? Measures.thick : 0) + this.skuInfo.p) * Math.sin(Math.PI / 4)
         const PDZ = ((side === Sides.L ? 2 * Measures.thick : 0) + this.skuInfo.p) * (1 - Math.cos(Math.PI / 4))
         item.object.position.y = 0
@@ -610,7 +593,6 @@ export default class Meuble extends Fbx {
                     .filter(i => i.skuInfo.isTiroir || i.skuInfo.isBlot)
                     .sort((a, b) => b.getBox().max.y - a.getBox().max.y)
         
-                console.log(sortedItems)
                 return sortedItems && sortedItems.length > 0 ? sortedItems[0].getBox().max.y : this.skuInfo.ymin */
     }
     getTop() {
@@ -629,7 +611,6 @@ export default class Meuble extends Fbx {
         only from scene loading !?
     */
     setPosition(position) {
-        // console.log("setPosition",position, MainScene);
         switch (position.wall) {
             case Walls.R:
                 this.object.rotation.y = 0;// natural wall for fbx

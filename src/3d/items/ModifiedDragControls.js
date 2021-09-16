@@ -176,7 +176,6 @@ var DragControls = function (_objects, _camera, _domElement) {
 				_selected = _selected.parent
 				current = Fbx.getByUuid(_selected.uuid)
 			}
-			// console.log("----------", _selected)
 
 			_plane.setFromNormalAndCoplanarPoint(_camera.getWorldDirection(_plane.normal), _worldPosition.setFromMatrixPosition(_selected.matrixWorld));
 

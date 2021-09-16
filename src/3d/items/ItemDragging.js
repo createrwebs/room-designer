@@ -20,7 +20,6 @@ export default {
         }
         objects.push(object)
         this.dragControls = this.setup(objects);
-        // console.log(` ItemDragging add`, object)
     },
     remove(object) {
         const objects = this.dragControls ? this.dragControls.getObjects() : []
@@ -29,7 +28,6 @@ export default {
             this.dragControls.dispose()
         }
         this.dragControls = this.setup(objects.filter(o => object !== o));
-        // console.log(` ItemDragging remove`, object)
     },
     setup(objects) {
         const dragControls = new DragControls(objects, MainScene.camera, MainScene.renderer.domElement);
@@ -39,7 +37,6 @@ export default {
         return dragControls;
     },
     dragStart(event) {
-        console.log(`dragStart Item`, event)
         this.current = event.item;
         this.current.startDrag()
         store.dispatch(drag(this.current))
@@ -50,11 +47,6 @@ export default {
         MainScene.render();
     },
     dragEnd(event) {
-        console.log(`dragEnd Item`, event)
-
-        this.current.box = new Box3().setFromObject(this.current.object);// updateBox()
-
-
         this.current = null
         store.dispatch(drag(null))
         MainScene.orbitControls.enabled = true;

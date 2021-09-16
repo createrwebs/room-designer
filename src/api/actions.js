@@ -431,7 +431,7 @@ export const drag = (meuble) => {
 }
 
 export const select = (meuble, arg) => {
-    console.warn(`Scene click with tool ${MainScene.tool}`)
+    // console.warn(`Scene click with tool ${MainScene.tool}`)
     switch (MainScene.tool) {
         case Tools.ARROW:
             if (meuble) console.warn(`Use hammer tool to edit ${meuble.props.sku}`)
@@ -521,8 +521,6 @@ export const animeSelectedMeuble = () => {
     var distanceToMove = 200;
 
     selectedMeuble.object.traverse(function (child) {// bug : traverse drops first object !!?
-        console.log(child, child.name, child.position)
-
 
         // var meshPosition = child.position;
 
@@ -596,31 +594,6 @@ export const clickMeubleLine = (sku) => {
         })
     }
 }
-
-/**
- * drag meuble on scene.
- * window.scene_bridge('drag_meuble_over_scene','NYC155H219P0').
- *
- * @param {String} sku Stock Keeping Unit of clicked meuble
- * @return {Object} Action object with type and sku
- */
-export const dragMeubleOverScene = (sku) => {
-    console.warn(`what to do here ? dragMeubleOverScene`)
-
-}
-/**
- * drop meuble on scene.
- * window.scene_bridge('drop_meuble_to_scene','NYC155H219P0').
- *
- * @param {String} sku Stock Keeping Unit of clicked meuble
- * @return {Object} Action object with type and sku
- */
-/* export const dropMeubleOnScene = (sku) => {
-    return {
-        type: MeubleEvent.DROP_MEUBLE_TO_SCENE, sku
-    }
-} */
-
 export const printRaycast = (raycast) => {
     return {
         type: SceneEvent.PRINTRAYCAST, raycast

@@ -24,7 +24,6 @@ export default class RangeChaussure extends Item {
     setPositionY(y = 0) {
         const max = this.parent.getTop() - this.height
         const min = this.parent.getBottom()
-        // console.log(min, max)
         this.object.position.y = this.positionY = Math.min(max, Math.max(min, y === undefined ? 0 : y))
     }
 }

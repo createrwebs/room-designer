@@ -25,7 +25,6 @@ import { WEBGL } from 'three/examples/jsm/WEBGL.js';
 import ThreeScene from './ThreeScene';
 import Loading from './printing/Loading';
 import Logging from './printing/Logging';
-import { getGui } from './printing/DataGui';
 
 class App extends Component {
 	constructor (props) {
@@ -40,7 +39,6 @@ class App extends Component {
 
 		setMaterialId(window.materials[0].id)
 
-		let gui
 		if (localhost) {
 
 			fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
@@ -63,7 +61,6 @@ class App extends Component {
 						// window.ts.meubles[0].click()
 						showhideMetrage(true)
 					}, 3000)
-					// gui = getGui()
 					goingToKino(KinoEvent.APP_READY)
 				})
 		}
@@ -80,19 +77,14 @@ class App extends Component {
 						.then(response => response.json())
 						.then(catalogue => {
 							setCatalogue(catalogue)
-							/* 
-							gui = getGui()
-							gui.hide() */
 							newScene();
 							this.setState({ catalogueLoaded: true })
 							goingToKino(KinoEvent.APP_READY)
 						})
 						.catch(e => {
-							console.log("load catalogue error", e);
 						})
 				})
 				.catch(e => {
-					console.log("load config error", e);
 				})
 		}
 	}
