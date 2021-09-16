@@ -1,132 +1,119 @@
 {
-    "xmax": 4000,
-    "zmax": 4000,
-    "name": "4 meubles en coin avec leurs triangles",
+    "xmax": 4900,
+    "zmax": 5000,
+    "name": "untitled",
     "meubles": [
         {
-            "sku": "NYC231H238PP",
+            "sku": "NYH219P62L119",
+            "uid": "57E49C1A",
             "laqueOnMeshes": [],
             "position": {
-                "wall": "right",
-                "x": 1000
+                "wall": "front",
+                "x": 3132
             },
             "items": [
                 {
-                    "sku": "NYETLPCOL074",
+                    "sku": "NYETTP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "left",
-                        "x": 372
+                        "slot": "left",
+                        "x": 25,
+                        "y": 815
                     }
                 },
                 {
-                    "sku": "NYETLPCOL074",
+                    "sku": "NYETAP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "right",
-                        "x": 1268
+                        "slot": "left",
+                        "x": 25,
+                        "y": 372
                     }
                 },
                 {
-                    "sku": "NYETAPCOL074",
+                    "sku": "NYETLP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "right",
-                        "x": 820
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1047
                     }
                 },
                 {
-                    "sku": "NYETAPCOL074",
+                    "sku": "NYETTP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "right",
-                        "x": 372
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1367
                     }
                 },
                 {
-                    "sku": "NYETAPCOL074",
+                    "sku": "NYETLP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "center",
-                        "x": 692
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1495
                     }
                 },
                 {
-                    "sku": "NYETAPCOL074",
+                    "sku": "NYETTP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "left",
-                        "x": 436
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1623
                     }
                 },
                 {
-                    "sku": "NYETTPCOL074",
+                    "sku": "NYETAP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "left",
-                        "x": 692
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1943
                     }
                 },
                 {
-                    "sku": "NYETTPCOL074",
+                    "sku": "NYETTP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "right",
-                        "x": 1844
+                        "slot": "left",
+                        "x": 25,
+                        "y": 1751
                     }
                 },
                 {
-                    "sku": "NYETTPCOL074",
+                    "sku": "NYETLP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "left",
-                        "x": 564
+                        "slot": "left",
+                        "x": 25,
+                        "y": 663
                     }
                 },
                 {
-                    "sku": "NYETAPCOL074",
+                    "sku": "NYETAP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "left",
-                        "x": 756
-                    }
-                }
-            ]
-        },
-        {
-            "sku": "NYH238P40L081",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "right",
-                "x": 140
-            },
-            "items": [
-                {
-                    "sku": "NYETAP40L081",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 372
+                        "slot": "left",
+                        "x": 25,
+                        "y": 431
                     }
                 },
                 {
-                    "sku": "NYETAP40L081",
+                    "sku": "NYETLP62L119",
                     "laqueOnMeshes": [],
                     "position": {
-                        "place": "left",
-                        "x": 1111
-                    }
-                },
-                {
-                    "sku": "NYETAP40L081",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "place": "left",
-                        "x": 919
+                        "slot": "left",
+                        "x": 25,
+                        "y": 919
                     }
                 }
             ]
         }
     ],
-    "materialId": 1301
+    "materialId": 1293,
+    "joins": []
 }

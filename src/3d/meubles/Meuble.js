@@ -57,6 +57,7 @@ import AngAB from '../items/AngAB'
 import RangePull from '../items/RangePull'
 import SeparateurV from '../items/SeparateurV'
 import Penrab from '../items/Penrab'
+import Miroir from '../items/Miroir'
 import ANGETAP from '../items/ANGETAP'
 import ANGETAL from '../items/ANGETAL'
 import ANGTIR from '../items/ANGTIR'
@@ -134,7 +135,7 @@ export default class Meuble extends Fbx {
                 })
 
         // log meuble to console
-        console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`, this.getSlots())
+        // console.log(`Meuble ${this.skuInfo.type} ${this.props.ID} ${this.props.sku} of width ${this.width}mm on ${state.position.wall} wall at ${state.position.x}mm`, this.getSlots())
 
         const front = this.getFrontPosition()
         const roof = Room.getRoofPosition()
@@ -225,7 +226,7 @@ export default class Meuble extends Fbx {
         }
     }
     click(interactiveEvent) {
-        console.warn(`click Meuble ${this.info()}`)
+        // console.warn(`click Meuble ${this.info()}`)
         if (interactiveEvent) {
             // console.warn(`click equality`, interactiveEvent.target == this.object)
             interactiveEvent.stopPropagation()
@@ -300,12 +301,10 @@ export default class Meuble extends Fbx {
     /* items */
 
     removeItem(item, event) {
-        // console.warn(`removeIem ${item.skuInfo}`, event)
         if (event) event.stopPropagation()
         item.remove()
         this.items = this.items.filter(i => item !== i)
         this.object.remove(item.object);
-        console.warn(`removeIem ${item.skuInfo}`, item, this)
         MainScene.render()
         sceneChange()
     }
@@ -412,6 +411,9 @@ export default class Meuble extends Fbx {
         else if (skuInfo.type === "ANGTIR") {
             item = new ANGTIR(props, object, state, skuInfo, this)
         }
+        else if (skuInfo.type === "MIROIR") {
+            item = new Miroir(props, object, state, skuInfo, this)
+        }
         else {
             item = new Item(props, object, state, skuInfo, this)
         }
@@ -431,7 +433,7 @@ export default class Meuble extends Fbx {
             if (this.dragItemHelper) {
                 this.ruler.add(this.dragItemHelper);
             } */
-            console.log(item.slot)
+            // console.log(item.slot)
             let place
             const slot = this.getSlots()
                 .filter(slot => item.forceSlot ? slot == item.forceSlot : true)
@@ -442,7 +444,7 @@ export default class Meuble extends Fbx {
                     // console.log("Found place in slot:", slot, place)
                     return typeof place !== "string"
                 })
-            console.log("found slot place", place, slot)
+            // console.log("found slot place", place, slot)
             if (slot && place) {
                 state = {
                     position: {

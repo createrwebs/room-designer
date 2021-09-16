@@ -534,7 +534,7 @@ export default {
             }
             else {
                 meuble.object.position[axis] = x
-                console.log(meuble.wall, x)
+                // console.log(meuble.wall, x)
 
 
             }
