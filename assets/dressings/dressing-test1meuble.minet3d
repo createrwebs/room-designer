@@ -1,47 +1,118 @@
 {
-    "xmax": 4900,
-    "zmax": 5000,
+    "xmax": 6000,
+    "zmax": 8000,
     "name": "untitled",
     "meubles": [
         {
-            "sku": "NYH219P62L119",
-            "uid": "57E49C1A",
+            "sku": "NYC231H238PP",
+            "uid": "D6F63133",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 1672
+            },
+            "items": []
+        },
+        {
+            "sku": "NYC191H238PG",
+            "uid": "9EBBFA6A",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "front",
-                "x": 3132
+                "x": 4940
             },
-            "items": [
-                {
-                    "sku": "NYETTP62L119",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 25,
-                        "y": 1751
-                    }
-                },
-                {
-                    "sku": "NYETLP62L119",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 25,
-                        "y": 1495
-                    }
-                },
-                {
-                    "sku": "NYMIROIRP62",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 1184,
-                        "y": 396
-                    }
-                }
-            ]
+            "items": []
+        },
+        {
+            "sku": "NYC155H238P0",
+            "uid": "57A21319",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back",
+                "x": 2970
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANG90H238",
+            "uid": "AF0315D4",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front-right"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYANG90H238",
+            "uid": "39523B56",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "left-front"
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P62L096",
+            "uid": "31A7ABB4",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 662
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P62L096",
+            "uid": "1CA0E452",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 1672
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P62L081",
+            "uid": "50FF45EB",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 5140
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40L119",
+            "uid": "F4E96367",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "left",
+                "x": 3000
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40L096",
+            "uid": "495F56C7",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "left",
+                "x": 3985
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P40L081",
+            "uid": "6C77584E",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "back-left"
+            },
+            "items": []
         }
     ],
-    "materialId": 1293,
-    "joins": []
+    "materialId": 1301,
+    "joins": [
+        "495F56C7-F4E96367"
+    ]
 }

@@ -1,17 +1,10 @@
 import {
-    Font,
     LineBasicMaterial,
     Box3,
     Vector3,
     BufferGeometry,
     LineSegments,
-    TextGeometry,
-    Mesh,
     Group,
-    Texture,
-    SpriteMaterial,
-    Sprite,
-    SpriteAlignment
 } from "three";
 import { Walls, Corners, Sides } from '../Constants';
 import { Space } from '../Space';
@@ -19,31 +12,15 @@ import Room from '../Room';
 import MainScene from "../MainScene";
 import TextSprite from './TextSprite'
 import Meuble from '../meubles/Meuble';
-import { getSegment, segmentIntersect, getSize, Measures } from '../Utils'
+import { getSegment, Measures } from '../Utils'
 
-const material1 = new LineBasicMaterial({ color: 0x000000, linewidth: 1, opacity: 1 });
-const material2 = new LineBasicMaterial({ color: 0xBBBBBB, linewidth: 1, opacity: 1 });
-const lineHeightInRoom = 2600
-const minimalSpace = 99
+const materialBold = new LineBasicMaterial({ color: 0x000000, linewidth: 1, opacity: 1 });
+const materialLight = new LineBasicMaterial({ color: 0xBBBBBB, linewidth: 1, opacity: 1 });
+const lineHeight1 = 2600
+const lineHeight2 = lineHeight1 + 400
+const minSpaceWidth = 99
 const distance = 120//distance Text From Line
 
-/*
-new THREE.TextSprite({
-    alignment: 'center',
-    backgroundColor: 'rgba(0,0,0,0)',
-    color: '#fff',
-    fontFamily: 'sans-serif',
-    fontSize: 1,
-    fontStyle: 'normal',
-    fontVariant: 'normal',
-    fontWeight: 'normal',
-    lineGap: 0.25,
-    padding: 0.5,
-    strokeColor: '#fff',
-    strokeWidth: 0,
-    text: '',
-}, material)
-*/
 const makeTextSprite = (t) => {
     return new TextSprite({
         alignment: 'center',
@@ -59,27 +36,62 @@ export const updateMetrage = () => {
 
     draw()
 }
-
+let jointMetrages = []
 export const draw = () => {
     const metrage = new Group();
     metrage.name = "metrage"
     const walls = [Walls.R, Walls.B, Walls.L, Walls.F]
+    jointMetrages = []
+
+    // meubles & spaces cotations
     walls.forEach(w => {
         const axis = Room.getAxisForWall(w)
         const meubles = Room.getMeublesOnWall(MainScene.meubles, w, axis)
         drawWall([], metrage, meubles, w, axis)
     });
-    return metrage
 
+    // grouping joint meubles cotations
+    let last, group
+    walls.forEach(w => {
+        const axis = Room.getAxisForWall(w)
+        last = null
+        group = null
+        jointMetrages.filter(m => m.wall === w)
+            .sort((a, b) => a.p - b.p).forEach(m => {
+                if (last) {
+                    if (last.p + last.w == m.p) {
+                        if (group) {
+                            group.w = (m.p + m.w) - group.p
+                        }
+                        else {
+                            group = {
+                                wall: m.wall,
+                                p: last.p,
+                                w: (m.p + m.w) - last.p
+                            }
+                        }
+
+                    }
+                    else {
+                        if (group) {
+                            metrage.add(drawOneCotation(group.p, group.w, w, axis, lineHeight2))
+                        }
+                        group = null
+                    }
+                }
+                last = m
+            })
+        if (group) {
+            metrage.add(drawOneCotation(group.p, group.w, w, axis, lineHeight2))
+            group = null
+        }
+    });
+    return metrage
 }
 const drawWall = (points, metrage, meubles, wall, axis) => {
-    // console.log("drawWall", meubles, wall, axis)
-    window.metrages = []
-
     let cotation, position, width
     meubles.forEach(meuble => {
         const box = new Box3().setFromObject(meuble.object)
-        // console.log(meuble.object)
         const joins = Meuble.isJoined(meuble)
 
         if (axis === "x") {
@@ -99,44 +111,9 @@ const drawWall = (points, metrage, meubles, wall, axis) => {
                     position += Measures.thick
                 }
                 width -= Measures.thick
-                /*
-                                // generating chain of joint meubles
-                                if (!Meuble.findLeftJoin(meuble) || Object.values(Corners).includes(meuble.wall)) {
-                                    const joinMetrage = {
-                                        position: position,
-                                        width: width
-                                    }
-                                    let union, unionMeuble = jointMeuble, unionUid, unionBox
-                                    while (unionMeuble) {
-                                        unionBox = new Box3().setFromObject(unionMeuble.object)
-                                        if (axis === "x") {
-                                            joinMetrage.width += Math.round(unionBox.max.x - unionBox.min.x)
-                                        }
-                                        else if (axis === "z") {
-                                            joinMetrage.width += Math.round(unionBox.max.z - unionBox.min.z)
-                                        }
-                                        union = Meuble.isJoined(unionMeuble)
-                                        if (union && union.includes(Sides.R)) {// only left meuble reduces
-                                            unionUid = Meuble.findRightJoin(unionMeuble)
-                                            unionMeuble = MainScene.meubles.find(m => m.getUid() === unionUid)
-                                            if (unionMeuble
-                                                && (unionMeuble.wall === wall || Object.values(Corners).includes(unionMeuble.wall))) {// angle meuble case
-                                                if (!Room.toRightDirection(wall)) {
-                                                    // position += Measures.thick
-                                                }
-                
-                                            }
-                                            else unionMeuble = null
-                                        }
-                                        else unionMeuble = null
-                                    }
-                                    metrage.add(drawOneCotation(joinMetrage.position, joinMetrage.width, wall, axis, lineHeightInRoom + 400, material1))
-                                }*/
             }
         }
-        // console.log(meuble, joins, position, width, wall, axis)
-        cotation = drawOneCotation(position, width, wall, axis, lineHeightInRoom, material1)
-        window.metrages.push({ p: position, w: width })
+        cotation = drawOneCotation(Math.round(position), width, wall, axis, lineHeight1, materialBold)
         metrage.add(cotation)
     })
 
@@ -154,18 +131,17 @@ const drawWall = (points, metrage, meubles, wall, axis) => {
     spaces.push(new Space((segment ? segment.max : lastPos), wallLength, lastMeuble, null))
     spaces.forEach(space => {
         width = Math.round(space.max - space.min)
-        if (width > minimalSpace) {
-            cotation = drawOneCotation(space.min, width, wall, axis, lineHeightInRoom, material2)
-            window.metrages.push({ p: space.min, w: width })
-            // console.log(meuble, joins, position, width, wall, axis)
+        if (width > minSpaceWidth) {
+            cotation = drawOneCotation(space.min, width, wall, axis, lineHeight1, materialLight)
             metrage.add(cotation)
         }
     })
 
 }
-const drawOneCotation = (position, width, wall, axis, height, material = material2) => {
+const drawOneCotation = (position, width, wall, axis, height, material = materialLight) => {
     // console.log("drawOneCotation", position,width, axis)
-
+    if (material != materialLight && height == lineHeight1)// real meuble
+        jointMetrages.push({ wall: wall, p: position, w: width })
     const metrage = new Group();
     metrage.name = "metrage"
     let points = [], geometry, label
@@ -183,13 +159,13 @@ const drawOneCotation = (position, width, wall, axis, height, material = materia
         points.push(new Vector3(position, height, abscis));
         points.push(new Vector3(position, Room.ymax, abscis));
         geometry = new BufferGeometry().setFromPoints(points)
-        metrage.add(new LineSegments(geometry, material2))
+        metrage.add(new LineSegments(geometry, materialLight))
 
         points = []
         points.push(new Vector3(position + width, height, abscis));
         points.push(new Vector3(position + width, Room.ymax, abscis));
         geometry = new BufferGeometry().setFromPoints(points)
-        metrage.add(new LineSegments(geometry, material2))
+        metrage.add(new LineSegments(geometry, materialLight))
 
         textMesh.position.x = position + width / 2
         textMesh.position.y = height + 80
@@ -213,13 +189,13 @@ const drawOneCotation = (position, width, wall, axis, height, material = materia
         points.push(new Vector3(abscis, height, position));
         points.push(new Vector3(abscis, Room.ymax, position));
         geometry = new BufferGeometry().setFromPoints(points)
-        metrage.add(new LineSegments(geometry, material2))
+        metrage.add(new LineSegments(geometry, materialLight))
 
         points = []
         points.push(new Vector3(abscis, height, position + width));
         points.push(new Vector3(abscis, Room.ymax, position + width));
         geometry = new BufferGeometry().setFromPoints(points)
-        metrage.add(new LineSegments(geometry, material2))
+        metrage.add(new LineSegments(geometry, materialLight))
 
         textMesh.position.x = wall === Walls.F ? -distance : Room.xmax + distance
         textMesh.position.y = height + 80
