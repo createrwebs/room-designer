@@ -424,6 +424,7 @@ export const select = (meuble, arg) => {
 }
 
 export const sceneChange = () => {
+    // console.warn(`sceneChange`, getCurrentDressingForDevis())
     if (goingToKino)
         goingToKino(KinoEvent.SCENE_CHANGE, getCurrentDressingForDevis())
 }

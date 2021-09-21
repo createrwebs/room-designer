@@ -86,6 +86,7 @@ export default class Fbx {
                     if (laq) {
                         loadOneMaterial(laq).then(m => {
                             applyOnMesh(m, this.object.getObjectByName(l.mesh))
+                            sceneChange()
                             MainScene.render()
                         });
                     }
