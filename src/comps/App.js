@@ -27,7 +27,7 @@ import Loading from './printing/Loading';
 import Logging from './printing/Logging';
 
 class App extends Component {
-	constructor (props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			catalogueLoaded: false
@@ -48,6 +48,8 @@ class App extends Component {
 				.then(catalogue => {
 					setConfig(config)// creation scene
 					setCatalogue(catalogue)
+					this.setState({ catalogueLoaded: true })
+					goingToKino(KinoEvent.APP_READY)
 
 					if (loadedDressingAtStart) {
 						loadScene(loadedDressingAtStart)// from index
@@ -55,13 +57,12 @@ class App extends Component {
 					else {
 						newScene()
 					}
-					this.setState({ catalogueLoaded: true })
+
 					setTimeout(function () {
 						// changeTool(Tools.HAMMER)
 						// window.ts.meubles[0].click()
 						showhideMetrage(true)
 					}, 3000)
-					goingToKino(KinoEvent.APP_READY)
 				})
 		}
 		else {

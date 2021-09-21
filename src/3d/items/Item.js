@@ -17,7 +17,7 @@ import { Space } from "../Space";
 
 export default class Item extends Fbx {
 
-    constructor (props, object, state, skuInfo, parent) {
+    constructor(props, object, state, skuInfo, parent) {
         super(props, object, state, skuInfo)
         this.parent = parent;
         this.slot = (state && state.position && state.position.slot) ? state.position.slot : Slots.L
@@ -34,7 +34,7 @@ export default class Item extends Fbx {
     loadAndApplyMaterial() {
         const material = getMaterialById(getMaterialId())
         if (material) {
-            loadMaterial(material.textures).then(m => {
+            loadMaterial(material).then(m => {
                 // console.log(`material loaded`, m, this)
                 applyMaterial(m, this)
                 this.setLaques(this.state)

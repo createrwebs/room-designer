@@ -433,7 +433,7 @@ export default {
             return Errors.NOT_A_MODULE
         }
 
-        // distinction clickMeubleLine vs. loadMeubleFromDressing : state == null ?
+        // distinction clickMeubleLine vs. loadMeubleFromDressing : state == null
 
         let pState, wall = "right", corner = Corners.FR
         if (!state) {

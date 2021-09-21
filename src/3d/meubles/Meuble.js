@@ -59,7 +59,7 @@ import ANGETAL from '../items/ANGETAL'
 import ANGTIR from '../items/ANGTIR'
 
 export default class Meuble extends Fbx {
-    constructor (props, object, state, skuInfo) {
+    constructor(props, object, state, skuInfo) {
         super(props, object, state, skuInfo)
 
         this.items = []
@@ -171,10 +171,10 @@ export default class Meuble extends Fbx {
 
     /* material */
 
-    applyMaterialOnMeuble(mtl) {
-        this.removeLaqueOnMeshes()
+    applyMaterialOnMeuble(mtl, applyToItems = false) {
+        this.setLaques(this.state)
         applyMaterial(mtl, this)
-        this.items.forEach(item => {
+        if (applyToItems) this.items.forEach(item => {
             item.removeLaqueOnMeshes()
             applyMaterial(mtl, item)
         })
@@ -184,7 +184,7 @@ export default class Meuble extends Fbx {
     loadAndApplyMaterial() {
         const material = getMaterialById(getMaterialId())
         if (material) {
-            loadMaterial(material.textures).then(mtl => {
+            loadMaterial(material).then(mtl => {
                 // applyMaterial(m, this)
                 this.applyMaterialOnMeuble(mtl)
                 MainScene.render()
@@ -744,4 +744,4 @@ export default class Meuble extends Fbx {
         if (join) return join.substr(0, join.indexOf('-'))
         return null
     }
-} 
+}

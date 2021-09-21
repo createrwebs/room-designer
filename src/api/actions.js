@@ -1,5 +1,3 @@
-import store from './store';
-import { Vector3 } from "three";
 import {
     loadOne as loadOneMaterial,
     load as loadMaterial, apply as applyMaterial,
@@ -45,9 +43,7 @@ export const MeubleEvent = {
     SELECT: 'select',
     ANIM: 'anim',
     DRAG: 'drag',
-    DROP: 'drop',
     CLICKMEUBLELINE: 'clickmeubleline',
-    DROP_MEUBLE_TO_SCENE: 'drop_meuble_to_scene',
     LOAD_ALL_SKU: 'load_all_sku'
 }
 export const LoadingEvent = {
@@ -164,16 +160,16 @@ export const loadScene = (dressing) => {
     2/ load fbx
     */
 
+    if (dressing.joins) Meuble.Joins = dressing.joins
     const material = getMaterialById(getMaterialId())
     if (material) {
-        loadMaterial(material.textures).then(mtl => {
+        loadMaterial(material).then(mtl => {
             loadMeubles(dressing)
         })
     }
     else {
         loadMeubles(dressing)
     }
-    if (dressing.joins) Meuble.Joins = dressing.joins
 }
 
 const loadMeubles = (dressing) => {
@@ -182,27 +178,33 @@ const loadMeubles = (dressing) => {
 const loadMeuble = (state) => {
     const props = getProps(state.sku)
     if (!props) {
-        console.error(`no meuble found for sku  ${state.sku}`)
+        console.error(`no meuble found for sku ${state.sku} in catalogue`)
         return null
     }
-    const skuInfo = parseSKU(state.sku)
-    if (!skuInfo.isModule) {
-        console.error(`${state.sku} is not a module`)
-        return null
-    }
-
     if (!state.position) {
         console.error(`skipped ${state.sku} has no position`)
         return null
     }
+    loadMeubleFbx(props, state, parseSKU(state.sku))
+}
 
-    // meuble props are catalogue props + dressing props : no! => dressing props = state 
-    // props.position = state.position;
+/**
+ * loadMeubleFbx loads a fbx 3d file from props.fbx.url
+ * and tries to create and add the 3d object to MainScene
+ *
+ * @param {Object} props catalogue properties by sku
+ * @param {Object} state uid, position, items, material props on scene
+ * @param {Object} skuInfo all info deduced from sku parsing
+ * @return {null}
+ */
+const loadMeubleFbx = (props, state, skuInfo) => {
 
-    goingToKino(KinoEvent.LOADING_MEUBLE, state.sku)
+    if (!skuInfo.isModule) {
+        console.error(`${props.sku} is not a module`)
+        return null
+    }
+    goingToKino(KinoEvent.LOADING_MEUBLE, props.sku)
     loadFbx(props.fbx.url, object => {
-
-        // duplicate of clickMeuble plus bas :
         const createMeubleResult = MainScene.createMeuble(props, object, state, skuInfo)
         if (typeof createMeubleResult === "string") {// creation problem
             // console.warn(`creation error : ${createMeubleResult}`)
@@ -211,7 +213,7 @@ const loadMeuble = (state) => {
                 // TODO extraire gestion Errors
 
                 case Errors.NOT_A_MODULE:
-                    return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
+                    return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${props.sku} n'est pas un module`)
                 case Errors.NO_ROOM:
                     return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
                 case Errors.CORNER_FULL:
@@ -224,9 +226,39 @@ const loadMeuble = (state) => {
         }
         else {
             MainScene.add(createMeubleResult);
+            showhideMetrage()
             MainScene.render()
         }
     })
+}
+
+/**
+ * click on meuble to add it on scene.
+ * window.scene_bridge('add_meuble_to_scene','NYC155H219P0').
+ *
+ * @param {String} sku Stock Keeping Unit of clicked meuble
+ * @return {Object} Action object with type and sku
+ */
+export const clickMeubleLine = (sku) => {
+
+    const props = getProps(sku)
+    if (!props) {
+        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_MODULE_FOUND, `Pas de meuble ${sku}`)
+    }
+    const skuInfo = parseSKU(sku)
+    if (MainScene.selection) {
+        if (skuInfo.isModule) {
+            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.IS_A_MODULE, `${sku} n'est pas un accessoire`)
+        }
+        if (MainScene.selection.props.accessoirescompatibles.indexOf(sku) === -1) {
+            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.ITEM_NON_COMPATIBLE, `${sku} non compatible avec ${MainScene.selection.props.sku} sélectionné`)
+        }
+        else {
+            MainScene.selection.addItem(props, {}, skuInfo);
+        }
+    } else {
+        loadMeubleFbx(props, null, skuInfo)
+    }
 }
 
 /**
@@ -239,9 +271,9 @@ export const setSceneMaterial = (id) => {
         const material = getMaterialById(id)
         if (material) {
             setMaterialId(id)
-            loadMaterial(material.textures).then(mtl => {
+            loadMaterial(material).then(mtl => {
                 MainScene.meubles.forEach(meuble => {
-                    meuble.applyMaterialOnMeuble(mtl)
+                    meuble.applyMaterialOnMeuble(mtl, true)
                 })
                 MainScene.render()
                 sceneChange()
@@ -255,97 +287,6 @@ export const setSceneMaterial = (id) => {
     }
 }
 
-/* pix */
-export const takePicture = () => {
-    takePix("minet3d-scene-snapshopt")
-}
-export const generateAllPix = async (skus = []) => {
-    // if meuble selected, take its center to put meubles for pix batching
-
-    /*     let selectionCenter = new Vector3()
-        if (MainScene.selection) {// please on back wall !!
-            selectionCenter = MainScene.selection.getCenterPoint()//for back wall !
-        } */
-    Room.setup({
-        name: "generation-scene",
-        xmax: 4000,
-        zmax: 6000
-    })
-    MainScene.update(false)
-    for (const skuProps of getMultipleProps(skus)) {
-        await generatePix(skuProps)
-    }
-}
-window.generateAllPix = generateAllPix
-// ["NYC231H219PP", "NYC231H238PP", "NYC155H219PP", "NYANGH238", "NYH238P40RL057","NYC155H219PG"]
-export const generateOnePix = (sku) => {
-    Room.setup({
-        name: "generation-scene",
-        xmax: 4000,
-        zmax: 6000
-    })
-    MainScene.update(false)
-
-    const props = getProps(sku)
-    if (!props) {
-        console.error(`no meuble found for sku  ${sku}`)
-        return null
-    }
-    generatePix(props)
-}
-const generatePix = async (props) => {
-    return new Promise((resolve, reject) => {
-        if (props.sku && props.sku != "" && props.fbx.url && props.fbx.url != "") {
-            loadFbx(props.fbx.url, object => {
-                const skuInfo = parseSKU(props.sku)// put Item on scene as well
-                object.position.x = 0
-                object.position.y = 0
-                object.position.z = 0
-                const materialId = getMaterialId()
-                if (materialId) {
-                    const material = getMaterialById(materialId)
-                    if (material) {
-                        loadMaterial(material.textures)
-                            .then(mtl => {
-                                applyMaterial(mtl, { object: object })
-
-                                MainScene.scene.add(object);
-
-                                // position camera
-                                if (skuInfo.type === "ANG") {
-                                    MainScene.camera.position.set(getSize(object, "x") * 2.5, 1200, getSize(object, "z") * 2.5)
-                                }
-                                else {
-                                    MainScene.camera.position.set(getSize(object, "x") / 2, 1200, 3000)
-                                }
-                                MainScene.orbitControls.target = getCenterPoint(object)
-                                MainScene.orbitControls.update();
-
-                                MainScene.render()
-                                takePix(`${props.sku}`)
-                                MainScene.scene.remove(object);
-                                MainScene.render()
-
-                                resolve()
-                            })
-                            .catch((e) => {
-                                reject(new Error(`loadMaterial`))
-                            })
-                    }
-                    else {
-                        reject(new Error(`no material`))
-                    }
-                }
-                else {
-                    reject(new Error(`no materialId`))
-                }
-            })
-        }
-        else {
-            reject(new Error(`Reference problem found in catalogue :`))
-        }
-    })
-}
 export const downloadScene = () => {
     // console.warn(`what to do here ? downloadScene`)
     saveSceneToFile()
@@ -535,65 +476,7 @@ export const animeSelectedMeuble = () => {
         // tweenTo(child.position, moveThisFar, 1000)
     })
 }
-export const drop = (meuble) => {
-    return {
-        type: MeubleEvent.DROP, meuble
-    }
-}
 
-/**
- * click on meuble to add it on scene.
- * window.scene_bridge('add_meuble_to_scene','NYC155H219P0').
- *
- * @param {String} sku Stock Keeping Unit of clicked meuble
- * @return {Object} Action object with type and sku
- */
-export const clickMeubleLine = (sku) => {
-
-    const props = getProps(sku)
-    if (!props) {
-        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_MODULE_FOUND, `Pas de meuble ${sku}`)
-    }
-    const skuInfo = parseSKU(sku)
-    if (MainScene.selection) {
-        if (skuInfo.isModule) {
-            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.IS_A_MODULE, `${sku} n'est pas un accessoire`)
-        }
-        if (MainScene.selection.props.accessoirescompatibles.indexOf(sku) === -1) {
-            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.ITEM_NON_COMPATIBLE, `${sku} non compatible avec ${MainScene.selection.props.sku} sélectionné`)
-        }
-        else {
-            MainScene.selection.addItem(props, {}, skuInfo);
-        }
-    } else {
-        if (!skuInfo.isModule) {
-            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
-        }
-        goingToKino(KinoEvent.LOADING_MEUBLE, sku)
-        loadFbx(props.fbx.url, object => {
-            const createMeubleResult = MainScene.createMeuble(props, object, null, skuInfo)
-            if (typeof createMeubleResult === "string") {// creation problem
-                switch (createMeubleResult) {// TODO out errors
-                    case Errors.NOT_A_MODULE:
-                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NOT_A_MODULE, `${sku} n'est pas un module`)
-                    case Errors.NO_ROOM:
-                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_ROOM, `Il n'y a pas assez de place pour ce meuble`)
-                    case Errors.CORNER_FULL:
-                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Ce coin est déjà occupé`)
-                    case Errors.NO_PLACE_IN_CORNER:
-                        return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_IN_CORNER, `Il n'y a pas assez de place dans le coin pour ce meuble`)
-                    default:
-                        console.warn(`error ${createMeubleResult} not handled`)
-                }
-            }
-            else {
-                MainScene.add(createMeubleResult);
-                showhideMetrage()
-                MainScene.render()
-            }
-        })
-    }
-}
 export const printRaycast = (raycast) => {
     return {
         type: SceneEvent.PRINTRAYCAST, raycast
@@ -604,4 +487,96 @@ export const logKinoEvent = (event, param1, param2) => {
     return {
         type: SceneEvent.LOGKINOEVENT, event, param1, param2
     }
+}
+
+
+/* pix */
+
+export const takePicture = () => {
+    takePix("minet3d-scene-snapshopt")
+}
+export const generateAllPix = async (skus = []) => {
+    // if meuble selected, take its center to put meubles for pix batching
+
+    /*     let selectionCenter = new Vector3()
+        if (MainScene.selection) {// please on back wall !!
+            selectionCenter = MainScene.selection.getCenterPoint()//for back wall !
+        } */
+    Room.setup({
+        name: "generation-scene",
+        xmax: 4000,
+        zmax: 6000
+    })
+    MainScene.update(false)
+    for (const skuProps of getMultipleProps(skus)) {
+        await generatePix(skuProps)
+    }
+}
+export const generateOnePix = (sku) => {
+    Room.setup({
+        name: "generation-scene",
+        xmax: 4000,
+        zmax: 6000
+    })
+    MainScene.update(false)
+
+    const props = getProps(sku)
+    if (!props) {
+        console.error(`no meuble found for sku  ${sku}`)
+        return null
+    }
+    generatePix(props)
+}
+const generatePix = async (props) => {
+    return new Promise((resolve, reject) => {
+        if (props.sku && props.sku != "" && props.fbx.url && props.fbx.url != "") {
+            loadFbx(props.fbx.url, object => {
+                const skuInfo = parseSKU(props.sku)// put Item on scene as well
+                object.position.x = 0
+                object.position.y = 0
+                object.position.z = 0
+                const materialId = getMaterialId()
+                if (materialId) {
+                    const material = getMaterialById(materialId)
+                    if (material) {
+                        loadMaterial(material)
+                            .then(mtl => {
+                                applyMaterial(mtl, { object: object })
+
+                                MainScene.scene.add(object);
+
+                                // position camera
+                                if (skuInfo.type === "ANG") {
+                                    MainScene.camera.position.set(getSize(object, "x") * 2.5, 1200, getSize(object, "z") * 2.5)
+                                }
+                                else {
+                                    MainScene.camera.position.set(getSize(object, "x") / 2, 1200, 3000)
+                                }
+                                MainScene.orbitControls.target = getCenterPoint(object)
+                                MainScene.orbitControls.update();
+
+                                MainScene.render()
+                                takePix(`${props.sku}`)
+                                MainScene.scene.remove(object);
+                                MainScene.render()
+
+                                resolve()
+                            })
+                            .catch((e) => {
+                                reject(new Error(`loadMaterial`))
+                            })
+                    }
+                    else {
+                        reject(new Error(`no material`))
+                    }
+                }
+                else {
+                    reject(new Error(`no materialId`))
+                }
+            })
+        }
+        else {
+            reject(new Error(`Reference problem found in catalogue :`))
+        }
+    })
 }

@@ -10,13 +10,13 @@ import {
 } from "three";
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';// miroir
 import { loadTexture } from './Loader'
-import MainScene from "./MainScene";
+import { getFileNameFromUrl } from '../api/Utils';
 
 /*
     textures loading manager keeps already loaded textures in Textures[]
 */
 const Textures = []
-
+window.tx = Textures
 
 let mId = 0
 export const getId = () => {
@@ -58,9 +58,9 @@ export const loadOne = (material) => {
 
     return new Promise((resolve, reject) => {
 
-        // try to find already loaded
-        const textureLoaded = Textures.find(tx => tx.image.currentSrc === material.url)
-        // JSON.stringify(texture.repeat) === JSON.stringify(material.texture_args);
+        // try to find already loaded texture
+        const name = `laque-${material.name}-${getFileNameFromUrl(material.url)}`
+        const textureLoaded = Textures.find(tx => tx.name === name)
 
         if (textureLoaded) {
             resolve({
@@ -73,8 +73,6 @@ export const loadOne = (material) => {
             loadTexture(material.url, texture => {
                 if (texture instanceof Texture) {
 
-                    if (undefined == Textures.find(tx => tx.image.currentSrc === texture.image.currentSrc))
-                        Textures.push(texture)
                     texture.needsUpdate = true;
                     texture.wrapS = texture.wrapT = RepeatWrapping;
 
@@ -82,6 +80,11 @@ export const loadOne = (material) => {
                         texture.repeat.set(material.texture_args.repeatX, material.texture_args.repeatY)
                     if (material.texture_args && material.texture_args.offsetX && material.texture_args.offsetY)
                         texture.offset.set(material.texture_args.offsetX, material.texture_args.offsetY)
+
+                    texture.name = name
+
+                    if (undefined == Textures.find(tx => tx.name == name))
+                        Textures.push(texture)
 
                     resolve({
                         part: material.label,
@@ -101,42 +104,44 @@ export const loadOne = (material) => {
     });
 
 }
-export const load = (materials) => {
+export const load = (material) => {
     let texturePromises = [];
     return new Promise((resolveTexturesLoaded, rejectTexturesLoaded) => {
-        Object.entries(materials).forEach(
-            ([part, material]) => {
+        Object.entries(material.textures).forEach(
+            ([part, texture]) => {
                 texturePromises.push(new Promise((resolve, reject) => {
 
                     // try to find already loaded texture
-                    const textureLoaded = Textures.find(tx => tx.image.currentSrc === material.url)
-                    // JSON.stringify(texture.repeat) === JSON.stringify(material.texture_args);// confident in url check ?
+                    const name = `${material.name}-${getFileNameFromUrl(texture.url)}`
+                    const textureLoaded = Textures.find(tx => tx.name === name)
 
                     if (textureLoaded) {
                         resolve({
                             part: part,
                             texture: textureLoaded,
-                            material_args: material.material_args
+                            material_args: texture.material_args
                         });
                     }
                     else {
-                        loadTexture(material.url, texture => {
-                            if (texture instanceof Texture) {
+                        loadTexture(texture.url, newTexture => {
+                            if (newTexture instanceof Texture) {
+                                newTexture.needsUpdate = true;
+                                newTexture.wrapS = newTexture.wrapT = RepeatWrapping;
 
-                                if (undefined == Textures.find(tx => tx.image.currentSrc === texture.image.currentSrc))
-                                    Textures.push(texture)
-                                texture.needsUpdate = true;
-                                texture.wrapS = texture.wrapT = RepeatWrapping;
+                                if (texture.texture_args && texture.texture_args.repeatX && texture.texture_args.repeatY)
+                                    newTexture.repeat.set(texture.texture_args.repeatX, texture.texture_args.repeatY)
+                                if (texture.texture_args && texture.texture_args.offsetX && texture.texture_args.offsetY)
+                                    newTexture.offset.set(texture.texture_args.offsetX, texture.texture_args.offsetY)
 
-                                if (material.texture_args && material.texture_args.repeatX && material.texture_args.repeatY)
-                                    texture.repeat.set(material.texture_args.repeatX, material.texture_args.repeatY)
-                                if (material.texture_args && material.texture_args.offsetX && material.texture_args.offsetY)
-                                    texture.offset.set(material.texture_args.offsetX, material.texture_args.offsetY)
+                                newTexture.name = name
+
+                                if (undefined == Textures.find(tx => tx.name === name))
+                                    Textures.push(newTexture)
 
                                 resolve({
                                     part: part,
-                                    texture: texture,
-                                    material_args: material.material_args
+                                    texture: newTexture,
+                                    material_args: texture.material_args
                                 });
                             }
                         },
@@ -144,7 +149,7 @@ export const load = (materials) => {
                                 console.log(url + ' ' + (xhr.loaded / xhr.total * 100) + '% loaded');
                             },
                             xhr => {
-                                reject(new Error(xhr + 'An error occurred loading while loading: ' + material.url));
+                                reject(new Error(xhr + 'An error occurred loading while loading: ' + texture.url));
                             }
                         );
                     }
@@ -157,6 +162,7 @@ export const load = (materials) => {
 }
 export const apply = (materials, meuble) => {
     let material_args, material, mtl
+    // console.log('Material : apply', materials, 'on', meuble)
 
     /*
     dynamic texture apply
@@ -276,5 +282,6 @@ export const applyOnMesh = (mtl, child) => {
         child.receiveShadow = true;
     }
     else {
+        console.warn('no material for child mesh', child)
     }
 }

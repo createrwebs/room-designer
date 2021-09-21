@@ -54,7 +54,6 @@ const BridgeEvent = {
     TAKE_PICTURE: 'take_picture',
     ADD_MEUBLE_TO_SCENE: 'add_meuble_to_scene',
     DRAG_MEUBLE_OVER_SCENE: 'drag_meuble_over_scene',
-    DROP_MEUBLE_TO_SCENE: 'drop_meuble_to_scene',
     SELECT_MEUBLE: 'select_meuble',
     EDIT_MEUBLE: 'edit_meuble',
     ANIM_SELECTED_MEUBLE: 'anim_selected_meuble',

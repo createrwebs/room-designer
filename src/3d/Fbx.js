@@ -15,7 +15,7 @@ import {
 
 export default class Fbx {
     static list = []
-    constructor (props, object, state, skuInfo) {
+    constructor(props, object, state, skuInfo) {
         this.props = props;// wp backoffice props
         this.object = object;// threejs group mesh
         this.state = state// position & dressing stuff
