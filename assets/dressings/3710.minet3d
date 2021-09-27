@@ -1,0 +1,391 @@
+{
+	"xmax": "4900",
+	"zmax": "5000",
+	"name": "untitled",
+	"meubles": [
+		{
+			"sku": "NYANGH238W",
+			"uid": "852C9331",
+			"position": {
+				"wall": "front-right"
+			},
+			"items": [
+				{
+					"sku": "BC80000",
+					"position": {
+						"slot": "left",
+						"x": "780",
+						"y": "2355"
+					}
+				},
+				{
+					"sku": "NYPPD-H238L59A",
+					"laqueOnMeshes": [
+						{
+							"mesh": "portedroite-mtl-vert",
+							"laque": "3127"
+						}
+					],
+					"position": {
+						"slot": "left",
+						"x": "620",
+						"y": "23"
+					}
+				},
+				{
+					"sku": "BC77000",
+					"position": {
+						"slot": "center",
+						"x": "620",
+						"y": "2380"
+					}
+				}
+			]
+		},
+		{
+			"sku": "NYC155H238P0",
+			"uid": "3CF83981",
+			"position": {
+				"wall": "right",
+				"x": "1063"
+			},
+			"items": [
+				{
+					"sku": "BC78000",
+					"position": {
+						"slot": "left",
+						"x": "402",
+						"y": "2320"
+					}
+				},
+				{
+					"sku": "NYETTPCOL074",
+					"position": {
+						"slot": "center",
+						"x": "785",
+						"y": "1844"
+					}
+				},
+				{
+					"sku": "NYBLOTMML074",
+					"position": {
+						"slot": "center",
+						"x": "785",
+						"y": "89"
+					}
+				},
+				{
+					"sku": "NYRP1P62L074",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "1780"
+					}
+				}
+			]
+		},
+		{
+			"sku": "NYANG90H238",
+			"uid": "3C68EFB2",
+			"position": {
+				"wall": "right-back"
+			}
+		},
+		{
+			"sku": "NYH238P62P40",
+			"uid": "79D7570F",
+			"position": {
+				"wall": "right",
+				"x": "3448"
+			}
+		},
+		{
+			"sku": "NYH238P40RL057",
+			"uid": "233A2FB4",
+			"position": {
+				"wall": "front",
+				"x": "3758"
+			},
+			"items": [
+				{
+					"sku": "NYPPC-H238",
+					"position": {
+						"slot": "left",
+						"x": "224",
+						"y": "23"
+					}
+				}
+			],
+			"turned": "-1"
+		},
+		{
+			"sku": "NYCOIFH238",
+			"uid": "674B04DC",
+			"position": {
+				"wall": "right",
+				"x": "2613"
+			}
+		},
+		{
+			"sku": "NYH238P62L081",
+			"uid": "4EFEFE5E",
+			"position": {
+				"wall": "front",
+				"x": "3138"
+			},
+			"items": [
+				{
+					"sku": "NYETAP62L081",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "2071"
+					}
+				},
+				{
+					"sku": "NYETAP62L081",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "1751"
+					}
+				},
+				{
+					"sku": "NYETAP62L081",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "1431"
+					}
+				},
+				{
+					"sku": "NYSEPVP62",
+					"position": {
+						"slot": "left",
+						"x": "328",
+						"y": "1762"
+					}
+				},
+				{
+					"sku": "NYSEPVP62",
+					"position": {
+						"slot": "left",
+						"x": "566",
+						"y": "1444"
+					}
+				},
+				{
+					"sku": "BC77000",
+					"position": {
+						"slot": "left",
+						"x": "230",
+						"y": "2380"
+					}
+				},
+				{
+					"sku": "NYCASP62L081",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "0"
+					}
+				},
+				{
+					"sku": "NYPVG2H238L40",
+					"laqueOnMeshes": [
+						{
+							"mesh": "portedroite-mtl-vert",
+							"laque": "3127"
+						}
+					],
+					"position": {
+						"slot": "left",
+						"x": "23",
+						"y": "423"
+					}
+				},
+				{
+					"sku": "NYPVD2H238L40",
+					"laqueOnMeshes": [
+						{
+							"mesh": "portebas-mtl-vert",
+							"laque": "3127"
+						}
+					],
+					"position": {
+						"slot": "left",
+						"x": "430",
+						"y": "423"
+					}
+				},
+				{
+					"sku": "NYTIR2P62L081",
+					"laqueOnMeshes": [
+						{
+							"mesh": "laquable-mtl-hori",
+							"laque": "3127"
+						}
+					],
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "50"
+					}
+				},
+				{
+					"sku": "NYCHAPANT81",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "1303"
+					}
+				}
+			]
+		},
+		{
+			"sku": "NYH238P62L119",
+			"uid": "9827F480",
+			"position": {
+				"wall": "front",
+				"x": "2303"
+			},
+			"items": [
+				{
+					"sku": "BC77000",
+					"position": {
+						"slot": "left",
+						"x": "417",
+						"y": "2380"
+					}
+				},
+				{
+					"sku": "NYETLP62L119",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "1175"
+					}
+				},
+				{
+					"sku": "NYPPG-H238L59",
+					"position": {
+						"slot": "left",
+						"x": "23",
+						"y": "23"
+					}
+				},
+				{
+					"sku": "NYPPD-H238L59",
+					"position": {
+						"slot": "left",
+						"x": "617",
+						"y": "23"
+					}
+				},
+				{
+					"sku": "BC80000",
+					"position": {
+						"slot": "left",
+						"x": "617",
+						"y": "2355"
+					}
+				},
+				{
+					"sku": "NYPENRABP62M3L119",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "1481"
+					}
+				}
+			]
+		},
+		{
+			"sku": "NYH238P62L059",
+			"uid": "1BA102F0",
+			"position": {
+				"wall": "back",
+				"x": "436"
+			},
+			"items": [
+				{
+					"sku": "NYETAP62L059",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "815"
+					}
+				},
+				{
+					"sku": "NYETAP62L059",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "2007"
+					}
+				},
+				{
+					"sku": "BC83000",
+					"position": {
+						"slot": "left",
+						"x": "80",
+						"y": "689"
+					}
+				},
+				{
+					"sku": "BC81000",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "701"
+					}
+				},
+				{
+					"sku": "BC77000",
+					"position": {
+						"slot": "left",
+						"x": "119",
+						"y": "2380"
+					}
+				},
+				{
+					"sku": "NYMIROIRP62",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "982"
+					}
+				},
+				{
+					"sku": "NYTABREP",
+					"position": {
+						"slot": "left",
+						"x": "80",
+						"y": "733"
+					}
+				},
+				{
+					"sku": "NYCHACHAUSS59",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "372"
+					}
+				},
+				{
+					"sku": "NYCHAPANF59",
+					"position": {
+						"slot": "left",
+						"x": "25",
+						"y": "663"
+					}
+				}
+			]
+		}
+	],
+	"materialId": "1293",
+	"joins": [
+		"674B04DC-79D7570F",
+		"4EFEFE5E-9827F480"
+	]
+}

@@ -1,5 +1,6 @@
 import {
     HemisphereLight,
+    AmbientLight,
     HemisphereLightHelper,
     PointLight,
     PointLightHelper
@@ -11,18 +12,17 @@ export const setupLights = (scene, scene_params) => {
 
     /* lumière moyenne ambiance */
 
-    const light = new HemisphereLight(0xFFFDF4, 0x000000, .6);
-    light.position.set(Room.xmax / 2, Room.ymax, Room.zmax / 2);
+    const light = new AmbientLight(0xFFFFFF, .6); // soft white light
+    // const light = new HemisphereLight(0xFFFFFF, 0xFFFFFF, 1);
 
     scene.add(light);
 
-    const helper = new HemisphereLightHelper(light, 100);
-    if (localhost) scene.add(helper);
+    // const helper = new HemisphereLightHelper(light, 100);
+    // if (localhost) scene.add(helper);
 
     /* plafonnier */
 
-    const pointLight = new PointLight(0xffffff, .55, 0, 1);
-    pointLight.position.set(2500, 3000, 2500);
+    const pointLight = new PointLight(0xffffff, .5, 0, 1);
     pointLight.position.set(Room.xmax / 2, Room.ymax * 2, Room.zmax / 2);
 
     pointLight.castShadow = true; // default false

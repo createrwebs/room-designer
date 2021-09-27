@@ -3,7 +3,12 @@ const Client = require('ssh2-sftp-client');
 const sftp = new Client('example-client');
 
 /*
-preprod
+https://minet3d.kinoki.fr/                  dev/preprod
+https://kinotools.kinoki.fr/minet3d/        recette
+https://meublesminet.com/3d-dressing/       prod
+
+
+dev/preprod
 http://minet3d.kinoki.fr/
 WP:
 minet3d_fab

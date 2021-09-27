@@ -1,4 +1,5 @@
 import MainScene from '../MainScene';
+import { KinoEvent, goingToKino } from '../../api/Bridge'
 
 const saveFile = function (strData, filename) {
     var link = document.createElement('a');
@@ -15,10 +16,14 @@ const saveFile = function (strData, filename) {
 export const takePix = (name) => {
     try {
         const imgData = MainScene.getRendererNodeElement().toDataURL("image/jpeg");
-        const image = new Image();
-        image.src = imgData
-        const w = window.open("");
-        w.document.write(image.outerHTML);
+        // const image = new Image();
+        // image.src = imgData
+        // const w = window.open("");
+        // w.document.write(image.outerHTML);
+
+        goingToKino(KinoEvent.PICTURE_DATA, imgData)
+
+
         // to save it :
         // saveFile(imgData.replace("image/jpeg", "image/octet-stream"), name ? `${name}.png` : "scene-3d.png");
     } catch (e) {

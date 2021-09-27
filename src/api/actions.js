@@ -54,6 +54,7 @@ export const LoadingEvent = {
     ERROR: 'error',
 }
 export const Tools = {
+    CAMERA: 'camera',
     ARROW: 'arrow',
     HAMMER: 'hammer',
     TRASH: 'trash',
@@ -294,6 +295,14 @@ export const downloadScene = () => {
 export const changeTool = (tool, arg) => {
     // console.warn(`changeTool`, tool, arg)
     switch (tool) {
+        case Tools.CAMERA:
+            MainScene.deselect()// deselection => camera to room center ?
+            MainScene.enableMeubleDragging(false)
+            MainScene.enableMeubleClicking(false)
+            MainScene.enableMeublePainting(false)
+            MainScene.enableItemsDragging(false)
+            MainScene.enableItemsRemoving(false)
+            break;
         case Tools.ARROW:
             MainScene.deselect()// deselection => camera to room center ?
             MainScene.enableMeubleDragging(true)

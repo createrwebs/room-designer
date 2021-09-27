@@ -114,7 +114,6 @@ export default {
         // renderer.toneMapping = THREE.ACESFilmicToneMapping;
         // renderer.toneMappingExposure = 1;
         // renderer.outputEncoding = THREE.sRGBEncoding;
-        // renderer.physicallyCorrectLights = true;
         // renderer.shadowMap.enabled = true;
         // renderer.localClippingEnable = false;
         // renderer.setClearColor(0xFFFFFF);
@@ -158,7 +157,7 @@ export default {
         mesh.receiveShadow = true;
         scene.add(mesh);
 
-        this.setupLights()
+        setupLights(this.scene, this.scene_params)
         this.buildWalls()
         this.resize()
     },
@@ -175,9 +174,6 @@ export default {
         this.renderer.render(this.scene, this.camera);
     },
 
-    setupLights() {
-        setupLights(this.scene, this.scene_params)
-    },
     buildWalls(visible = true) {
 
         if (localhost) {
@@ -246,27 +242,6 @@ export default {
             this.scene.add(this.sol);
         }
     },
-    /*     updateCamera(props) {// unused!
-            let camera = this.camera
-            camera.fov = props.fov;
-            camera.zoom = props.zoom;
-            camera.focus = props.focus;
-            camera.updateProjectionMatrix();
-        }, */
-    updateLights(light) {
-        let scene = this.scene
-        let spotLight = this.spotLight
-        let spotLight2 = this.spotLight2
-
-        if (light) {
-            scene.add(spotLight);
-            scene.add(spotLight2);
-        }
-        else {
-            scene.remove(spotLight);
-            scene.remove(spotLight2);
-        }
-    },
     clear() {
         if (this.scene) this.scene.clear();
         this.meubles = [];
@@ -275,7 +250,7 @@ export default {
     },
     update(wallVisible = true) {
         this.clear();
-        this.setupLights();
+        setupLights(this.scene, this.scene_params)
         this.buildWalls(wallVisible)
     },
     resize() {

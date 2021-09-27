@@ -929,6 +929,7 @@
 
 		const KinoEvent = {
 			APP_READY: 'app_ready',
+			DRAG_PAN_CAMERA: 'drag_pan_camera',
 			SELECT_MEUBLE: 'select_meuble',
 			SCENE_CHANGE: 'scene_change',
 			SEND_MESSAGE: 'send_message',
@@ -971,6 +972,7 @@
 				case 'download_dressing':
 				case 'generateallpix':
 				case 'take_picture':
+				case 'drag_pan_camera':
 					break;
 
 				case 'add_meuble_to_scene':
@@ -1043,11 +1045,15 @@
 	<button class="btn" onclick="local_scene_bridge('generateallpix')">
 		<i class="fa fa-clone"></i>
 	</button>
+
 	<button class="btn" onclick="local_scene_bridge('get_devis')" style="margin-right: 1em;">
 		<i class="fa fa-euro-sign"></i>
 	</button>
 
-	<button class="btn" onclick="local_scene_bridge('select_meuble')">
+	<button class="btn" onclick="local_scene_bridge('drag_pan_camera')">
+		<i class="fa fa-hand-paper"></i>
+
+	</button><button class="btn" onclick="local_scene_bridge('select_meuble')">
 		<i class="fa fa-mouse-pointer"></i>
 	</button>
 

@@ -33,6 +33,7 @@ export const KinoEvent = {
     SEND_MESSAGE: 'send_message',
     MOUSEOVER_ITEM: 'mouseover_item',
     MOUSEOUT_ITEM: 'mouseout_item',
+    PICTURE_DATA: 'picture_data',
     LOADING_MEUBLE: 'loading_meuble',
     MEUBLE_LOADED: 'meuble_loaded',
     ERROR_LOADING_MEUBLE: 'error_loading_meuble',
@@ -54,6 +55,7 @@ const BridgeEvent = {
     TAKE_PICTURE: 'take_picture',
     ADD_MEUBLE_TO_SCENE: 'add_meuble_to_scene',
     DRAG_MEUBLE_OVER_SCENE: 'drag_meuble_over_scene',
+    DRAG_PAN_CAMERA: 'drag_pan_camera',
     SELECT_MEUBLE: 'select_meuble',
     EDIT_MEUBLE: 'edit_meuble',
     ANIM_SELECTED_MEUBLE: 'anim_selected_meuble',
@@ -104,6 +106,9 @@ export const comingFromKino = (event, param1, param2) => {
             break;
         case BridgeEvent.LOAD_ALL_SKU:
             generateAllPix(param1)
+            break;
+        case BridgeEvent.DRAG_PAN_CAMERA:
+            changeTool(Tools.CAMERA)
             break;
         case BridgeEvent.SELECT_MEUBLE:
             changeTool(Tools.ARROW)

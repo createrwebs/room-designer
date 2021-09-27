@@ -1,51 +1,38 @@
 # room-designer
 
-https://threejs.org/docs/
-.fbx
-Y up
 
+https://minet3d.kinoki.fr/                  dev
+https://kinotools.kinoki.fr/minet3d/        recette
+https://meublesminet.com/3d-dressing/       prod
 
-accessoires asocies OK :
+------------ TODO v2 :
 
-NYH238P62L119
+1/
+largeur sur mesure:
+XXX de 300 a 800 cm
+NYH238P40LSM[XXX]
+NYH238P62LSM[XXX]
+NYH219P40LSM[XXX]
+NYH219P62LSM[XXX]
 
-  [0] => NYRP1P62L119
-    [1] => NYETAP62L119
-    [2] => NYH238P62SE
-    [3] => NYH238P62FG
-    [4] => NYH238P62FD
+pas de porte, pas de tiroir.
+etageres, BC, etc
 
-NYH238P62L096
+2/
+drag_pan_camera FAIT
 
-[0] => NYRP1P62L096
-    [1] => NYETLP62L096
-    [2] => NYETAP62L096
-    [3] => NYH238P62SE
-    [4] => NYH238P62FG
-    [5] => NYH238P62FD
- 
-NYH219P40L096
+3/
+take picture and send to WP raf to open FAIT
 
-[0] => NYETAP40L096
-    [1] => NYH219P40SE
-    [2] => NYH219P40FG
-    [3] => NYH219P40FD
- 
-NYC231H238PP
+4/
+NYCAS dans les tiroirs NYTIR
 
-[0] => NYETTPCOL074
-    [1] => NYETAPCOL074
+5/
+NYFIL lsm ou penetre dans le mur
 
+6/
+éclairage FAIT
 
-    les panneaux latéraux sont des meubles comme les autres
+7 jours x 350€HT = 2450€
 
-ils ont une référence
-
-à priori ils seront dans la liste des accessoires compatibles
-
-le seul truc avec eux :
-
-- ils auront un attribut qui permettra de les emboiter dans la rainure (bounding box etc)
-- ils s'ajoutent automatiquement quand on pose un module sur la scène
-- quand le module est pas collé à un autre, il a des cotés, quand il touche un autre module, il a des séparateurs
-pour trouver les bons à l'heure actuelle ... faut regarder les tailles et largeur, mais je vais t'en mettre en accessoires compatibles sur le module ID = 248
+-------------------
