@@ -1,9 +1,6 @@
-import { Measures } from '../Utils'
 import { getClosestInArray } from '../Drag'
-import { Slots } from '../Constants'
 import Item from './Item';
 import { Box3 } from "three";
-import { KinoEvent, goingToKino } from '../../api/Bridge'
 import { Errors } from '../../api/Errors'
 
 export default class ItemUsingHole extends Item {

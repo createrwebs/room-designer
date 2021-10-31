@@ -7,11 +7,9 @@ import {
     getId as getMaterialId,
 } from '../Material'
 import { Measures, getSize, getSegment, segmentIntersect } from '../Utils'
-import { getClosestInArray } from '../Drag'
 import { Slots } from '../Constants'
 import ItemDragging from './ItemDragging';
 import { Box3, Vector3 } from "three";
-import { KinoEvent, goingToKino } from '../../api/Bridge'
 import { Errors } from '../../api/Errors'
 import { Space } from "../Space";
 
@@ -91,6 +89,10 @@ export default class Item extends Fbx {
             this.setPositionY(y)
         }
         // this.setPositionZ(z)
+
+        if (this.skuInfo.type == "CAS") {// not colliding
+            return
+        }
 
         const collide = this.checkCollision(new Box3().setFromObject(this.object), this.slot)
         // console.warn("colliding", this.slot, collide, y)

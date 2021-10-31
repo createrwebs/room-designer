@@ -839,9 +839,7 @@
 		load_dressing = function (url) {
 			fetch(url).then(response => response.json()).then(json => local_scene_bridge('load_dressing', json));
 		}
-
-		//https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue
-		fetch("https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue").then(response => response.json()).then(json => {
+		fetch("https://minet3d.kinoki.fr/wp-json/minet-api/v2/catalogue").then(response => response.json()).then(json => {
 			catalogue = json
 			populate_module_list()
 			populate_material_list()

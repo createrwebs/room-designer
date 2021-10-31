@@ -17,13 +17,11 @@ import {
     PCFSoftShadowMap,
     VSMShadowMap,
     PerspectiveCamera,
-    OrthographicCamera,
     Mesh,
     PlaneGeometry,
     MeshPhongMaterial,
     MeshStandardMaterial,
     AxesHelper,
-    GridHelper,
     DoubleSide,
     CameraHelper,
 } from "three";
@@ -44,6 +42,7 @@ import Room from './Room';
 import Draggable from './meubles/Draggable'
 import Angle from './meubles/Angle'
 import RL057 from './meubles/RL057'
+import LSM from './meubles/LSM'
 import Fileur from './meubles/Fileur'
 import FileurAng90 from './meubles/FileurAng90'
 
@@ -465,6 +464,9 @@ export default {
                 break;
             case "P40RL057":// range chaussure, pivotable à 90
                 meuble = new RL057(props, object, pState, skuInfo)
+                break;
+            case "LSM":// largeur sur mesure
+                meuble = new LSM(props, object, pState, skuInfo)
                 break;
             default:
                 meuble = new Draggable(props, object, pState, skuInfo)

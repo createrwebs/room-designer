@@ -40,8 +40,8 @@ class App extends Component {
 		setMaterialId(window.materials[0].id)
 
 		if (localhost) {
-
-			fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
+			fetch('https://minet3d.kinoki.fr/wp-json/minet-api/v2/catalogue', {
+				// fetch('https://kinotools.kinoki.fr/minet3d/wp-json/minet-api/v2/catalogue', {
 				method: 'GET',
 			})
 				.then(response => response.json())

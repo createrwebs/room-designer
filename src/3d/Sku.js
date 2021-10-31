@@ -48,6 +48,7 @@ const types = [
     "ETL",// étagère tringle led
     "ETT",// étagère tringle// PCO pour coulissante
     "FIL",// fileur droit
+    "LSM",// largeur sur mesure
     "MIROIR",
     "PENRAB",// Penderie rabattable
     "PGD2",// porte glace droite
@@ -119,6 +120,7 @@ export const parseSKU = (sku) => {
         || obj.type === "C191"
         || obj.type === "C231"
         || obj.type === "P40RL057"
+        || obj.type === "LSM"
         || obj.type === "FIL"
 
     /* modules with panneaux inamovibles */
@@ -219,6 +221,7 @@ export const parseSKU = (sku) => {
             break;
         default:
             if (obj.L) obj.l = obj.L * 10
+            if (obj.type === "LSM") obj.l = 400
     }
     obj.p = obj.P === 62 ? 622 : 396
 
@@ -241,6 +244,7 @@ export const parseSKU = (sku) => {
 
         obj.draggableX = obj.type.substr(0, 3) !== "ANG"
             && !obj.isPorte
+            && !obj.isTiroir// !!?
 
         obj.draggableY = obj.type !== "ANGAB"
             && obj.type !== "BC77000"

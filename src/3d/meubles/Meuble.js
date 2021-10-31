@@ -45,6 +45,7 @@ import Item from '../items/Item'
 import Porte from '../items/Porte'
 import Etagere from '../items/Etagere'
 import Tiroir from '../items/Tiroir'
+import Casier from '../items/Casier'
 import Blot from '../items/Blot'
 import RangeChaussure from '../items/RangeChaussure'
 import Chassis from '../items/Chassis'
@@ -341,6 +342,15 @@ export default class Meuble extends Fbx {
             }
         }
 
+        // NYCAS casier pour tiroir
+        if (skuInfo.type == "CAS") {
+            const nbTiroirs = this.items.filter(i => i.skuInfo.isTiroir).reduce((p, c) => p + c.skuInfo.type == "TIR4" ? 4 : 2, 0)// only 2 types of tiroirs
+            const casiers = this.items.filter(i => i.skuInfo.type == "CAS")
+            if (nbTiroirs <= casiers.length) {
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_DRAWER_FOR_CAS, `Pas de tiroir disponible pour recevoir le casier`)
+            }
+        }
+
         // accessoires compatible ? (triangles and panes not in compatibles)
         if (this.props.accessoirescompatibles.indexOf(props.sku) === -1
             && skuInfo.type !== "ANGAB"
@@ -380,6 +390,9 @@ export default class Meuble extends Fbx {
         }
         else if (skuInfo.isTiroir) {
             item = new Tiroir(props, object, state, skuInfo, this)
+        }
+        else if (skuInfo.type == "CAS") {
+            item = new Casier(props, object, state, skuInfo, this)
         }
         else if (skuInfo.isBlot) {
             item = new Blot(props, object, state, skuInfo, this)

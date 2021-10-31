@@ -1,11 +1,11 @@
 {
     "xmax": 6000,
     "zmax": 4000,
-    "name": "1 armoire",
+    "name": "1 armoire avec 3 blots",
     "meubles": [
         {
-            "sku": "NYH238P40L096",
-            "uid": "AE6E5375",
+            "sku": "NYH219P62L119",
+            "uid": "FF2CFAE4",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "right",
@@ -13,113 +13,17 @@
             },
             "items": [
                 {
-                    "sku": "NYPPD-H238L48",
+                    "sku": "NYTIR4P62L119",
                     "laqueOnMeshes": [],
                     "position": {
                         "slot": "left",
-                        "x": 505,
-                        "y": 23
-                    }
-                },
-                {
-                    "sku": "NYPPG-H238L48",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 23,
-                        "y": 23
-                    }
-                }
-            ]
-        },
-        {
-            "sku": "NYH238P40L119",
-            "uid": "ED8FEDCC",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "front",
-                "x": 2850
-            },
-            "items": [
-                {
-                    "sku": "NYPPD-H238L59",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 617,
-                        "y": 23
-                    }
-                },
-                {
-                    "sku": "NYPPG-H238L59",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 23,
-                        "y": 23
-                    }
-                }
-            ]
-        },
-        {
-            "sku": "NYH238P40L081",
-            "uid": "DDC8C103",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "left",
-                "x": 3690
-            },
-            "items": [
-                {
-                    "sku": "NYPPD-H238L40",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 430,
-                        "y": 23
-                    }
-                },
-                {
-                    "sku": "NYPPG-H238L40",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 23,
-                        "y": 23
-                    }
-                }
-            ]
-        },
-        {
-            "sku": "NYH238P40L119",
-            "uid": "F34F25F8",
-            "laqueOnMeshes": [],
-            "position": {
-                "wall": "back",
-                "x": 1530
-            },
-            "items": [
-                {
-                    "sku": "NYPPD-H238L59",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 617,
-                        "y": 23
-                    }
-                },
-                {
-                    "sku": "NYPPG-H238L59",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 23,
-                        "y": 23
+                        "x": 25,
+                        "y": 50
                     }
                 }
             ]
         }
     ],
-    "materialId": 1301,
+    "materialId": 1304,
     "joins": []
 }
