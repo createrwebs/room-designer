@@ -7,7 +7,7 @@ https://meublesminet.com/3d-dressing/       prod
 
 ------------ TODO v2 :
 
-1/
+1/ FAIT
 largeur sur mesure:
 XXX de 300 a 800 cm
 NYH238P40LSM[XXX]
@@ -28,11 +28,13 @@ drag_pan_camera FAIT
 3/
 take picture and send to WP raf to open FAIT
 
-4/
+4/ FAIT
 NYCAS dans les tiroirs NYTIR
 à gérer par rapport aux TIR2 TIR4
 
-5/
+... a faire côté Raf ?
+
+5/ FAIT : pénétration coupe le fileur
 NYFIL lsm ou penetre dans le mur
 
 6/
@@ -52,6 +54,6 @@ Si module, remplacer panneau de finition par un SE
 
 8/ module, en angle avec, + deux séparateurs en lieu et place des finitions actuels
 
-
+3 jours x 350€HT = 1050€
 
 

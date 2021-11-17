@@ -152,6 +152,9 @@ export const parseSKU = (sku) => {
     /* blot */
     obj.isBlot = obj.type.substr(0, 4) === "BLOT"
 
+    /* LSM */
+    obj.isLSM = sku.substr(-3) === "LSM"
+
     /* alignement en applique */
     obj.frontAlign = obj.isEtagere//etagere
         || obj.isTiroir// tiroir en applique
@@ -200,7 +203,9 @@ export const parseSKU = (sku) => {
             if (obj.isModule) {
                 obj.trous = obj.H === 219 ? trous219Panneaux : trous238Panneaux
 
-                if (obj.PR === obj.PL && obj.type != "FIL") {// module de liaison not in corners
+                if (obj.PR === obj.PL
+                    && !obj.isLSM
+                    && obj.type != "FIL") {// module de liaison not in corners
                     obj.angABSku = {// put in corners with 1/4 turn and triangles
                         "right": `NYANGABP${obj.P}R`,
                         "left": `NYANGABP${obj.P}L`,
@@ -243,13 +248,15 @@ export const parseSKU = (sku) => {
             || obj.isChassis
 
         obj.draggableX = obj.type.substr(0, 3) !== "ANG"
+            && obj.type !== "CAS"
             && !obj.isPorte
-            && !obj.isTiroir// !!?
+            && !obj.isTiroir
 
         obj.draggableY = obj.type !== "ANGAB"
             && obj.type !== "BC77000"
             && obj.type !== "BC78000"
             && obj.type !== "BC80000"
+            && obj.type !== "CAS"
             && !obj.isBlot
             && !obj.isTiroir
             && !obj.isPorte

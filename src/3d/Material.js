@@ -1,6 +1,7 @@
 import {
     Texture,
     RepeatWrapping,
+    ClampToEdgeWrapping,
     Box3,
     BoxBufferGeometry,
     Color,
@@ -75,6 +76,7 @@ export const loadOne = (material) => {
 
                     texture.needsUpdate = true;
                     texture.wrapS = texture.wrapT = RepeatWrapping;
+                    // texture.wrapS = texture.wrapT = ClampToEdgeWrapping
 
                     if (material.texture_args && material.texture_args.repeatX && material.texture_args.repeatY)
                         texture.repeat.set(material.texture_args.repeatX, material.texture_args.repeatY)
@@ -127,6 +129,7 @@ export const load = (material) => {
                             if (newTexture instanceof Texture) {
                                 newTexture.needsUpdate = true;
                                 newTexture.wrapS = newTexture.wrapT = RepeatWrapping;
+                                // newTexture.wrapS = newTexture.wrapT = ClampToEdgeWrapping
 
                                 if (texture.texture_args && texture.texture_args.repeatX && texture.texture_args.repeatY)
                                     newTexture.repeat.set(texture.texture_args.repeatX, texture.texture_args.repeatY)

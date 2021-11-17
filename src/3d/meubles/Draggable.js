@@ -104,21 +104,23 @@ export default class Draggable extends Meuble {
         const newPlace = getWallChange(this.wall, event.object.position)
 
         if (this.wall != newPlace) {
-            // console.warn(`Moving from ${this.wall} to ${newPlace}`)
 
             if (this.isOnAWall()
                 && this.skuInfo.angABSku
                 && Object.values(Corners).includes(newPlace)) {// from wall to corner
                 const cornerFree = Room.isCornerFreeForMeuble(newPlace, this.skuInfo)
-                if (typeof cornerFree === "string")// error
+                if (typeof cornerFree === "string") {// error
                     switch (cornerFree) {// TODO out errors
                         case Errors.CORNER_FULL:
-                            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Ce coin est déjà occupé`)
+                            // return 
+                            goingToKino(KinoEvent.SEND_MESSAGE, Errors.CORNER_FULL, `Ce coin est déjà occupé`)
                         case Errors.NO_PLACE_IN_CORNER:
-                            return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_IN_CORNER, `Il n'y a pas assez de place dans le coin pour ce meuble`)
+                            // return 
+                            goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_PLACE_IN_CORNER, `Il n'y a pas assez de place dans le coin pour ce meuble`)
                         default:
                             console.warn(`error ${cornerFree} not handled`)
                     }
+                }
                 else {
                     this.addAngAB()
                     this.wall = newPlace

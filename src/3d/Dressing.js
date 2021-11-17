@@ -44,10 +44,14 @@ export const getCurrentDressingForDevis = () => {
         }
         else {
             meuble.sku = m.props.sku
-            // meubles.push(m.props.sku)
+
             if (!m.skuInfo.hasSides) {//gestion panneaux amovibles
                 if (!joins.includes(Sides.L)) meubles.push({ sku: m.getPanneauName(Sides.L) })
                 if (!joins.includes(Sides.R)) meubles.push({ sku: m.getPanneauName(Sides.R) })
+            }
+            if (m.LSMwidth) {// LSM gets width appends to sku
+                // meuble.sku = `${m.props.sku}${m.LSMwidth}`
+                meuble.width = m.LSMwidth
             }
         }
 

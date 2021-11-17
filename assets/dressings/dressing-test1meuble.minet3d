@@ -4,24 +4,57 @@
     "name": "1 armoire avec 3 blots",
     "meubles": [
         {
-            "sku": "NYH219P62L119",
-            "uid": "FF2CFAE4",
+            "sku": "NYFILH238",
+            "uid": "220F1322",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "front",
+                "x": 3070
+            },
+            "items": [],
+            "width": 150
+        },
+        {
+            "sku": "NYH238P40L059",
+            "uid": "93DD8AE2",
             "laqueOnMeshes": [],
             "position": {
                 "wall": "right",
-                "x": 1000
+                "x": 650
             },
-            "items": [
-                {
-                    "sku": "NYTIR4P62L119",
-                    "laqueOnMeshes": [],
-                    "position": {
-                        "slot": "left",
-                        "x": 25,
-                        "y": 50
-                    }
-                }
-            ]
+            "items": []
+        },
+        {
+            "sku": "NYH238P40L081",
+            "uid": "2457F4D8",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 3290
+            },
+            "items": []
+        },
+        {
+            "sku": "NYFILH219",
+            "uid": "709CBF93",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 5970
+            },
+            "items": [],
+            "width": 30
+        },
+        {
+            "sku": "NYFILH238",
+            "uid": "23F46A14",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 0
+            },
+            "items": [],
+            "width": 60
         }
     ],
     "materialId": 1304,

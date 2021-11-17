@@ -1,0 +1,49 @@
+{
+    "xmax": 6000,
+    "zmax": 4000,
+    "name": "1 armoire avec 3 blots",
+    "meubles": [
+        {
+            "sku": "NYH238P62LSM",
+            "uid": "6EC484A1",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 3880
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P40LSM",
+            "uid": "2C0C47D9",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 2720
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH219P62LSM",
+            "uid": "FD135279",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 870
+            },
+            "items": []
+        },
+        {
+            "sku": "NYH238P40LSM",
+            "uid": "C15E03D6",
+            "laqueOnMeshes": [],
+            "position": {
+                "wall": "right",
+                "x": 2040
+            },
+            "items": []
+        }
+    ],
+    "materialId": 1304,
+    "joins": []
+}

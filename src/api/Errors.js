@@ -14,4 +14,5 @@ export const Errors = {
     BAD_DOOR_FOR_DRAWER: 'bad_door_for_drawer',
     BAD_DRAWER_FOR_DOOR: 'bad_drawer_for_door',
     NO_DRAWER_FOR_CAS: 'no_drawer_for_cas',
+    TOO_MANY_CAS: 'too_many_cas',
 }

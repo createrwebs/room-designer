@@ -44,6 +44,7 @@ import ItemDragging from '../items/ItemDragging';
 import Item from '../items/Item'
 import Porte from '../items/Porte'
 import Etagere from '../items/Etagere'
+import EtagereLSM from '../items/EtagereLSM'
 import Tiroir from '../items/Tiroir'
 import Casier from '../items/Casier'
 import Blot from '../items/Blot'
@@ -60,7 +61,7 @@ import ANGETAL from '../items/ANGETAL'
 import ANGTIR from '../items/ANGTIR'
 
 export default class Meuble extends Fbx {
-    constructor(props, object, state, skuInfo) {
+    constructor (props, object, state, skuInfo) {
         super(props, object, state, skuInfo)
 
         this.items = []
@@ -343,11 +344,15 @@ export default class Meuble extends Fbx {
         }
 
         // NYCAS casier pour tiroir
-        if (skuInfo.type == "CAS") {
-            const nbTiroirs = this.items.filter(i => i.skuInfo.isTiroir).reduce((p, c) => p + c.skuInfo.type == "TIR4" ? 4 : 2, 0)// only 2 types of tiroirs
-            const casiers = this.items.filter(i => i.skuInfo.type == "CAS")
-            if (nbTiroirs <= casiers.length) {
+        // Object.keys(state).length > 0 for new added item
+        if (skuInfo.type == "CAS" && Object.keys(state).length === 0) {
+            const nbTiroirs = this.items.filter(i => i.skuInfo.isTiroir).reduce((p, c) => p + c.skuInfo.type == "TIR4" ? 4 : 2, 0)
+            if (nbTiroirs == 0) {
                 return goingToKino(KinoEvent.SEND_MESSAGE, Errors.NO_DRAWER_FOR_CAS, `Pas de tiroir disponible pour recevoir le casier`)
+            }
+            const casiers = this.items.filter(i => i.skuInfo.type == "CAS")
+            if (1 <= casiers.length) {
+                return goingToKino(KinoEvent.SEND_MESSAGE, Errors.TOO_MANY_CAS, `Un seul casier de rangement par meuble`)
             }
         }
 
@@ -377,7 +382,11 @@ export default class Meuble extends Fbx {
             }
             else if (skuInfo.type === "ANGETAL") {
                 item = new ANGETAL(props, object, state, skuInfo, this)
-            } else item = new Etagere(props, object, state, skuInfo, this)
+            }
+            else if (skuInfo.isLSM) {
+                item = new EtagereLSM(props, object, state, skuInfo, this)
+            }
+            else item = new Etagere(props, object, state, skuInfo, this)
         }
         else if (skuInfo.isChassis) {
             item = new Chassis(props, object, state, skuInfo, this)

@@ -17,7 +17,7 @@ export default {
     axis: "x",
     MeublesOnWall: [],
     MeublesOnCorners: [],
-    meubleMagnet: 50,// magnetisme du meuble (mm)
+    meubleMagnet: 30,// magnetisme du meuble (mm)
 
     setup(dressing) {
         this.name = dressing && dressing.name ? dressing.name : this.name
@@ -299,7 +299,8 @@ export default {
             next = closestSpace.prev
         }
 
-        // if (insideDrag) console.warn(`stickTo ${stickTo}`, closestSpace.prev ? closestSpace.prev.skuInfo.PR : "", meuble.skuInfo.PL)
+        // if (insideDrag) 
+        // console.warn(`stickTo ${stickTo}`, prev, next, closestSpace.prev ? closestSpace.prev.skuInfo.PR : "", meuble.skuInfo.PL)
         // insideDrag
         if (meuble.insideDrag) {
             meuble.insideDrag(insideDrag, stickTo, stickTo == Sides.L ? prev : next)
